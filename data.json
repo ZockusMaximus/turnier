@@ -46,7 +46,18 @@
       ]
     }
   },
-  "challenges": [],
+  "challenges": [
+    {
+      "id": 1,
+      "creator": "Victor",
+      "challenge_game_id": "1",
+      "title": "dasd",
+      "description": "asdasd",
+      "difficulty": "Mittel",
+      "timestamp": "2026-08-01 14:29:20",
+      "completions": []
+    }
+  ],
   "brackets_de": [
     {
       "id": 1,
@@ -269,6 +280,11 @@
       "timestamp": "2026-08-01 14:27:15",
       "user": "Victor",
       "action": "Spiel 'Valheim' angelegt. Erster King: Victor"
+    },
+    {
+      "timestamp": "2026-08-01 14:29:20",
+      "user": "Victor",
+      "action": "Challenge 'dasd' von Victor erstellt."
     }
   ],
   "challenge_games": {
