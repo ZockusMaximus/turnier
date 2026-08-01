@@ -23,45 +23,8 @@
       "created_at": "2026-08-01 14:05:22"
     }
   },
-  "games": {
-    "2": {
-      "name": "War Thunder",
-      "creator": "Marcel",
-      "custom_cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/236390/header.jpg",
-      "link": "https://store.steampowered.com/app/236390/",
-      "format": "Best of 3 (Bo3)",
-      "rules": "1on1 Tank "
-    }
-  },
-  "koth": {
-    "2": {
-      "king": "Sascha",
-      "streak": 2,
-      "history": [
-        {
-          "timestamp": "2026-08-01 15:10:16",
-          "defender": "Marcel",
-          "challenger": "Thron-Gründung",
-          "winner": "Marcel",
-          "format": "Best of 3 (Bo3)"
-        },
-        {
-          "timestamp": "2026-08-01 15:13:53",
-          "defender": "Marcel",
-          "challenger": "Sascha",
-          "winner": "Sascha",
-          "format": "Best of 3 (Bo3)"
-        },
-        {
-          "timestamp": "2026-08-01 15:14:09",
-          "defender": "Sascha",
-          "challenger": "Victor",
-          "winner": "Sascha",
-          "format": "Best of 3 (Bo3)"
-        }
-      ]
-    }
-  },
+  "games": {},
+  "koth": {},
   "challenges": [
     {
       "id": 1,
@@ -418,6 +381,11 @@
       "timestamp": "2026-08-01 19:05:54",
       "user": "Admin",
       "action": "KotH Spiel 'CS2' gelöscht"
+    },
+    {
+      "timestamp": "2026-08-01 19:05:56",
+      "user": "Admin",
+      "action": "KotH Spiel 'War Thunder' gelöscht"
     }
   ],
   "challenge_games": {
