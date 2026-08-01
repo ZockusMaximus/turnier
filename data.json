@@ -653,14 +653,14 @@
             "id": "W_R2_M2",
             "p1": "Jan",
             "p2": "BYE (Freilos)",
-            "winner": null
+            "winner": "Jan"
           }
         ],
         [
           {
             "id": "W_R3_M1",
             "p1": "Victor",
-            "p2": "TBD",
+            "p2": "Jan",
             "winner": null
           }
         ]
@@ -668,7 +668,7 @@
       "third_place_match": {
         "id": "M_3RD",
         "p1": "Stefan",
-        "p2": "TBD",
+        "p2": "BYE (Freilos)",
         "winner": null
       }
     },
