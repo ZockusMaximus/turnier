@@ -25,18 +25,7 @@
   },
   "games": {},
   "koth": {},
-  "challenges": [
-    {
-      "id": 2,
-      "creator": "Jan",
-      "game_id": "2",
-      "title": "dum die dum",
-      "description": "aaaaaaaaaaaaaaaaa",
-      "difficulty": "Mittel",
-      "timestamp": "2026-08-01 14:16:44",
-      "completions": []
-    }
-  ],
+  "challenges": [],
   "brackets_de": [
     {
       "id": 1,
@@ -249,6 +238,11 @@
       "timestamp": "2026-08-01 14:26:22",
       "user": "Admin",
       "action": "Challenge #1 (sei der schnellste) gelöscht"
+    },
+    {
+      "timestamp": "2026-08-01 14:26:24",
+      "user": "Admin",
+      "action": "Challenge #2 (dum die dum) gelöscht"
     }
   ],
   "challenge_games": {}
