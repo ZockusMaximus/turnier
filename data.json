@@ -72,6 +72,16 @@
           "timestamp": "2026-08-01 14:15:30"
         }
       ]
+    },
+    {
+      "id": 2,
+      "creator": "Jan",
+      "game_id": "2",
+      "title": "dum die dum",
+      "description": "aaaaaaaaaaaaaaaaa",
+      "difficulty": "Mittel",
+      "timestamp": "2026-08-01 14:16:44",
+      "completions": []
     }
   ],
   "brackets_de": [
@@ -266,6 +276,11 @@
       "timestamp": "2026-08-01 14:15:30",
       "user": "Alexander",
       "action": "Challenge #1 von Alexander absolviert."
+    },
+    {
+      "timestamp": "2026-08-01 14:16:44",
+      "user": "Jan",
+      "action": "Challenge 'dum die dum' von Jan erstellt."
     }
   ]
 }
