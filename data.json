@@ -34,7 +34,7 @@
   "koth": {
     "1": {
       "king": "Victor",
-      "streak": 1,
+      "streak": 2,
       "history": [
         {
           "timestamp": "2026-08-01 14:27:15",
@@ -42,6 +42,13 @@
           "challenger": "Thron-Gründung",
           "winner": "Victor",
           "format": "Kröne dich selbst"
+        },
+        {
+          "timestamp": "2026-08-01 14:31:52",
+          "defender": "Victor",
+          "challenger": "Marcel",
+          "winner": "Victor",
+          "format": "Best of 1 (Bo1)"
         }
       ]
     }
@@ -324,6 +331,11 @@
       "timestamp": "2026-08-01 14:30:59",
       "user": "Victor",
       "action": "Challenge #1 von Victor absolviert."
+    },
+    {
+      "timestamp": "2026-08-01 14:31:52",
+      "user": "Victor",
+      "action": "KotH (Valheim): Victor gewann gegen Marcel"
     }
   ],
   "challenge_games": {
