@@ -911,30 +911,30 @@
             "p2": "Sascha",
             "p1_origin": "Schweizer Matchmaking R2",
             "p2_origin": "Schweizer Matchmaking R2",
-            "winner": null
+            "winner": "Sascha"
           }
         ],
         [
           {
             "id": "S3M1",
-            "p1": "TBD",
-            "p2": "TBD",
+            "p1": "Jan",
+            "p2": "Stefan",
             "p1_origin": "Schweizer Matchmaking R3",
             "p2_origin": "Schweizer Matchmaking R3",
             "winner": null
           },
           {
             "id": "S3M2",
-            "p1": "TBD",
-            "p2": "TBD",
+            "p1": "Alexander",
+            "p2": "Sascha",
             "p1_origin": "Schweizer Matchmaking R3",
             "p2_origin": "Schweizer Matchmaking R3",
             "winner": null
           },
           {
             "id": "S3M3",
-            "p1": "TBD",
-            "p2": "TBD",
+            "p1": "Victor",
+            "p2": "Marcel",
             "p1_origin": "Schweizer Matchmaking R3",
             "p2_origin": "Schweizer Matchmaking R3",
             "winner": null
