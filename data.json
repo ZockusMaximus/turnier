@@ -575,61 +575,7 @@
     }
   ],
   "brackets": {
-    "single": {
-      "game_name": "Blood Bowl 2",
-      "type": "single",
-      "created_at": "2026-08-01 20:42:26",
-      "rounds": [
-        [
-          {
-            "id": "R1_M1",
-            "p1": "Stefan",
-            "p2": "Marcel",
-            "winner": "Stefan"
-          },
-          {
-            "id": "R1_M2",
-            "p1": "Sascha",
-            "p2": "Victor",
-            "winner": "Sascha"
-          },
-          {
-            "id": "R1_M3",
-            "p1": "Jan",
-            "p2": "Alexander",
-            "winner": "Jan"
-          },
-          {
-            "id": "R1_M4",
-            "p1": "BYE (Freilos)",
-            "p2": "BYE (Freilos)",
-            "winner": "BYE (Freilos)"
-          }
-        ],
-        [
-          {
-            "id": "R2_M1",
-            "p1": "Stefan",
-            "p2": "Sascha",
-            "winner": "Stefan"
-          },
-          {
-            "id": "R2_M2",
-            "p1": "Jan",
-            "p2": "BYE (Freilos)",
-            "winner": "Jan"
-          }
-        ],
-        [
-          {
-            "id": "R3_M1",
-            "p1": "Stefan",
-            "p2": "Jan",
-            "winner": "Stefan"
-          }
-        ]
-      ]
-    },
+    "single": null,
     "double": null
   }
 }
