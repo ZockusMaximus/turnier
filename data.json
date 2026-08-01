@@ -86,6 +86,17 @@
           "timestamp": "2026-08-01 14:53:41"
         }
       ]
+    },
+    {
+      "id": 2,
+      "creator": "Stefan",
+      "challenge_game_id": "2",
+      "title": "Schnellste Runde",
+      "custom_cover": "",
+      "description": "Schnellste runde in Map xy",
+      "difficulty": "Mittel",
+      "timestamp": "2026-08-01 15:12:00",
+      "completions": []
     }
   ],
   "brackets_de": [],
@@ -355,6 +366,11 @@
       "timestamp": "2026-08-01 15:10:16",
       "user": "Marcel",
       "action": "KotH Spiel 'War Thunder' angelegt von Marcel. King: Marcel"
+    },
+    {
+      "timestamp": "2026-08-01 15:12:00",
+      "user": "Stefan",
+      "action": "Challenge 'Schnellste Runde' von Stefan erstellt."
     }
   ],
   "challenge_games": {
