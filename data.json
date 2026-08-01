@@ -447,6 +447,10 @@
     "1": {
       "name": "Elden Ring",
       "cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/1245620/header.jpg"
+    },
+    "2": {
+      "name": "War Thunder",
+      "cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/236390/header.jpg"
     }
   },
   "news": [
