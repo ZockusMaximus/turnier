@@ -583,65 +583,7 @@
     }
   ],
   "brackets": {
-    "single": {
-      "game_name": "Mortal Kobat 1",
-      "cover": "https://via.placeholder.com/460x215/1e293b/00f0ff?text=KEIN+COVER",
-      "rules": "Standard Rule Set",
-      "link": "",
-      "type": "single",
-      "created_at": "2026-08-01 21:10:36",
-      "champion": null,
-      "rounds": [
-        [
-          {
-            "id": "R1_M1",
-            "p1": "Marcel",
-            "p2": "Victor",
-            "winner": null
-          },
-          {
-            "id": "R1_M2",
-            "p1": "Alexander",
-            "p2": "Stefan",
-            "winner": null
-          },
-          {
-            "id": "R1_M3",
-            "p1": "Jan",
-            "p2": "Sascha",
-            "winner": null
-          },
-          {
-            "id": "R1_M4",
-            "p1": "BYE (Freilos)",
-            "p2": "BYE (Freilos)",
-            "winner": "BYE (Freilos)"
-          }
-        ],
-        [
-          {
-            "id": "R2_M1",
-            "p1": "TBD",
-            "p2": "TBD",
-            "winner": null
-          },
-          {
-            "id": "R2_M2",
-            "p1": "TBD",
-            "p2": "BYE (Freilos)",
-            "winner": null
-          }
-        ],
-        [
-          {
-            "id": "R3_M1",
-            "p1": "TBD",
-            "p2": "TBD",
-            "winner": null
-          }
-        ]
-      ]
-    },
+    "single": null,
     "double": {
       "game_name": "Blood Bowl 2",
       "cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/236690/header.jpg",
