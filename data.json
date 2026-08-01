@@ -414,7 +414,12 @@
       "action": "KotH Spiel 'Age of Empires 4' angelegt von Alexander. King: Alexander"
     }
   ],
-  "challenge_games": {},
+  "challenge_games": {
+    "1": {
+      "name": "Elden Ring",
+      "cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/1245620/header.jpg"
+    }
+  },
   "news": [
     {
       "id": 1,
