@@ -31,6 +31,14 @@
       "link": "https://store.steampowered.com/app/730/",
       "format": "Best of 3 (Bo3)",
       "rules": "1 on 1 Only AWP Map Dust 2"
+    },
+    "2": {
+      "name": "War Thunder",
+      "creator": "Marcel",
+      "custom_cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/236390/header.jpg",
+      "link": "https://store.steampowered.com/app/236390/",
+      "format": "Best of 3 (Bo3)",
+      "rules": "1on1 Tank "
     }
   },
   "koth": {
@@ -44,6 +52,19 @@
           "challenger": "Thron-Gründung",
           "winner": "Victor",
           "format": "Best of 1 (Bo1)"
+        }
+      ]
+    },
+    "2": {
+      "king": "Marcel",
+      "streak": 1,
+      "history": [
+        {
+          "timestamp": "2026-08-01 15:10:16",
+          "defender": "Marcel",
+          "challenger": "Thron-Gründung",
+          "winner": "Marcel",
+          "format": "Best of 3 (Bo3)"
         }
       ]
     }
@@ -329,6 +350,11 @@
       "timestamp": "2026-08-01 15:05:57",
       "user": "Admin",
       "action": "KotH Spiel 'Rocket League' gelöscht"
+    },
+    {
+      "timestamp": "2026-08-01 15:10:16",
+      "user": "Marcel",
+      "action": "KotH Spiel 'War Thunder' angelegt von Marcel. King: Marcel"
     }
   ],
   "challenge_games": {
