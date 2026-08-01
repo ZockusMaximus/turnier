@@ -271,5 +271,10 @@
       "action": "Spiel 'Valheim' angelegt. Erster King: Victor"
     }
   ],
-  "challenge_games": {}
+  "challenge_games": {
+    "1": {
+      "name": "Elden Ring",
+      "cover": ""
+    }
+  }
 }
