@@ -23,36 +23,8 @@
       "created_at": "2026-08-01 14:05:22"
     }
   },
-  "games": {
-    "1": {
-      "name": "Counter Strike 2",
-      "creator": "Victor",
-      "custom_cover": "",
-      "link": ""
-    }
-  },
-  "koth": {
-    "1": {
-      "king": "Alexander",
-      "streak": 1,
-      "history": [
-        {
-          "timestamp": "2026-08-01 14:34:23",
-          "defender": "Victor",
-          "challenger": "Thron-Gründung",
-          "winner": "Victor",
-          "format": "Kröne dich selbst"
-        },
-        {
-          "timestamp": "2026-08-01 14:36:10",
-          "defender": "Victor",
-          "challenger": "Alexander",
-          "winner": "Alexander",
-          "format": "Best of 1 (Bo1)"
-        }
-      ]
-    }
-  },
+  "games": {},
+  "koth": {},
   "challenges": [],
   "brackets_de": [],
   "appeals": [],
@@ -251,6 +223,11 @@
       "timestamp": "2026-08-01 14:43:39",
       "user": "Admin",
       "action": "Challenge #1 (Speed Run) gelöscht"
+    },
+    {
+      "timestamp": "2026-08-01 14:43:51",
+      "user": "Admin",
+      "action": "KotH Spiel 'Counter Strike 2' gelöscht"
     }
   ],
   "challenge_games": {}
