@@ -293,12 +293,12 @@
       "timestamp": "2026-08-01 14:32:40",
       "user": "Admin",
       "action": "Challenge-Spiel 'Elden Ring' gelöscht"
+    },
+    {
+      "timestamp": "2026-08-01 14:32:41",
+      "user": "Admin",
+      "action": "Challenge-Spiel 'Counter Strike' gelöscht"
     }
   ],
-  "challenge_games": {
-    "2": {
-      "name": "Counter Strike",
-      "cover": ""
-    }
-  }
+  "challenge_games": {}
 }
