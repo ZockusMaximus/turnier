@@ -79,7 +79,14 @@
       "description": "Besiege den ersten Boss ohne Schaden zu nehmen",
       "difficulty": "Schwer",
       "timestamp": "2026-08-01 19:18:05",
-      "completions": []
+      "completions": [
+        {
+          "player": "Victor",
+          "rating": 2,
+          "comment": "Zu einfach",
+          "timestamp": "2026-08-01 19:18:44"
+        }
+      ]
     }
   ],
   "brackets_de": [],
@@ -429,6 +436,11 @@
       "timestamp": "2026-08-01 19:18:05",
       "user": "Marcel",
       "action": "Challenge '1er Boss No Hit' von Marcel erstellt."
+    },
+    {
+      "timestamp": "2026-08-01 19:18:44",
+      "user": "Victor",
+      "action": "Challenge #1 von Victor absolviert."
     }
   ],
   "challenge_games": {
@@ -459,6 +471,14 @@
       "timestamp": "2026-08-01 19:18:05",
       "title": "🎯 Neue Challenge: 1er Boss No Hit",
       "content_html": "<b>Marcel</b> hat eine neue Challenge für <span style='color:#00f0ff;'><b>Elden Ring</b></span> herausgegeben! Schwierigkeit: <b>Schwer</b>",
+      "category": "CHALLENGE",
+      "custom_color": ""
+    },
+    {
+      "id": 4,
+      "timestamp": "2026-08-01 19:18:44",
+      "title": "🏆 Challenge Meisterschaft!",
+      "content_html": "🏆 <b>Victor</b> hat die Challenge <b>1er Boss No Hit</b> (<span style='color:#00f0ff;'><b>Elden Ring</b></span>) erfolgreich gemeistert!",
       "category": "CHALLENGE",
       "custom_color": ""
     }
