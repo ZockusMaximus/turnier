@@ -99,7 +99,7 @@ def get_default_data():
         },
         "players": {},
         "games": {},           # KotH Spiele
-        "challenge_games": {}, # KPL. SEPARATE Spiele-Datenbank für Challenges
+        "challenge_games": {}, # Separate Spiele-Datenbank für Challenges
         "koth": {},
         "challenges": [],
         "brackets_de": [],
@@ -162,7 +162,6 @@ def add_audit_log(data, action, user="System"):
     })
 
 def resolve_steam_cover(input_val, custom_cover=""):
-    """Zuverlässiges Zielen auf Steam Cover oder Custom URLs."""
     if custom_cover and custom_cover.strip():
         return custom_cover.strip()
     
@@ -171,11 +170,9 @@ def resolve_steam_cover(input_val, custom_cover=""):
     
     input_str = str(input_val).strip()
     
-    # 1. Wenn es bereits eine direkte Bild-URL ist
     if input_str.startswith("http") and any(input_str.endswith(ext) for ext in [".jpg", ".png", ".jpeg", ".webp"]):
         return input_str
 
-    # 2. Extrahiere AppID aus Steam-URL oder Reine Zahl
     appid_match = re.search(r'/app/(\d+)', input_str)
     if appid_match:
         appid = appid_match.group(1)
@@ -185,10 +182,8 @@ def resolve_steam_cover(input_val, custom_cover=""):
         appid = None
 
     if appid:
-        # Steam Header Banner API URL
         return f"https://cdn.cloudflare.steamstatic.com/steam/apps/{appid}/header.jpg"
         
-    # Falls es ein normaler Web-Link ohne extrahierbare AppID ist
     if input_str.startswith("http"):
         return input_str
         
@@ -215,7 +210,7 @@ page = st.sidebar.radio(
 )
 
 # ------------------------------------------------------------------------------
-# 4. KING OF THE HILL (MIT DIREKT-KÖNIG ERSTELLUNG)
+# 4. KING OF THE HILL
 # ------------------------------------------------------------------------------
 if page == "👑 King of the Hill":
     st.title("👑 KING OF THE HILL")
@@ -245,7 +240,6 @@ if page == "👑 King of the Hill":
                         "custom_cover": g_cover,
                         "link": g_link
                     }
-                    # Direkt der erste King werden!
                     db.setdefault("koth", {})[new_id] = {
                         "king": creator, 
                         "streak": 1, 
@@ -254,8 +248,7 @@ if page == "👑 King of the Hill":
                             "defender": creator,
                             "challenger": "Thron-Gründung",
                             "winner": creator,
-                            "format": "Kröne dich selbst",
-                            "comment": "Thron gegründet"
+                            "format": "Kröne dich selbst"
                         }]
                     }
                     add_audit_log(db, f"Spiel '{g_name}' angelegt. Erster King: {creator}", user=creator)
@@ -343,7 +336,7 @@ if page == "👑 King of the Hill":
                 st.caption(f"{entry['defender']} vs {entry['challenger']}")
 
 # ------------------------------------------------------------------------------
-# 5. CHALLENGES (FARBIGE DIFFICULTY BADGES & SEPARATE SPIELE-DATENBANK)
+# 5. CHALLENGES
 # ------------------------------------------------------------------------------
 elif page == "🎯 Challenges":
     st.title("🎯 CHALLENGES & HERAUSFORDERUNGEN")
@@ -358,7 +351,6 @@ elif page == "🎯 Challenges":
         if not player_list:
             st.error("Lege zuerst Spieler im Admin-Bereich an!")
         else:
-            # Option ein Challenge-Spiel direkt anzulegen
             with st.expander("➕ Neues Spiel für Challenges anlegen (Separat von KotH)"):
                 cg_name = st.text_input("Challenge-Spiel Name", placeholder="z.B. Elden Ring")
                 cg_cover = st.text_input("Cover Bild-URL oder Steam Link", placeholder="Steam Link / Bild URL")
@@ -419,7 +411,6 @@ elif page == "🎯 Challenges":
             for c in reversed(challenges):
                 cg_info = challenge_games.get(c.get("challenge_game_id"), {"name": "Allgemein", "cover": ""})
                 cover = resolve_steam_cover(cg_info.get("cover"))
-                
                 diff_class = diff_css_map.get(c['difficulty'], 'diff-mittel')
                 
                 with st.container(border=True):
@@ -597,7 +588,7 @@ elif page == "📩 Einspruch & Anträge":
                         st.rerun()
 
 # ------------------------------------------------------------------------------
-# 8. ADMIN-BEREICH (PASSWORT: zm1234)
+# 8. ADMIN-BEREICH (MIT FULL DELETE KOTH & CHALLENGE OPTIONS)
 # ------------------------------------------------------------------------------
 elif page == "⚙️ Admin-Bereich":
     st.title("⚙️ ADMIN CONTROL PANEL")
@@ -611,9 +602,10 @@ elif page == "⚙️ Admin-Bereich":
         st.success("Authentifizierung erfolgreich.")
         
         tab_admin = st.tabs([
-            "🎮 Spiele", 
+            "🎮 KotH Spiele", 
+            "🎯 Challenges",
             "👥 Spieler", 
-            "🌿 Bracket Generator", 
+            "🌿 Brackets", 
             "👑 KotH Overrides", 
             "🔒 Status", 
             "📩 Einsprüche", 
@@ -621,21 +613,79 @@ elif page == "⚙️ Admin-Bereich":
             "💾 Backup"
         ])
         
-        # TAB 1: Spiele Verwaltung
+        # TAB 1: KotH Spiele & Historie Löschen
         with tab_admin[0]:
-            st.subheader("KotH Spiele verwalten")
+            st.subheader("👑 KotH Spiele & Match-Historie Löschen")
             games = db.get("games", {})
-            for g_id, g in list(games.items()):
-                c1, c2 = st.columns([3, 1])
-                c1.write(f"**ID {g_id}: {g['name']}** (Gründer: {g.get('creator', 'Admin')})")
-                if c2.button(f"Löschen #{g_id}", key=f"del_g_{g_id}"):
-                    del games[g_id]
-                    if g_id in db["koth"]: del db["koth"][g_id]
-                    update_db()
-                    st.rerun()
+            if not games:
+                st.info("Keine KotH-Spiele vorhanden.")
+            else:
+                for g_id, g in list(games.items()):
+                    with st.container(border=True):
+                        c1, c2 = st.columns([3, 1])
+                        c1.markdown(f"### ID {g_id}: {g['name']}")
+                        c1.write(f"Ersteller: **{g.get('creator', 'Admin')}**")
+                        
+                        if c2.button(f"🗑️ Spiel komplett löschen", key=f"del_g_{g_id}"):
+                            del games[g_id]
+                            if g_id in db.get("koth", {}): 
+                                del db["koth"][g_id]
+                            add_audit_log(db, f"KotH Spiel '{g['name']}' gelöscht", user="Admin")
+                            update_db()
+                            st.rerun()
+                        
+                        # KotH Matches löschen
+                        k_hist = db.get("koth", {}).get(g_id, {}).get("history", [])
+                        if k_hist:
+                            with st.expander(f"Einzelne Matches von '{g['name']}' löschen ({len(k_hist)} Matches)"):
+                                for h_idx, h in enumerate(reversed(k_hist)):
+                                    real_idx = len(k_hist) - 1 - h_idx
+                                    col_m, col_btn = st.columns([4, 1])
+                                    col_m.write(f"Match #{real_idx+1}: **{h['winner']}** gewann ({h['timestamp']})")
+                                    if col_btn.button("Match Löschen", key=f"del_km_{g_id}_{real_idx}"):
+                                        k_hist.pop(real_idx)
+                                        add_audit_log(db, f"KotH Match #{real_idx+1} in {g['name']} gelöscht.", user="Admin")
+                                        update_db()
+                                        st.rerun()
 
-        # TAB 2: Spieler-Verwaltung
+        # TAB 2: Challenges Löschen (Spiele & einzelne Challenges)
         with tab_admin[1]:
+            st.subheader("🎯 Challenges & Challenge-Spiele Verwalten / Löschen")
+            
+            st.markdown("#### 1. Einzelne Challenges löschen")
+            challenges = db.get("challenges", [])
+            if not challenges:
+                st.write("Keine aktiven Challenges vorhanden.")
+            else:
+                for c_idx, c in enumerate(list(challenges)):
+                    with st.container(border=True):
+                        c1, c2 = st.columns([3, 1])
+                        c1.write(f"**Challenge #{c['id']}: {c['title']}** (Schwierigkeit: {c['difficulty']})")
+                        c1.caption(f"Erstellt von {c['creator']} am {c['timestamp']}")
+                        
+                        if c2.button("🗑️ Challenge Löschen", key=f"del_c_{c['id']}"):
+                            challenges.pop(c_idx)
+                            add_audit_log(db, f"Challenge #{c['id']} ({c['title']}) gelöscht", user="Admin")
+                            update_db()
+                            st.rerun()
+            
+            st.markdown("---")
+            st.markdown("#### 2. Challenge-Spiele löschen")
+            c_games = db.get("challenge_games", {})
+            if not c_games:
+                st.write("Keine Challenge-Spiele vorhanden.")
+            else:
+                for cg_id, cg in list(c_games.items()):
+                    c1, c2 = st.columns([3, 1])
+                    c1.write(f"**ID {cg_id}: {cg['name']}**")
+                    if c2.button(f"🗑️ Challenge-Spiel Löschen", key=f"del_cg_{cg_id}"):
+                        del c_games[cg_id]
+                        add_audit_log(db, f"Challenge-Spiel '{cg['name']}' gelöscht", user="Admin")
+                        update_db()
+                        st.rerun()
+
+        # TAB 3: Spieler-Verwaltung
+        with tab_admin[2]:
             st.subheader("Spieler hinzufügen / löschen")
             c1, c2 = st.columns(2)
             new_p = c1.text_input("Neuer Spieler Name")
@@ -653,9 +703,25 @@ elif page == "⚙️ Admin-Bereich":
                 update_db()
                 st.rerun()
 
-        # TAB 3: Double Elimination Bracket Generator
-        with tab_admin[2]:
-            st.subheader("🌿 Double Elimination Bracket Generator")
+        # TAB 4: Double Elimination Bracket Generator
+        with tab_admin[3]:
+            st.subheader("🌿 Double Elimination Bracket Generator & Löschen")
+            
+            # Brackets löschen
+            brackets = db.get("brackets_de", [])
+            if brackets:
+                st.markdown("#### Aktive Brackets löschen")
+                for b_idx, b in enumerate(list(brackets)):
+                    c1, c2 = st.columns([3, 1])
+                    c1.write(f"**Bracket #{b['id']}: {b['name']}** ({b.get('game_name', 'General')})")
+                    if c2.button("🗑️ Bracket Löschen", key=f"del_b_{b['id']}"):
+                        brackets.pop(b_idx)
+                        add_audit_log(db, f"Bracket '{b['name']}' gelöscht", user="Admin")
+                        update_db()
+                        st.rerun()
+                st.markdown("---")
+
+            st.markdown("#### Neues Bracket Erstellen")
             p_list = list(db["players"].keys())
             
             if len(p_list) < 2:
@@ -714,8 +780,8 @@ elif page == "⚙️ Admin-Bereich":
                     st.success("Bracket erfolgreich erstellt!")
                     st.rerun()
 
-        # TAB 4: KotH Overrides
-        with tab_admin[3]:
+        # TAB 5: KotH Overrides
+        with tab_admin[4]:
             st.subheader("👑 King of the Hill Override")
             games = db.get("games", {})
             if games:
@@ -734,8 +800,8 @@ elif page == "⚙️ Admin-Bereich":
                     st.success("KotH geändert!")
                     st.rerun()
 
-        # TAB 5: Status Control
-        with tab_admin[4]:
+        # TAB 6: Status Control
+        with tab_admin[5]:
             st.subheader("🔒 Bracket Status")
             c1, c2 = st.columns(2)
             if c1.button("🟢 ÖFFNEN"):
@@ -747,28 +813,33 @@ elif page == "⚙️ Admin-Bereich":
                 update_db()
                 st.rerun()
 
-        # TAB 6: Einsprüche
-        with tab_admin[5]:
-            st.subheader("📩 Einsprüche bearbeiten")
-            for app in db["appeals"]:
-                st.write(f"#{app['id']} von {app['sender']} gegen {app['target']}")
-                c1, c2 = st.columns(2)
-                if c1.button("Klären", key=f"acc_{app['id']}"):
-                    app["status"] = "GEKLÄRT"
-                    update_db()
-                    st.rerun()
-                if c2.button("Ablehnen", key=f"rej_{app['id']}"):
-                    app["status"] = "ABGELEHNT"
-                    update_db()
-                    st.rerun()
-
-        # TAB 7: Logs
+        # TAB 7: Einsprüche
         with tab_admin[6]:
+            st.subheader("📩 Einsprüche bearbeiten / löschen")
+            for a_idx, app in enumerate(list(db["appeals"])):
+                with st.container(border=True):
+                    st.write(f"#{app['id']} von **{app['sender']}** gegen **{app['target']}**: {app['reason']}")
+                    c1, c2, c3 = st.columns(3)
+                    if c1.button("Klären", key=f"acc_{app['id']}"):
+                        app["status"] = "GEKLÄRT"
+                        update_db()
+                        st.rerun()
+                    if c2.button("Ablehnen", key=f"rej_{app['id']}"):
+                        app["status"] = "ABGELEHNT"
+                        update_db()
+                        st.rerun()
+                    if c3.button("🗑️ Löschen", key=f"del_app_{app['id']}"):
+                        db["appeals"].pop(a_idx)
+                        update_db()
+                        st.rerun()
+
+        # TAB 8: Logs
+        with tab_admin[7]:
             st.subheader("📊 Audit Logs")
             st.dataframe(db["audit_logs"], use_container_width=True)
 
-        # TAB 8: Backup
-        with tab_admin[7]:
+        # TAB 9: Backup
+        with tab_admin[8]:
             st.subheader("💾 Backup & Restore")
             st.download_button("data.json herunterladen", data=json.dumps(db, indent=2, ensure_ascii=False), file_name="data_backup.json")
             up_file = st.file_uploader("Backup hochladen", type=["json"])
