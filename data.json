@@ -64,7 +64,14 @@
       "description": "Dies das",
       "difficulty": "Schwer",
       "timestamp": "2026-08-01 14:14:59",
-      "completions": []
+      "completions": [
+        {
+          "player": "Alexander",
+          "rating": 3,
+          "comment": "",
+          "timestamp": "2026-08-01 14:15:30"
+        }
+      ]
     }
   ],
   "brackets_de": [
@@ -254,6 +261,11 @@
       "timestamp": "2026-08-01 14:14:59",
       "user": "Victor",
       "action": "Challenge 'sei der schnellste' von Victor erstellt."
+    },
+    {
+      "timestamp": "2026-08-01 14:15:30",
+      "user": "Alexander",
+      "action": "Challenge #1 von Alexander absolviert."
     }
   ]
 }
