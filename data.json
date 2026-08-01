@@ -55,7 +55,14 @@
       "description": "asdasd",
       "difficulty": "Mittel",
       "timestamp": "2026-08-01 14:29:20",
-      "completions": []
+      "completions": [
+        {
+          "player": "Victor",
+          "rating": 1,
+          "comment": "",
+          "timestamp": "2026-08-01 14:30:59"
+        }
+      ]
     },
     {
       "id": 2,
@@ -312,6 +319,11 @@
       "timestamp": "2026-08-01 14:30:17",
       "user": "Victor",
       "action": "Challenge #2 von Victor absolviert."
+    },
+    {
+      "timestamp": "2026-08-01 14:30:59",
+      "user": "Victor",
+      "action": "Challenge #1 von Victor absolviert."
     }
   ],
   "challenge_games": {
