@@ -697,14 +697,14 @@
             "p2": "Sascha",
             "p1_origin": "Gewinner W1M3",
             "p2_origin": "Gewinner W1M4",
-            "winner": null
+            "winner": "Marcel"
           }
         ],
         [
           {
             "id": "W3M1",
             "p1": "Victor",
-            "p2": "TBD",
+            "p2": "Marcel",
             "p1_origin": "Gewinner W2M1",
             "p2_origin": "Gewinner W2M2",
             "winner": null
