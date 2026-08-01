@@ -69,7 +69,19 @@
       ]
     }
   },
-  "challenges": [],
+  "challenges": [
+    {
+      "id": 1,
+      "creator": "Marcel",
+      "challenge_game_id": "1",
+      "title": "1er Boss No Hit",
+      "custom_cover": "",
+      "description": "Besiege den ersten Boss ohne Schaden zu nehmen",
+      "difficulty": "Schwer",
+      "timestamp": "2026-08-01 19:18:05",
+      "completions": []
+    }
+  ],
   "brackets_de": [],
   "appeals": [],
   "audit_logs": [
@@ -412,6 +424,11 @@
       "timestamp": "2026-08-01 19:14:41",
       "user": "Alexander",
       "action": "KotH Spiel 'Age of Empires 4' angelegt von Alexander. King: Alexander"
+    },
+    {
+      "timestamp": "2026-08-01 19:18:05",
+      "user": "Marcel",
+      "action": "Challenge '1er Boss No Hit' von Marcel erstellt."
     }
   ],
   "challenge_games": {
@@ -435,6 +452,14 @@
       "title": "👑 Neuer Thron errichtet: Age of Empires 4",
       "content_html": "<b>Alexander</b> hat den Thron für <span style='color:#00f0ff;'><b>Age of Empires 4</b></span> errichtet und ist der erste König!",
       "category": "KOTH",
+      "custom_color": ""
+    },
+    {
+      "id": 3,
+      "timestamp": "2026-08-01 19:18:05",
+      "title": "🎯 Neue Challenge: 1er Boss No Hit",
+      "content_html": "<b>Marcel</b> hat eine neue Challenge für <span style='color:#00f0ff;'><b>Elden Ring</b></span> herausgegeben! Schwierigkeit: <b>Schwer</b>",
+      "category": "CHALLENGE",
       "custom_color": ""
     }
   ]
