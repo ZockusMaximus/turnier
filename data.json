@@ -604,6 +604,14 @@
       "content_html": "Das Turnier in <b>Blood Bowl 2</b> wurde gestartet! 6 Teilnehmer.",
       "category": "GENERAL",
       "custom_color": "#00f0ff"
+    },
+    {
+      "id": 12,
+      "timestamp": "2026-08-01 22:47:02",
+      "title": "👑 CHAMPION GEKRÖNT: Alexander",
+      "content_html": "<b>Alexander</b> hat das Turnier <b>Blood Bowl 2</b> gewonnen!",
+      "category": "BRACKET",
+      "custom_color": "#f59e0b"
     }
   ],
   "brackets": {
@@ -615,7 +623,7 @@
       "link": "https://store.steampowered.com/app/236690/",
       "type": "double",
       "created_at": "2026-08-01 22:45:10",
-      "champion": null,
+      "champion": "Alexander",
       "rounds": [
         [
           {
@@ -734,7 +742,7 @@
         "p2": "Sascha",
         "p1_origin": "Winner Champ",
         "p2_origin": "Loser Champ",
-        "winner": null,
+        "winner": "Alexander",
         "active": true
       }
     }
