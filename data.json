@@ -644,6 +644,14 @@
       "content_html": "<b>Victor</b> hat das Turnier <b>Mortal Kombat 1</b> gewonnen!",
       "category": "BRACKET",
       "custom_color": "#f59e0b"
+    },
+    {
+      "id": 17,
+      "timestamp": "2026-08-01 23:03:00",
+      "title": "🏆 Neues Schweizer System Turnier: Blood Bowl 2",
+      "content_html": "Das Turnier in <b>Blood Bowl 2</b> wurde gestartet! 6 Teilnehmer.",
+      "category": "GENERAL",
+      "custom_color": "#00f0ff"
     }
   ],
   "brackets": {
@@ -849,6 +857,98 @@
         "winner": null,
         "active": false
       }
+    },
+    "swiss": {
+      "game_name": "Blood Bowl 2",
+      "cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/236690/header.jpg",
+      "rules": "",
+      "link": "https://store.steampowered.com/app/236690/",
+      "type": "swiss",
+      "created_at": "2026-08-01 23:03:00",
+      "champion": null,
+      "total_rounds": 3,
+      "rounds": [
+        [
+          {
+            "id": "S1M1",
+            "p1": "Alexander",
+            "p2": "Marcel",
+            "winner": null
+          },
+          {
+            "id": "S1M2",
+            "p1": "Sascha",
+            "p2": "Jan",
+            "winner": null
+          },
+          {
+            "id": "S1M3",
+            "p1": "Stefan",
+            "p2": "Victor",
+            "winner": null
+          }
+        ],
+        [
+          {
+            "id": "S2M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "p1_origin": "Schweizer Matchmaking R2",
+            "p2_origin": "Schweizer Matchmaking R2",
+            "winner": null
+          },
+          {
+            "id": "S2M2",
+            "p1": "TBD",
+            "p2": "TBD",
+            "p1_origin": "Schweizer Matchmaking R2",
+            "p2_origin": "Schweizer Matchmaking R2",
+            "winner": null
+          },
+          {
+            "id": "S2M3",
+            "p1": "TBD",
+            "p2": "TBD",
+            "p1_origin": "Schweizer Matchmaking R2",
+            "p2_origin": "Schweizer Matchmaking R2",
+            "winner": null
+          }
+        ],
+        [
+          {
+            "id": "S3M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "p1_origin": "Schweizer Matchmaking R3",
+            "p2_origin": "Schweizer Matchmaking R3",
+            "winner": null
+          },
+          {
+            "id": "S3M2",
+            "p1": "TBD",
+            "p2": "TBD",
+            "p1_origin": "Schweizer Matchmaking R3",
+            "p2_origin": "Schweizer Matchmaking R3",
+            "winner": null
+          },
+          {
+            "id": "S3M3",
+            "p1": "TBD",
+            "p2": "TBD",
+            "p1_origin": "Schweizer Matchmaking R3",
+            "p2_origin": "Schweizer Matchmaking R3",
+            "winner": null
+          }
+        ]
+      ],
+      "players": [
+        "Victor",
+        "Alexander",
+        "Jan",
+        "Marcel",
+        "Sascha",
+        "Stefan"
+      ]
     }
   }
 }
