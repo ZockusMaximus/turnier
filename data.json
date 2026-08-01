@@ -704,16 +704,16 @@
         "p2": "Alexander",
         "p1_origin": "Winner Champ",
         "p2_origin": "Loser Champ",
-        "winner": null
+        "winner": "Alexander"
       },
       "grand_final_reset": {
         "id": "GF_RESET",
-        "p1": "TBD",
-        "p2": "TBD",
+        "p1": "Sascha",
+        "p2": "Alexander",
         "p1_origin": "Winner Champ",
         "p2_origin": "Loser Champ",
         "winner": null,
-        "active": false
+        "active": true
       }
     }
   }
