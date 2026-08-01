@@ -686,7 +686,7 @@
             "id": "W_R1_M1",
             "p1": "Alexander",
             "p2": "Victor",
-            "winner": null
+            "winner": "Alexander"
           },
           {
             "id": "W_R1_M2",
@@ -710,7 +710,7 @@
         [
           {
             "id": "W_R2_M1",
-            "p1": "TBD",
+            "p1": "Alexander",
             "p2": "TBD",
             "winner": null
           },
@@ -734,7 +734,7 @@
         [
           {
             "id": "L_R1_M1",
-            "p1": "TBD",
+            "p1": "Victor",
             "p2": "TBD",
             "winner": null
           },
