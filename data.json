@@ -92,7 +92,14 @@
       "description": "schneller als 5h",
       "difficulty": "Extrem",
       "timestamp": "2026-08-01 14:53:18",
-      "completions": []
+      "completions": [
+        {
+          "player": "Jan",
+          "rating": 2,
+          "comment": "",
+          "timestamp": "2026-08-01 14:53:41"
+        }
+      ]
     }
   ],
   "brackets_de": [],
@@ -322,6 +329,11 @@
       "timestamp": "2026-08-01 14:53:18",
       "user": "Victor",
       "action": "Challenge 'Speedrun ' von Victor erstellt."
+    },
+    {
+      "timestamp": "2026-08-01 14:53:41",
+      "user": "Jan",
+      "action": "Challenge #1 von Jan absolviert."
     }
   ],
   "challenge_games": {
