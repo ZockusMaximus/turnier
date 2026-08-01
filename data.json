@@ -57,7 +57,7 @@
     },
     "2": {
       "king": "Sascha",
-      "streak": 1,
+      "streak": 2,
       "history": [
         {
           "timestamp": "2026-08-01 15:10:16",
@@ -70,6 +70,13 @@
           "timestamp": "2026-08-01 15:13:53",
           "defender": "Marcel",
           "challenger": "Sascha",
+          "winner": "Sascha",
+          "format": "Best of 3 (Bo3)"
+        },
+        {
+          "timestamp": "2026-08-01 15:14:09",
+          "defender": "Sascha",
+          "challenger": "Victor",
           "winner": "Sascha",
           "format": "Best of 3 (Bo3)"
         }
@@ -406,6 +413,11 @@
       "timestamp": "2026-08-01 15:13:53",
       "user": "Sascha",
       "action": "KotH (War Thunder): Sascha gewann gegen Marcel"
+    },
+    {
+      "timestamp": "2026-08-01 15:14:09",
+      "user": "Sascha",
+      "action": "KotH (War Thunder): Sascha gewann gegen Victor"
     }
   ],
   "challenge_games": {
