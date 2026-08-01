@@ -4,6 +4,8 @@ import os
 import requests
 import base64
 import re
+import math
+import random
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -41,9 +43,9 @@ st.markdown("""
         border-right: 2px solid #00f0ff !important;
     }
     section[data-testid="stSidebar"] .stRadio label {
-        font-size: 1.2rem !important;
+        font-size: 1.15rem !important;
         font-weight: 800 !important;
-        padding: 8px !important;
+        padding: 6px !important;
         color: #00f0ff !important;
         text-transform: uppercase;
     }
@@ -112,10 +114,27 @@ st.markdown("""
 
     .challenge-body {
         flex: 1;
-        min-width: 0; /* Verhindert Overspill im Flex-Layout */
+        min-width: 0;
     }
 
-    /* Mobile Adaption */
+    /* Bracket Styling */
+    .bracket-node {
+        border: 1.5px solid #00f0ff;
+        background: #111622;
+        border-radius: 6px;
+        padding: 10px;
+        margin-bottom: 12px;
+        box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+    }
+    .bracket-node-winner {
+        border: 2px solid #10b981;
+        background: rgba(16, 185, 129, 0.15);
+    }
+    .bracket-bye {
+        opacity: 0.6;
+        font-style: italic;
+    }
+
     @media (max-width: 768px) {
         .challenge-flex-container {
             flex-direction: column;
@@ -128,7 +147,6 @@ st.markdown("""
         }
     }
 
-    /* Blauer Neon-Rahmen für Regeln */
     .rules-blue-box {
         border: 1.5px solid #00f0ff !important;
         background: rgba(0, 240, 255, 0.08) !important;
@@ -139,7 +157,6 @@ st.markdown("""
         font-size: 0.95rem;
     }
     
-    /* News Cards */
     .news-card {
         border-left: 5px solid #00f0ff;
         background: #111520;
@@ -159,14 +176,12 @@ st.markdown("""
         box-shadow: 0 0 12px rgba(168, 85, 247, 0.3) !important;
     }
     
-    /* Difficulty Badges */
     .diff-leicht { background-color: #10b981; color: #000; padding: 3px 8px; border-radius: 4px; font-weight: 800; display: inline-block; }
     .diff-mittel { background-color: #f59e0b; color: #000; padding: 3px 8px; border-radius: 4px; font-weight: 800; display: inline-block; }
     .diff-schwer { background-color: #f97316; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: 800; display: inline-block; }
     .diff-extrem { background-color: #ef4444; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: 800; display: inline-block; }
     .diff-unmoeglich { background-color: #a855f7; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: 800; box-shadow: 0 0 10px #a855f7; display: inline-block; }
 
-    /* Creator & King Boxes */
     .creator-box {
         background: rgba(0, 240, 255, 0.12);
         border: 1.5px solid #00f0ff;
@@ -200,7 +215,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ------------------------------------------------------------------------------
-# 2. PERSISTENZ & STEAM API ENGINE
+# 2. PERSISTENZ & BRACKET ENGINE (SMART BYE-SYSTEM)
 # ------------------------------------------------------------------------------
 DATA_FILE = "data.json"
 BERLIN_TZ = ZoneInfo("Europe/Berlin")
@@ -219,6 +234,10 @@ def get_default_data():
         "challenge_games": {},
         "koth": {},
         "challenges": [],
+        "brackets": {
+            "single": None,
+            "double": None
+        },
         "appeals": [],
         "audit_logs": []
     }
@@ -257,6 +276,7 @@ def load_data():
             data = json.load(f)
             data.setdefault("challenge_games", {})
             data.setdefault("news", [])
+            data.setdefault("brackets", {"single": None, "double": None})
             return data
     except Exception:
         return get_default_data()
@@ -316,6 +336,86 @@ def fetch_steam_info(game_name, custom_cover=""):
 
     return "https://via.placeholder.com/460x215/1e293b/00f0ff?text=KEIN+COVER", ""
 
+# ------------------------------------------------------------------------------
+# BRACKET GENERATION & AUTO-ADVANCE LOGIC
+# ------------------------------------------------------------------------------
+def generate_single_elimination(game_name, players):
+    n = len(players)
+    if n < 2: return None
+    
+    # Nächste 2er-Potenz finden (z.B. 3 -> 4, 5 -> 8)
+    next_pow = 1 << (n - 1).bit_length() if n > 1 else 2
+    if next_pow < 2: next_pow = 2
+    
+    num_byes = next_pow - n
+    shuffled = players.copy()
+    random.shuffle(shuffled)
+    
+    slots = []
+    for p in shuffled:
+        slots.append(p)
+    for _ in range(num_byes):
+        slots.append("BYE (Freilos)")
+        
+    num_rounds = int(math.log2(next_pow))
+    rounds = []
+    
+    # Runde 1 aufbauen
+    r1_matches = []
+    for i in range(0, next_pow, 2):
+        p1 = slots[i]
+        p2 = slots[i+1]
+        winner = None
+        if p1 == "BYE (Freilos)": winner = p2
+        elif p2 == "BYE (Freilos)": winner = p1
+        
+        r1_matches.append({
+            "id": f"R1_M{len(r1_matches)+1}",
+            "p1": p1,
+            "p2": p2,
+            "winner": winner
+        })
+    rounds.append(r1_matches)
+    
+    # Folge-Runden leere Platzhalter aufbauen
+    for r in range(2, num_rounds + 1):
+        prev_count = len(rounds[-1])
+        r_matches = []
+        for m in range(prev_count // 2):
+            r_matches.append({
+                "id": f"R{r}_M{m+1}",
+                "p1": "TBD",
+                "p2": "TBD",
+                "winner": None
+            })
+        rounds.append(r_matches)
+        
+    bracket = {
+        "game_name": game_name,
+        "type": "single",
+        "created_at": get_now_str(),
+        "rounds": rounds
+    }
+    update_bracket_advancements(bracket)
+    return bracket
+
+def update_bracket_advancements(bracket):
+    """Rechnet automatisch Gewinner in die nächsten Runden durch."""
+    rounds = bracket["rounds"]
+    for r_idx in range(len(rounds) - 1):
+        curr_round = rounds[r_idx]
+        next_round = rounds[r_idx + 1]
+        
+        for m_idx, match in enumerate(curr_round):
+            winner = match.get("winner")
+            target_match_idx = m_idx // 2
+            target_slot = "p1" if (m_idx % 2 == 0) else "p2"
+            
+            if winner:
+                next_round[target_match_idx][target_slot] = winner
+            else:
+                next_round[target_match_idx][target_slot] = "TBD"
+
 if "db" not in st.session_state:
     st.session_state.db = load_data()
 
@@ -334,7 +434,7 @@ st.sidebar.markdown("<div class='glowing-divider' style='margin: 15px 0;'></div>
 
 page = st.sidebar.radio(
     "NAVIGATION",
-    ["📰 News", "👑 King of the Hill", "🎯 Challenges", "📩 Einspruch & Anträge", "⚙️ Admin-Bereich"]
+    ["📰 News", "🏆 Turniere & Brackets", "👑 King of the Hill", "🎯 Challenges", "📩 Einspruch & Anträge", "⚙️ Admin-Bereich"]
 )
 
 # ------------------------------------------------------------------------------
@@ -389,7 +489,94 @@ if page == "📰 News":
             """, unsafe_allow_html=True)
 
 # ------------------------------------------------------------------------------
-# 5. KING OF THE HILL
+# 5. TURNIERE & BRACKETS (SINGLE & DOUBLE ELIMINATION)
+# ------------------------------------------------------------------------------
+elif page == "🏆 Turniere & Brackets":
+    st.title("🏆 TURNIERE & BRACKETS")
+    
+    tab_single, tab_double = st.tabs(["🔥 Single Elimination", "⚡ Double Elimination"])
+    brackets_data = db.setdefault("brackets", {"single": None, "double": None})
+    
+    # REITER 1: SINGLE ELIMINATION
+    with tab_single:
+        single_b = brackets_data.get("single")
+        if not single_b:
+            st.info("Aktuell ist kein Single-Elimination Turnier aktiv. Der Admin kann ein neues Turnier im Admin-Bereich erstellen.")
+        else:
+            st.subheader(f"⚔️ Turnier: {single_b['game_name']} (Single Elimination)")
+            st.caption(f"Erstellt am: {single_b['created_at']}")
+            
+            update_bracket_advancements(single_b)
+            rounds = single_b["rounds"]
+            
+            st.markdown("### 📊 Bracket Diagramm & Übersicht")
+            cols = st.columns(len(rounds))
+            for r_idx, r_matches in enumerate(rounds):
+                with cols[r_idx]:
+                    r_title = f"Runde {r_idx+1}" if r_idx < len(rounds)-1 else "🏆 FINALE"
+                    st.markdown(f"#### {r_title}")
+                    
+                    for m in r_matches:
+                        p1_str = m['p1']
+                        p2_str = m['p2']
+                        winner = m.get('winner')
+                        
+                        p1_class = "bracket-node-winner" if winner == p1_str and p1_str != "TBD" else ""
+                        p2_class = "bracket-node-winner" if winner == p2_str and p2_str != "TBD" else ""
+                        
+                        st.markdown(f"""
+                        <div class="bracket-node">
+                            <div class="{p1_class}" style="padding: 4px; border-radius: 4px;">👤 <b>{p1_str}</b></div>
+                            <div style="text-align: center; color: #64748b; font-size: 0.8em; margin: 2px 0;">VS</div>
+                            <div class="{p2_class}" style="padding: 4px; border-radius: 4px;">👤 <b>{p2_str}</b></div>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+            st.markdown("<div class='glowing-divider'></div>", unsafe_allow_html=True)
+            st.markdown("### ✏️ Match-Ergebnisse eintragen")
+            
+            for r_idx, r_matches in enumerate(rounds):
+                st.markdown(f"#### Runde {r_idx+1}")
+                for m_idx, m in enumerate(r_matches):
+                    p1, p2 = m['p1'], m['p2']
+                    if p1 in ["TBD", "BYE (Freilos)"] and p2 in ["TBD", "BYE (Freilos)"]:
+                        continue
+                    
+                    with st.container(border=True):
+                        c1, c2 = st.columns([2, 1])
+                        c1.write(f"Match **{m['id']}**: **{p1}** vs **{p2}**")
+                        
+                        if m.get('winner'):
+                            c1.success(f"Sieger: {m['winner']}")
+                        
+                        opts = ["- Noch offen -"]
+                        if p1 not in ["TBD", "BYE (Freilos)"]: opts.append(p1)
+                        if p2 not in ["TBD", "BYE (Freilos)"]: opts.append(p2)
+                        
+                        curr_win_idx = opts.index(m['winner']) if m.get('winner') in opts else 0
+                        new_winner = c2.selectbox("Sieger wählen", opts, index=curr_win_idx, key=f"sel_sing_{r_idx}_{m_idx}")
+                        
+                        if c2.button("Ergebnis Speichern", key=f"btn_sing_{r_idx}_{m_idx}"):
+                            m['winner'] = None if new_winner == "- Noch offen -" else new_winner
+                            update_bracket_advancements(single_b)
+                            if new_winner != "- Noch offen -":
+                                add_audit_log(db, f"Bracket Single ({single_b['game_name']}): {new_winner} gewinnt Match {m['id']}", user=new_winner)
+                            update_db()
+                            st.success("Ergebnis aktualisiert!")
+                            st.rerun()
+
+    # REITER 2: DOUBLE ELIMINATION
+    with tab_double:
+        double_b = brackets_data.get("double")
+        if not double_b:
+            st.info("Aktuell ist kein Double-Elimination Turnier aktiv. Der Admin kann ein neues Turnier im Admin-Bereich erstellen.")
+        else:
+            st.subheader(f"⚡ Turnier: {double_b['game_name']} (Double Elimination)")
+            st.caption("Double Elimination befindet sich in Vorbereitung oder kann im Admin-Bereich als Vorlage gefüllt werden.")
+            st.write("Information: Ein automatisches Double Elimination Bracket kann aus dem Admin-Bereich verwaltet werden.")
+
+# ------------------------------------------------------------------------------
+# 6. KING OF THE HILL
 # ------------------------------------------------------------------------------
 elif page == "👑 King of the Hill":
     st.title("👑 KING OF THE HILL")
@@ -625,7 +812,7 @@ elif page == "👑 King of the Hill":
                 st.progress(percent / 100)
 
 # ------------------------------------------------------------------------------
-# 6. CHALLENGES (FIXED MOBILE RESPONSIVE LAYOUT)
+# 7. CHALLENGES
 # ------------------------------------------------------------------------------
 elif page == "🎯 Challenges":
     st.title("🎯 CHALLENGES")
@@ -716,7 +903,6 @@ elif page == "🎯 Challenges":
                 diff_class = diff_css_map.get(c['difficulty'], 'diff-mittel')
                 completions = c.get("completions", [])
                 
-                # REIN HTML GEHALTENES COMPACT/RESPONSIVE CONTAINER MIT VERVERSUCHEN DRIN
                 st.markdown(f"""
                 <div class="full-challenge-card">
                     <div class="challenge-flex-container">
@@ -732,7 +918,6 @@ elif page == "🎯 Challenges":
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # ABSOLVIERTE VERSUCHE
                 with st.container(border=True):
                     st.markdown("#### 🌟 Absolvierte Versuche")
                     if completions:
@@ -821,7 +1006,7 @@ elif page == "🎯 Challenges":
                         st.write(f"**Erstellte Challenges:** {', '.join(data['created_list']) if data['created_list'] else 'Keine'}")
 
 # ------------------------------------------------------------------------------
-# 7. EINSPRUCH & ANTRÄGE
+# 8. EINSPRUCH & ANTRÄGE
 # ------------------------------------------------------------------------------
 elif page == "📩 Einspruch & Anträge":
     st.title("📩 ANTRÄGE & EINSPRÜCHE")
@@ -868,7 +1053,7 @@ elif page == "📩 Einspruch & Anträge":
                         st.rerun()
 
 # ------------------------------------------------------------------------------
-# 8. ADMIN-BEREICH
+# 9. ADMIN-BEREICH (INKLUSIVE TURNIER- & BRACKET-VERWALTUNG)
 # ------------------------------------------------------------------------------
 elif page == "⚙️ Admin-Bereich":
     st.title("⚙️ ADMIN CONTROL PANEL")
@@ -883,6 +1068,7 @@ elif page == "⚙️ Admin-Bereich":
         
         tab_admin = st.tabs([
             "📰 News Verwaltung",
+            "🏆 Turnier Verwaltung",
             "👑 KotH Verwaltung", 
             "🎯 Challenge Verwaltung",
             "👥 Spieler-Verwaltung", 
@@ -941,9 +1127,65 @@ elif page == "⚙️ Admin-Bereich":
                             update_db()
                             st.rerun()
 
-        # TAB 2: KotH
+        # TAB 2: TURNIER VERWALTUNG (BRACKETS GENERIEREN & EDTIEREN)
         with tab_admin[1]:
-            st.subheader("👑 King of the Hill Vollkontrolle & Spiel-Informationen anpassen")
+            st.subheader("🏆 Turnier & Bracket-Generierung")
+            player_list = list(db["players"].keys())
+            
+            st.markdown("#### 1. Neues Single-Elimination Turnier generieren")
+            with st.form("create_single_bracket_form"):
+                t_game = st.text_input("Turnier-Spielname", placeholder="z.B. Rocket League 1v1, Street Fighter")
+                selected_players = st.multiselect("Teilnehmende Spieler wählen", player_list, default=player_list)
+                
+                if st.form_submit_button("🎲 Single-Elimination Bracket Generieren"):
+                    if not t_game or len(selected_players) < 2:
+                        st.error("Bitte gib einen Spielnamen ein und wähle mindestens 2 Spieler!")
+                    else:
+                        new_b = generate_single_elimination(t_game, selected_players)
+                        db.setdefault("brackets", {})["single"] = new_b
+                        add_audit_log(db, f"Neues Single-Elimination Bracket für {t_game} generiert.", user="Admin")
+                        
+                        news_html = f"🏆 Ein neues Single-Elimination Turnier in <span style='color:#00f0ff;'><b>{t_game}</b></span> mit {len(selected_players)} Spielern wurde gestartet!"
+                        add_news(db, f"🏆 Neues Turnier: {t_game}", news_html, category="GENERAL", custom_color="#00f0ff")
+                        
+                        update_db()
+                        st.success("Turnier erstellt!")
+                        st.rerun()
+
+            st.markdown("---")
+            st.markdown("#### 🛠️ Aktuelles Single-Bracket Override / Manuelle Anpassungen")
+            curr_single = db.get("brackets", {}).get("single")
+            if not curr_single:
+                st.info("Aktuell kein Single-Elimination Bracket zum Bearbeiten vorhanden.")
+            else:
+                st.write(f"Bearbeite Turnier: **{curr_single['game_name']}**")
+                for r_idx, r_matches in enumerate(curr_single["rounds"]):
+                    with st.expander(f"✏️ Manuelles Override - Runde {r_idx+1}"):
+                        for m_idx, m in enumerate(r_matches):
+                            st.write(f"**Match {m['id']}**")
+                            c1, c2, c3 = st.columns(3)
+                            edit_p1 = c1.text_input("Spieler 1", value=m['p1'], key=f"ov_p1_{r_idx}_{m_idx}")
+                            edit_p2 = c2.text_input("Spieler 2", value=m['p2'], key=f"ov_p2_{r_idx}_{m_idx}")
+                            edit_w = c3.text_input("Gewinner (manuell)", value=m.get('winner') or "", key=f"ov_w_{r_idx}_{m_idx}")
+                            
+                            if st.button("Slot Speichern", key=f"btn_ov_{r_idx}_{m_idx}"):
+                                m['p1'] = edit_p1
+                                m['p2'] = edit_p2
+                                m['winner'] = edit_w if edit_w.strip() else None
+                                update_bracket_advancements(curr_single)
+                                update_db()
+                                st.success("Slot aktualisiert!")
+                                st.rerun()
+
+                if st.button("🗑️ Single-Elimination Turnier Zurücksetzen / Löschen"):
+                    db["brackets"]["single"] = None
+                    update_db()
+                    st.success("Turnier gelöscht!")
+                    st.rerun()
+
+        # TAB 3: KotH
+        with tab_admin[2]:
+            st.subheader("👑 King of the Hill Vollkontrolle")
             games = db.get("games", {})
             if not games:
                 st.info("Keine KotH-Spiele vorhanden.")
@@ -989,8 +1231,8 @@ elif page == "⚙️ Admin-Bereich":
                             update_db()
                             st.rerun()
 
-        # TAB 3: Challenge Verwaltung
-        with tab_admin[2]:
+        # TAB 4: Challenge Verwaltung
+        with tab_admin[3]:
             st.subheader("🎯 Challenge-Spiele & Challenges verwalten")
             
             st.markdown("#### 1. Challenge-Spiele bearbeiten")
@@ -1053,8 +1295,8 @@ elif page == "⚙️ Admin-Bereich":
                             update_db()
                             st.rerun()
 
-        # TAB 4: Spieler-Verwaltung
-        with tab_admin[3]:
+        # TAB 5: Spieler-Verwaltung
+        with tab_admin[4]:
             st.subheader("👥 Spieler verwalten")
             c1, c2 = st.columns(2)
             new_p = c1.text_input("Neuer Spieler Name")
@@ -1072,8 +1314,8 @@ elif page == "⚙️ Admin-Bereich":
                 update_db()
                 st.rerun()
 
-        # TAB 5: Einsprüche
-        with tab_admin[4]:
+        # TAB 6: Einsprüche
+        with tab_admin[5]:
             st.subheader("📩 Einsprüche bearbeiten / löschen")
             for a_idx, app in enumerate(list(db["appeals"])):
                 with st.container(border=True):
@@ -1092,13 +1334,13 @@ elif page == "⚙️ Admin-Bereich":
                         update_db()
                         st.rerun()
 
-        # TAB 6: Logs
-        with tab_admin[5]:
+        # TAB 7: Logs
+        with tab_admin[6]:
             st.subheader("📊 Audit Logs")
             st.dataframe(db["audit_logs"], use_container_width=True)
 
-        # TAB 7: Backup
-        with tab_admin[6]:
+        # TAB 8: Backup
+        with tab_admin[7]:
             st.subheader("💾 Backup & Restore")
             st.download_button("data.json herunterladen", data=json.dumps(db, indent=2, ensure_ascii=False), file_name="data_backup.json")
             up_file = st.file_uploader("Backup hochladen", type=["json"])
