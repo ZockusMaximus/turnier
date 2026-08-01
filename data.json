@@ -56,7 +56,7 @@
       ]
     },
     "2": {
-      "king": "Marcel",
+      "king": "Sascha",
       "streak": 1,
       "history": [
         {
@@ -64,6 +64,13 @@
           "defender": "Marcel",
           "challenger": "Thron-Gründung",
           "winner": "Marcel",
+          "format": "Best of 3 (Bo3)"
+        },
+        {
+          "timestamp": "2026-08-01 15:13:53",
+          "defender": "Marcel",
+          "challenger": "Sascha",
+          "winner": "Sascha",
           "format": "Best of 3 (Bo3)"
         }
       ]
@@ -394,6 +401,11 @@
       "timestamp": "2026-08-01 15:13:05",
       "user": "Sascha",
       "action": "Challenge #2 von Sascha absolviert."
+    },
+    {
+      "timestamp": "2026-08-01 15:13:53",
+      "user": "Sascha",
+      "action": "KotH (War Thunder): Sascha gewann gegen Marcel"
     }
   ],
   "challenge_games": {
