@@ -259,12 +259,12 @@
       "timestamp": "2026-08-01 14:42:17",
       "user": "Victor",
       "action": "Challenge #1 von Victor absolviert."
+    },
+    {
+      "timestamp": "2026-08-01 14:43:37",
+      "user": "Admin",
+      "action": "Challenge-Spiel 'Elden Ring' gelöscht"
     }
   ],
-  "challenge_games": {
-    "1": {
-      "name": "Elden Ring",
-      "cover": ""
-    }
-  }
+  "challenge_games": {}
 }
