@@ -62,7 +62,14 @@
       "description": "Nimm dein Hut",
       "difficulty": "Mittel",
       "timestamp": "2026-08-01 14:41:36",
-      "completions": []
+      "completions": [
+        {
+          "player": "Victor",
+          "rating": 2,
+          "comment": "eigentlich ganz easy",
+          "timestamp": "2026-08-01 14:42:17"
+        }
+      ]
     }
   ],
   "brackets_de": [],
@@ -247,6 +254,11 @@
       "timestamp": "2026-08-01 14:41:36",
       "user": "Victor",
       "action": "Challenge 'Speed Run' von Victor erstellt."
+    },
+    {
+      "timestamp": "2026-08-01 14:42:17",
+      "user": "Victor",
+      "action": "Challenge #1 von Victor absolviert."
     }
   ],
   "challenge_games": {
