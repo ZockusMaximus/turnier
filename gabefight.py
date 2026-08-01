@@ -125,12 +125,22 @@ st.markdown("""
         background: rgba(16, 185, 129, 0.15);
     }
     
-    /* FREILOS SLOTS DEUTLICH ABHEBEN */
     .bracket-bye-slot {
         background: rgba(100, 116, 139, 0.2) !important;
         border: 1px dashed #64748b !important;
         color: #94a3b8 !important;
         font-style: italic;
+    }
+
+    /* IDIOTENSICHERES NEXT-MATCH BANNER */
+    .next-match-banner {
+        background: linear-gradient(135deg, rgba(0, 240, 255, 0.15) 0%, rgba(16, 185, 129, 0.25) 100%);
+        border: 2px solid #00f0ff;
+        box-shadow: 0 0 18px rgba(0, 240, 255, 0.5);
+        border-radius: 8px;
+        padding: 15px 20px;
+        margin-bottom: 25px;
+        text-align: center;
     }
 
     .winner-champion-banner {
@@ -313,7 +323,7 @@ def fetch_steam_info(game_name, custom_cover=""):
     return "https://via.placeholder.com/460x215/1e293b/00f0ff?text=KEIN+COVER", ""
 
 # ------------------------------------------------------------------------------
-# DYNAMISCHE DUAL-BRACKET ENGINE (MIT GEFIXTEM LOSERS BRACKET ROUTING)
+# PERFECT DOUBLE & SINGLE ELIMINATION BRACKET ENGINE
 # ------------------------------------------------------------------------------
 def generate_bracket_data(game_name, players, cover, rules, link, b_type="single"):
     n = len(players)
@@ -329,6 +339,7 @@ def generate_bracket_data(game_name, players, cover, rules, link, b_type="single
     real_players = shuffled.copy()
     slots = []
     
+    # Paare Freilose sauber den ersten Spielern zu
     for i in range(num_byes):
         slots.append(real_players.pop(0))
         slots.append("BYE (Freilos)")
@@ -346,7 +357,7 @@ def generate_bracket_data(game_name, players, cover, rules, link, b_type="single
         winner = None
         if p1 == "BYE (Freilos)": winner = p2
         elif p2 == "BYE (Freilos)": winner = p1
-        r1_matches.append({"id": f"W_R1_M{len(r1_matches)+1}", "p1": p1, "p2": p2, "winner": winner})
+        r1_matches.append({"id": f"W_R1_M{len(r1_matches)+1}", "p1": p1, "p2": p2, "winner": winner, "type": "winner"})
     winner_rounds.append(r1_matches)
     
     # WINNER FOLGERUNDEN
@@ -354,7 +365,7 @@ def generate_bracket_data(game_name, players, cover, rules, link, b_type="single
         prev_count = len(winner_rounds[-1])
         r_matches = []
         for m in range(prev_count // 2):
-            r_matches.append({"id": f"W_R{r}_M{m+1}", "p1": "TBD", "p2": "TBD", "winner": None})
+            r_matches.append({"id": f"W_R{r}_M{m+1}", "p1": "TBD", "p2": "TBD", "winner": None, "type": "winner"})
         winner_rounds.append(r_matches)
         
     bracket = {
@@ -368,21 +379,25 @@ def generate_bracket_data(game_name, players, cover, rules, link, b_type="single
         "rounds": winner_rounds
     }
 
-    # DOUBLE ELIMINATION LOGIK
+    # DOUBLE ELIMINATION EXAKTE LOSERS-BRACKET STRUKTUR
     if b_type == "double":
         losers_rounds = []
+        # Exakte Losers-Runden Anzahl: (num_rounds - 1) * 2
         total_l_rounds = max(1, (num_rounds - 1) * 2)
         
+        # Erstelle Losers Runden mit verjüngenden Match-Anzahlen
+        m_count = next_pow // 4
         for r in range(1, total_l_rounds + 1):
-            num_m = max(1, next_pow // (2 ** ((r // 2) + 2)))
+            if r > 1 and r % 2 == 1:
+                m_count = max(1, m_count // 2)
             l_matches = []
-            for m in range(num_m):
-                l_matches.append({"id": f"L_R{r}_M{m+1}", "p1": "TBD", "p2": "TBD", "winner": None})
+            for m in range(max(1, m_count)):
+                l_matches.append({"id": f"L_R{r}_M{m+1}", "p1": "TBD", "p2": "TBD", "winner": None, "type": "loser"})
             losers_rounds.append(l_matches)
             
         bracket["losers_rounds"] = losers_rounds
-        bracket["grand_final"] = {"id": "GF_M1", "p1": "TBD", "p2": "TBD", "winner": None}
-        bracket["grand_final_reset"] = {"id": "GF_RESET", "p1": "TBD", "p2": "TBD", "winner": None, "active": False}
+        bracket["grand_final"] = {"id": "GF_M1", "p1": "TBD", "p2": "TBD", "winner": None, "type": "gf"}
+        bracket["grand_final_reset"] = {"id": "GF_RESET", "p1": "TBD", "p2": "TBD", "winner": None, "active": False, "type": "gf_reset"}
 
     update_bracket_advancements(bracket)
     return bracket
@@ -410,36 +425,44 @@ def update_bracket_advancements(bracket):
         if final_match.get("winner"):
             bracket["champion"] = final_match["winner"]
 
-    # 2. DOUBLE ELIMINATION (KORREKTES ROUTING DER VERLIERER INS LOSERS BRACKET)
+    # 2. DOUBLE ELIMINATION (PRÄZISES ROUTING DER VERLIERER)
     if b_type == "double":
         l_rounds = bracket.get("losers_rounds", [])
         
-        # A) Winner R1 Verlierer -> Losers R1
+        # A) Winner R1 Verlierer -> Losers R1 (ECHTE VERLIERER!)
         if len(l_rounds) > 0:
+            l_r1 = l_rounds[0]
             for m_idx, m in enumerate(rounds[0]):
                 w = m.get("winner")
                 if w:
                     loser = m["p2"] if m["p1"] == w else m["p1"]
                     if loser != "BYE (Freilos)":
-                        target_m = l_rounds[0][m_idx // 2]
-                        slot = "p1" if (m_idx % 2 == 0) else "p2"
-                        target_m[slot] = loser
+                        target_m_idx = m_idx // 2
+                        if target_m_idx < len(l_r1):
+                            slot = "p1" if (m_idx % 2 == 0) else "p2"
+                            l_r1[target_m_idx][slot] = loser
 
-        # B) Winner R2 Verlierer -> Losers R2/R3 Dropdown
-        for r_idx in range(1, len(rounds)):
-            w_round = rounds[r_idx]
-            l_target_r_idx = r_idx * 2 - 1
-            if l_target_r_idx < len(l_rounds):
-                for m_idx, m in enumerate(w_round):
-                    w = m.get("winner")
-                    if w:
-                        loser = m["p2"] if m["p1"] == w else m["p1"]
-                        if loser not in ["TBD", "BYE (Freilos)"]:
-                            target_m = l_rounds[l_target_r_idx][min(m_idx, len(l_rounds[l_target_r_idx])-1)]
-                            if target_m["p1"] == "TBD" or target_m["p1"] == loser: target_m["p1"] = loser
-                            elif target_m["p2"] == "TBD": target_m["p2"] = loser
+        # B) Winner R2 Verlierer -> Losers R2 (Bspw. Sascha/Stefan Verlierer)
+        if len(rounds) > 1 and len(l_rounds) > 1:
+            l_r2 = l_rounds[1]
+            for m_idx, m in enumerate(rounds[1]):
+                w = m.get("winner")
+                if w:
+                    loser = m["p2"] if m["p1"] == w else m["p1"]
+                    if loser not in ["TBD", "BYE (Freilos)"]:
+                        if m_idx < len(l_r2):
+                            l_r2[m_idx]["p2"] = loser # W-R2 Verlierer wartet auf L-R1 Sieger!
 
-        # C) Durchrechnen innerhalb des Losers Brackets
+        # C) Winner Finale Verlierer -> Losers Finale (Vorletzte/Letzte L-Runde)
+        if len(rounds) > 2 and len(l_rounds) >= 3:
+            w_final_match = rounds[-1][0]
+            w = w_final_match.get("winner")
+            if w:
+                loser = w_final_match["p2"] if w_final_match["p1"] == w else w_final_match["p1"]
+                if loser not in ["TBD", "BYE (Freilos)"]:
+                    l_rounds[-1][0]["p2"] = loser
+
+        # D) Durchrechnen innerhalb des Losers Brackets
         for lr_idx in range(len(l_rounds) - 1):
             curr_lr = l_rounds[lr_idx]
             next_lr = l_rounds[lr_idx + 1]
@@ -447,12 +470,12 @@ def update_bracket_advancements(bracket):
                 w = match.get("winner")
                 if w:
                     target_m_idx = m_idx // 2 if len(next_lr) < len(curr_lr) else m_idx
-                    slot = "p1" if (m_idx % 2 == 0 or len(next_lr) == len(curr_lr)) else "p2"
+                    slot = "p1" if (len(next_lr) < len(curr_lr)) else "p1"
                     if next_lr[target_m_idx][slot] == "TBD" or next_lr[target_m_idx][slot] == w:
                         next_lr[target_m_idx][slot] = w
 
-        # D) Grand Finals
-        gf = bracket.setdefault("grand_final", {"id": "GF_M1", "p1": "TBD", "p2": "TBD", "winner": None})
+        # E) Grand Finals (Winner Champ vs Loser Champ)
+        gf = bracket.setdefault("grand_final", {"id": "GF_M1", "p1": "TBD", "p2": "TBD", "winner": None, "type": "gf"})
         winner_champ = rounds[-1][0].get("winner")
         losers_champ = l_rounds[-1][0].get("winner") if l_rounds else None
         
@@ -460,7 +483,7 @@ def update_bracket_advancements(bracket):
         if losers_champ: gf["p2"] = losers_champ
 
         gf_w = gf.get("winner")
-        gf_reset = bracket.setdefault("grand_final_reset", {"id": "GF_RESET", "p1": "TBD", "p2": "TBD", "winner": None, "active": False})
+        gf_reset = bracket.setdefault("grand_final_reset", {"id": "GF_RESET", "p1": "TBD", "p2": "TBD", "winner": None, "active": False, "type": "gf_reset"})
 
         if gf_w:
             if gf_w == gf["p1"]:
@@ -473,6 +496,54 @@ def update_bracket_advancements(bracket):
                 
                 if gf_reset.get("winner"):
                     bracket["champion"] = gf_reset["winner"]
+
+def get_next_pending_match(bracket):
+    """Ermittelt idiotensicher das NÄCHSTE auszutragende Match in korrekter Reihenfolge!"""
+    if not bracket: return None
+    
+    # Winner R1
+    for m in bracket["rounds"][0]:
+        if not m.get("winner") and m["p1"] != "BYE (Freilos)" and m["p2"] != "BYE (Freilos)" and m["p1"] != "TBD" and m["p2"] != "TBD":
+            return m, "Winner Round 1"
+            
+    # Losers R1 (Muss VOR Winner R2 fertig gespielt werden!)
+    if bracket.get("type") == "double" and bracket.get("losers_rounds"):
+        for m in bracket["losers_rounds"][0]:
+            if not m.get("winner") and m["p1"] != "TBD" and m["p2"] != "TBD":
+                return m, "💀 Losers Round 1"
+
+    # Winner R2+
+    for r_idx in range(1, len(bracket["rounds"])):
+        for m in bracket["rounds"][r_idx]:
+            if not m.get("winner") and m["p1"] != "TBD" and m["p2"] != "TBD":
+                return m, f"Winner Round {r_idx+1}"
+                
+        # Entsprechende Loser-Runde prüfen
+        if bracket.get("type") == "double" and bracket.get("losers_rounds"):
+            l_idx = r_idx
+            if l_idx < len(bracket["losers_rounds"]):
+                for m in bracket["losers_rounds"][l_idx]:
+                    if not m.get("winner") and m["p1"] != "TBD" and m["p2"] != "TBD":
+                        return m, f"💀 Losers Round {l_idx+1}"
+
+    # Spätere Loser-Runden
+    if bracket.get("type") == "double" and bracket.get("losers_rounds"):
+        for lr_idx, lr in enumerate(bracket["losers_rounds"]):
+            for m in lr:
+                if not m.get("winner") and m["p1"] != "TBD" and m["p2"] != "TBD":
+                    return m, f"💀 Losers Round {lr_idx+1}"
+
+    # Grand Finals
+    if bracket.get("type") == "double":
+        gf = bracket.get("grand_final", {})
+        if not gf.get("winner") and gf.get("p1") != "TBD" and gf.get("p2") != "TBD":
+            return gf, "👑 Grand Final (Match 1)"
+            
+        gf_reset = bracket.get("grand_final_reset", {})
+        if gf_reset.get("active") and not gf_reset.get("winner"):
+            return gf_reset, "🔄 Grand Final RESET (Entscheidungsspiel)"
+
+    return None, None
 
 if "db" not in st.session_state:
     st.session_state.db = load_data()
@@ -542,7 +613,7 @@ if page == "📰 News":
         render_news_items(bracket_news)
 
 # ------------------------------------------------------------------------------
-# 5. TURNIERE & BRACKETS (MIT DEUTLICHER FREILOS-FARBE & ECHTEM LOSERS BRACKET)
+# 5. TURNIERE & BRACKETS (MIT IDIOTENSICHERER REIHENFOLGE & ECHTEM LOSERS BRACKET)
 # ------------------------------------------------------------------------------
 elif page == "🏆 Turniere & Brackets":
     st.title("🏆 TURNIERE & BRACKETS")
@@ -567,6 +638,17 @@ elif page == "🏆 Turniere & Brackets":
             </div>
             """, unsafe_allow_html=True)
 
+        # IDIOTENSICHERES NEXT MATCH BANNER
+        next_m, next_round_name = get_next_pending_match(b_data)
+        if next_m and not b_data.get("champion"):
+            st.markdown(f"""
+            <div class="next-match-banner">
+                <span style="color: #00f0ff; font-weight: 800; font-size: 0.9em; letter-spacing: 1px;">⚔️ NÄCHSTES ANSTEHENDES MATCH (REIHENFOLGE)</span>
+                <h2 style="margin: 5px 0 0 0; color: #ffffff !important;">{next_round_name}: <span style="color: #10b981;">{next_m['p1']}</span> vs <span style="color: #10b981;">{next_m['p2']}</span></h2>
+                <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 0.9em;">Tragt bitte zuerst dieses Ergebnis unten ein, bevor spätere Runden gespielt werden!</p>
+            </div>
+            """, unsafe_allow_html=True)
+
         col_img, col_detail = st.columns([1, 2])
         with col_img:
             st.image(b_data.get('cover', 'https://via.placeholder.com/460x215/1e293b/00f0ff?text=KEIN+COVER'), use_container_width=True)
@@ -576,7 +658,6 @@ elif page == "🏆 Turniere & Brackets":
             if b_data.get('link'): st.markdown(f"🔗 [Store / Website Link öffnen]({b_data['link']})")
             if b_data.get('rules'): st.markdown(f"<div class='rules-blue-box'>📜 <b>Turnier-Regeln:</b> {b_data['rules']}</div>", unsafe_allow_html=True)
 
-        # Helper zur farblichen Freilos-Hervorhebung
         def get_slot_html(p_name, winner):
             if p_name == "BYE (Freilos)":
                 return '<div class="bracket-bye-slot" style="padding: 4px; border-radius: 4px;">⏸️ <i>BYE (Freilos)</i></div>'
@@ -609,7 +690,8 @@ elif page == "🏆 Turniere & Brackets":
             l_cols = st.columns(len(l_rounds))
             for lr_idx, lr_matches in enumerate(l_rounds):
                 with l_cols[lr_idx]:
-                    st.markdown(f"#### L-Runde {lr_idx+1}")
+                    r_lbl = f"L-Runde {lr_idx+1}" if lr_idx < len(l_rounds)-1 else "🏆 Loser Finale"
+                    st.markdown(f"#### {r_lbl}")
                     for m in lr_matches:
                         p1, p2, winner = m['p1'], m['p2'], m.get('winner')
                         st.markdown(f"""
