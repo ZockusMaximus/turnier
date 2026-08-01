@@ -23,8 +23,29 @@
       "created_at": "2026-08-01 14:05:22"
     }
   },
-  "games": {},
-  "koth": {},
+  "games": {
+    "1": {
+      "name": "Valheim",
+      "creator": "Victor",
+      "custom_cover": "",
+      "link": ""
+    }
+  },
+  "koth": {
+    "1": {
+      "king": "Victor",
+      "streak": 1,
+      "history": [
+        {
+          "timestamp": "2026-08-01 14:27:15",
+          "defender": "Victor",
+          "challenger": "Thron-Gründung",
+          "winner": "Victor",
+          "format": "Kröne dich selbst"
+        }
+      ]
+    }
+  },
   "challenges": [],
   "brackets_de": [
     {
@@ -243,6 +264,11 @@
       "timestamp": "2026-08-01 14:26:24",
       "user": "Admin",
       "action": "Challenge #2 (dum die dum) gelöscht"
+    },
+    {
+      "timestamp": "2026-08-01 14:27:15",
+      "user": "Victor",
+      "action": "Spiel 'Valheim' angelegt. Erster King: Victor"
     }
   ],
   "challenge_games": {}
