@@ -591,65 +591,7 @@
     }
   ],
   "brackets": {
-    "single": {
-      "game_name": "Mortal Kombat 1",
-      "cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/1971870/header.jpg",
-      "rules": "Standard Rule Set",
-      "link": "https://store.steampowered.com/app/1971870/",
-      "type": "single",
-      "created_at": "2026-08-01 21:12:33",
-      "champion": null,
-      "rounds": [
-        [
-          {
-            "id": "R1_M1",
-            "p1": "Jan",
-            "p2": "Alexander",
-            "winner": null
-          },
-          {
-            "id": "R1_M2",
-            "p1": "Victor",
-            "p2": "Stefan",
-            "winner": null
-          },
-          {
-            "id": "R1_M3",
-            "p1": "Marcel",
-            "p2": "Sascha",
-            "winner": null
-          },
-          {
-            "id": "R1_M4",
-            "p1": "BYE (Freilos)",
-            "p2": "BYE (Freilos)",
-            "winner": "BYE (Freilos)"
-          }
-        ],
-        [
-          {
-            "id": "R2_M1",
-            "p1": "TBD",
-            "p2": "TBD",
-            "winner": null
-          },
-          {
-            "id": "R2_M2",
-            "p1": "TBD",
-            "p2": "BYE (Freilos)",
-            "winner": null
-          }
-        ],
-        [
-          {
-            "id": "R3_M1",
-            "p1": "TBD",
-            "p2": "TBD",
-            "winner": null
-          }
-        ]
-      ]
-    },
+    "single": null,
     "double": null
   }
 }
