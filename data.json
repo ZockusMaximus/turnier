@@ -469,6 +469,11 @@
       "timestamp": "2026-08-01 19:20:15",
       "user": "Victor",
       "action": "Challenge #2 von Victor absolviert."
+    },
+    {
+      "timestamp": "2026-08-01 20:42:26",
+      "user": "Admin",
+      "action": "Neues Single-Elimination Bracket für Blood Bowl 2 generiert."
     }
   ],
   "challenge_games": {
@@ -529,6 +534,72 @@
       "content_html": "🏆 <b>Victor</b> hat die Challenge <b>1 Panzer Challange</b> (<span style='color:#00f0ff;'><b>War Thunder</b></span>) erfolgreich gemeistert!",
       "category": "CHALLENGE",
       "custom_color": ""
+    },
+    {
+      "id": 7,
+      "timestamp": "2026-08-01 20:42:26",
+      "title": "🏆 Neues Turnier: Blood Bowl 2",
+      "content_html": "🏆 Ein neues Single-Elimination Turnier in <span style='color:#00f0ff;'><b>Blood Bowl 2</b></span> mit 6 Spielern wurde gestartet!",
+      "category": "GENERAL",
+      "custom_color": "#00f0ff"
     }
-  ]
+  ],
+  "brackets": {
+    "single": {
+      "game_name": "Blood Bowl 2",
+      "type": "single",
+      "created_at": "2026-08-01 20:42:26",
+      "rounds": [
+        [
+          {
+            "id": "R1_M1",
+            "p1": "Stefan",
+            "p2": "Marcel",
+            "winner": null
+          },
+          {
+            "id": "R1_M2",
+            "p1": "Sascha",
+            "p2": "Victor",
+            "winner": null
+          },
+          {
+            "id": "R1_M3",
+            "p1": "Jan",
+            "p2": "Alexander",
+            "winner": null
+          },
+          {
+            "id": "R1_M4",
+            "p1": "BYE (Freilos)",
+            "p2": "BYE (Freilos)",
+            "winner": "BYE (Freilos)"
+          }
+        ],
+        [
+          {
+            "id": "R2_M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null
+          },
+          {
+            "id": "R2_M2",
+            "p1": "TBD",
+            "p2": "BYE (Freilos)",
+            "winner": null
+          }
+        ],
+        [
+          {
+            "id": "R3_M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null
+          }
+        ]
+      ]
+    },
+    "double": null
+  }
 }
