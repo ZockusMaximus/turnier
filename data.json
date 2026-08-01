@@ -74,7 +74,7 @@
               "id": 2,
               "p1": "Jan",
               "p2": "Marcel",
-              "winner": null
+              "winner": "Jan"
             },
             {
               "id": 3,
@@ -93,7 +93,7 @@
             {
               "id": 1,
               "p1": "Victor",
-              "p2": "TBD",
+              "p2": "Marcel",
               "winner": null
             },
             {
@@ -121,7 +121,7 @@
             {
               "id": 5,
               "p1": "Alexander",
-              "p2": "TBD",
+              "p2": "Jan",
               "winner": null
             },
             {
@@ -218,6 +218,11 @@
       "timestamp": "2026-08-01 14:13:10",
       "user": "System",
       "action": "Bracket 'Turnier 1': Alexander schlägt Victor"
+    },
+    {
+      "timestamp": "2026-08-01 14:13:13",
+      "user": "System",
+      "action": "Bracket 'Turnier 1': Jan schlägt Marcel"
     }
   ]
 }
