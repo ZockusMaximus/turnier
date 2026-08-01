@@ -676,7 +676,7 @@
             "p2": "Alexander",
             "p1_origin": "Gewinner W2M1",
             "p2_origin": "Gewinner W2M2",
-            "winner": null
+            "winner": "Alexander"
           }
         ]
       ],
@@ -713,7 +713,7 @@
           {
             "id": "L3M1",
             "p1": "Sascha",
-            "p2": "TBD",
+            "p2": "Stefan",
             "p1_origin": "Sieger L2M1",
             "p2_origin": "Verlierer W3M1",
             "winner": null
@@ -722,7 +722,7 @@
       ],
       "grand_final": {
         "id": "GF_M1",
-        "p1": "TBD",
+        "p1": "Alexander",
         "p2": "TBD",
         "p1_origin": "Winner Champ",
         "p2_origin": "Loser Champ",
