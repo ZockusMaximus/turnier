@@ -308,5 +308,10 @@
       "action": "KotH (Rocket League): Marcel gewann gegen Jan"
     }
   ],
-  "challenge_games": {}
+  "challenge_games": {
+    "1": {
+      "name": "Elden Ring",
+      "cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/1245620/header.jpg"
+    }
+  }
 }
