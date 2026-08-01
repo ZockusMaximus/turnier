@@ -65,7 +65,14 @@
       "description": "super",
       "difficulty": "Unmöglich",
       "timestamp": "2026-08-01 14:30:06",
-      "completions": []
+      "completions": [
+        {
+          "player": "Victor",
+          "rating": 5,
+          "comment": "ez",
+          "timestamp": "2026-08-01 14:30:17"
+        }
+      ]
     }
   ],
   "brackets_de": [
@@ -300,6 +307,11 @@
       "timestamp": "2026-08-01 14:30:06",
       "user": "Jan",
       "action": "Challenge 'Be best' von Jan erstellt."
+    },
+    {
+      "timestamp": "2026-08-01 14:30:17",
+      "user": "Victor",
+      "action": "Challenge #2 von Victor absolviert."
     }
   ],
   "challenge_games": {
