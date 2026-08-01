@@ -79,11 +79,33 @@ st.markdown("""
     .diff-schwer { background-color: #f97316; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
     .diff-extrem { background-color: #ef4444; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
     .diff-unmoeglich { background-color: #a855f7; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: bold; box-shadow: 0 0 8px #a855f7; }
+
+    /* Highlights */
+    .creator-box {
+        background: rgba(0, 240, 255, 0.08);
+        border: 1px solid #00f0ff;
+        padding: 6px 12px;
+        border-radius: 4px;
+        color: #00f0ff;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 8px;
+    }
+    .king-highlight-box {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(180, 83, 9, 0.3) 100%);
+        border: 2px solid #f59e0b;
+        padding: 10px 15px;
+        border-radius: 6px;
+        color: #fbbf24;
+        font-weight: bold;
+        text-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+        margin-bottom: 10px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 # ------------------------------------------------------------------------------
-# 2. PERSISTENZ & SMART STEAM AUTO-FETCH ENGINE
+# 2. PERSISTENZ & STEAM API ENGINE
 # ------------------------------------------------------------------------------
 DATA_FILE = "data.json"
 BERLIN_TZ = ZoneInfo("Europe/Berlin")
@@ -162,17 +184,12 @@ def add_audit_log(data, action, user="System"):
     })
 
 def fetch_steam_info(game_name, custom_cover=""):
-    """
-    Sucht automatisch auf Steam nach dem Spielnamen, um Banner & Store-Link zu ziehen.
-    Unterstützt Custom Overrides.
-    """
     if custom_cover and custom_cover.strip():
         return custom_cover.strip(), ""
 
     if not game_name:
         return "https://via.placeholder.com/460x215/1e293b/00f0ff?text=KEIN+COVER", ""
 
-    # Check ob der Name selbst eine URL/AppID ist
     appid_match = re.search(r'/app/(\d+)', str(game_name))
     if appid_match:
         appid = appid_match.group(1)
@@ -181,7 +198,6 @@ def fetch_steam_info(game_name, custom_cover=""):
         appid = str(game_name)
         return f"https://cdn.cloudflare.steamstatic.com/steam/apps/{appid}/header.jpg", f"https://store.steampowered.com/app/{appid}/"
 
-    # Auto-Search via Steam Store Search API
     try:
         url = f"https://store.steampowered.com/api/storesearch/?term={requests.utils.quote(game_name)}&l=german&cc=DE"
         res = requests.get(url, timeout=3)
@@ -216,17 +232,17 @@ page = st.sidebar.radio(
 )
 
 # ------------------------------------------------------------------------------
-# 4. KING OF THE HILL (TAB-TRENNUNG & AUTO STEAM FETCH)
+# 4. KING OF THE HILL (STATISTIKEN & KÖNIG HIGHLIGHT & FIXED CHALLENGE)
 # ------------------------------------------------------------------------------
 if page == "👑 King of the Hill":
     st.title("👑 KING OF THE HILL")
     
-    tab_koth_active, tab_koth_create = st.tabs(["🔥 Aktive Kings", "➕ Neues KotH-Spiel & Thron gründen"])
+    tab_koth_active, tab_koth_create, tab_koth_stats = st.tabs(["🔥 Aktive Kings", "➕ Neues KotH-Spiel & Thron gründen", "📊 KotH Statistiken"])
     
     games = db.get("games", {})
     player_list = list(db["players"].keys())
 
-    # TAB 2: SPIEL ANLEGEN & KÖNIG WERDEN
+    # TAB 2: NEUES SPIEL ANLEGEN
     with tab_koth_create:
         st.subheader("➕ Neues KotH-Spiel erstellen & Thron beanspruchen")
         if not player_list:
@@ -238,7 +254,7 @@ if page == "👑 King of the Hill":
                 
                 c1, c2 = st.columns(2)
                 match_format = c1.selectbox("Wettkampf-Format", ["Best of 1 (Bo1)", "Best of 3 (Bo3)", "Best of 5 (Bo5)", "Best of 7 (Bo7)"])
-                custom_cover = c2.text_input("Custom Cover Bild-URL (optional - überschreibt Auto-Steam):", placeholder="https://...")
+                custom_cover = c2.text_input("Custom Cover Bild-URL (optional):", placeholder="https://...")
                 
                 rules_comment = st.text_area("Herausforderungs-Regeln / Modus / Waffen & Maps:", 
                                              placeholder="z.B. Nur 1v1 AWP auf Aim_Map, Ohne Rüstung, Hardcore Modus...")
@@ -247,7 +263,6 @@ if page == "👑 King of the Hill":
                     if not g_name:
                         st.error("Bitte gib einen Spielnamen ein!")
                     else:
-                        # Auto-Fetch Banner & Link via Steam Engine
                         cover_url, store_link = fetch_steam_info(g_name, custom_cover)
                         
                         new_id = str(len(games) + 1)
@@ -260,7 +275,6 @@ if page == "👑 King of the Hill":
                             "rules": rules_comment
                         }
                         
-                        # Thron direkt mit Streak 1 gründen
                         db.setdefault("koth", {})[new_id] = {
                             "king": creator, 
                             "streak": 1, 
@@ -277,7 +291,7 @@ if page == "👑 King of the Hill":
                         st.success(f"KotH Arena für '{g_name}' eröffnet! Du bist der aktuelle King!")
                         st.rerun()
 
-    # TAB 1: AKTIVE KINGS UND HERAUSFORDERUNGEN
+    # TAB 1: AKTIVE KINGS
     with tab_koth_active:
         if not games:
             st.info("Noch keine KotH-Spiele vorhanden. Wechsel in den Reiter 'Neues KotH-Spiel & Thron gründen', um das erste Spiel zu starten.")
@@ -292,8 +306,12 @@ if page == "👑 King of the Hill":
                     with st.container(border=True):
                         st.image(cover, use_container_width=True)
                         st.markdown(f"### {g_info['name']}")
-                        st.write(f"👑 King: **{k_data['king'] or 'Niemand'}**")
-                        st.write(f"🔥 Streak: **{k_data['streak']} Siege**")
+                        st.markdown(f"""
+                        <div class="king-highlight-box">
+                            👑 KING: <b>{k_data['king'] or 'Niemand'}</b><br>
+                            🔥 Streak: <b>{k_data['streak']} Siege</b>
+                        </div>
+                        """, unsafe_allow_html=True)
             
             st.markdown("---")
             
@@ -309,25 +327,35 @@ if page == "👑 King of the Hill":
                 st.write(f"Gründer: `{g_info.get('creator', 'Admin')}` | Format: **{g_info.get('format', 'Bo3')}**")
                 if g_info.get('link'): st.markdown(f"🔗 [Store / Steam Link öffnen]({g_info['link']})")
                 if g_info.get('rules'): st.info(f"📜 **Regeln & Waffen/Maps:** {g_info['rules']}")
-                st.write(f"Aktueller King: **{k_data['king'] or 'Thron unbesetzt'}** (Streak: **{k_data['streak']}**) ")
+                
+                st.markdown(f"""
+                <div class="king-highlight-box" style="font-size: 1.2em;">
+                    👑 AKTUELLER KÖNIG: <b>{k_data['king'] or 'Thron unbesetzt'}</b> (Streak: <b>{k_data['streak']} Siege</b>)
+                </div>
+                """, unsafe_allow_html=True)
 
             st.markdown("### ⚔️ King herausfordern")
             if len(player_list) < 2:
                 st.warning("Mindestens 2 registrierte Spieler erforderlich.")
             else:
+                current_king = k_data['king']
+                
+                # Herausforderer-Auswahl AUSSERHALB des Formulars, damit das Sieger-Dropdown dynamisch aktualisiert wird!
+                c1, c2 = st.columns(2)
+                if current_king:
+                    defender = current_king
+                    c1.text_input("King (Verteidiger)", value=defender, disabled=True)
+                    available_challengers = [p for p in player_list if p != defender]
+                    challenger = c2.selectbox("Herausforderer wählen", available_challengers, key=f"challenger_select_{selected_g_id}")
+                else:
+                    defender = c1.selectbox("Spieler 1 (Anwärter)", player_list, key=f"def_select_{selected_g_id}")
+                    available_challengers = [p for p in player_list if p != defender]
+                    challenger = c2.selectbox("Spieler 2 (Anwärter)", available_challengers, key=f"challenger_select_{selected_g_id}")
+
                 with st.form(f"koth_challenge_form_{selected_g_id}", clear_on_submit=True):
-                    c1, c2 = st.columns(2)
-                    current_king = k_data['king']
-                    
-                    if current_king:
-                        defender = current_king
-                        c1.text_input("King (Verteidiger)", value=defender, disabled=True)
-                        challenger = c2.selectbox("Herausforderer", [p for p in player_list if p != defender])
-                    else:
-                        defender = c1.selectbox("Spieler 1 (Anwärter)", player_list)
-                        challenger = c2.selectbox("Spieler 2 (Anwärter)", [p for p in player_list if p != defender])
-                    
-                    winner = st.selectbox("Sieger des Matches", [defender, challenger])
+                    # EXAKTE BEIDEN SPIELER FÜR SIEGER-DROPDOWN:
+                    match_participants = [defender, challenger]
+                    winner = st.selectbox("Sieger des Matches eintragen", match_participants)
                     
                     if st.form_submit_button("Match-Ergebnis Speichern"):
                         if winner == k_data["king"]:
@@ -355,24 +383,63 @@ if page == "👑 King of the Hill":
                     st.write(f"🏆 **Sieger: {entry['winner']}** ({entry.get('format', 'Bo3')}) | {entry['timestamp']}")
                     st.caption(f"Kampf: {entry['defender']} vs {entry['challenger']}")
 
+    # TAB 3: KOTH STATISTIKEN
+    with tab_koth_stats:
+        st.subheader("📊 King of the Hill Leaderboards & Statistiken")
+        
+        # Aggregiere KotH Daten
+        king_counts = {}
+        max_streaks = {}
+        total_wins = {}
+        
+        for g_id, k_info in db.get("koth", {}).items():
+            current_k = k_info.get("king")
+            if current_k:
+                king_counts[current_k] = king_counts.get(current_k, 0) + 1
+            
+            for h in k_info.get("history", []):
+                w = h.get("winner")
+                if w and w != "Thron-Gründung":
+                    total_wins[w] = total_wins.get(w, 0) + 1
+            
+            # Höchste Streak tracken
+            c_streak = k_info.get("streak", 0)
+            if current_k and c_streak > max_streaks.get(current_k, 0):
+                max_streaks[current_k] = c_streak
+
+        st.markdown("#### 👑 Aktuelle Kronen-Besitzer")
+        if not king_counts:
+            st.info("Noch keine aktiven Könige.")
+        else:
+            for p_name, count in sorted(king_counts.items(), key=lambda x: x[1], reverse=True):
+                st.write(f"👑 **{p_name}**: Hält aktuell **{count}** King of the Hill Titel (Höchste Streak: {max_streaks.get(p_name, 0)} Siege)")
+
+        st.markdown("---")
+        st.markdown("#### 🏆 Gesamte KotH Match-Siege")
+        if not total_wins:
+            st.write("Noch keine Matches ausgetragen.")
+        else:
+            stats_table = [{"Spieler": p, "Gesamt KotH Siege": w} for p, w in sorted(total_wins.items(), key=lambda x: x[1], reverse=True)]
+            st.dataframe(stats_table, use_container_width=True)
+
 # ------------------------------------------------------------------------------
-# 5. CHALLENGES (KLARE SPIEL-SELEKTION & AUTO STEAM FETCH)
+# 5. CHALLENGES (ERSTELLER HIGHLIGHT & VOLLSTÄNDIGE STATISTIKEN)
 # ------------------------------------------------------------------------------
 elif page == "🎯 Challenges":
     st.title("🎯 CHALLENGES & HERAUSFORDERUNGEN")
     
-    tab1, tab2 = st.tabs(["🔥 Aktive Challenges", "➕ Challenge Erstellen"])
+    tab1, tab2, tab3 = st.tabs(["🔥 Aktive Challenges", "➕ Challenge Erstellen", "📊 Challenge Statistiken"])
     
     challenge_games = db.setdefault("challenge_games", {})
     player_list = list(db["players"].keys())
     
+    # TAB 2: ERSTELLUNG
     with tab2:
         st.subheader("Neues Challenge-Spiel registrieren oder bestehendes wählen")
         
-        # Schritt 1: Spiel registrieren (falls es noch nicht existiert)
         with st.expander("➕ Ein neues Spiel zur Challenge-Datenbank hinzufügen"):
             cg_name = st.text_input("Spielname eingeben", placeholder="z.B. Elden Ring, Hollow Knight")
-            cg_cover_custom = st.text_input("Custom Cover Bild-URL (optional - sonst Auto-Steam):", placeholder="https://...")
+            cg_cover_custom = st.text_input("Custom Cover Bild-URL (optional):", placeholder="https://...")
             
             if st.button("Spiel in Challenge-Datenbank Speichern"):
                 if cg_name:
@@ -387,7 +454,6 @@ elif page == "🎯 Challenges":
                     st.rerun()
 
         st.markdown("---")
-        # Schritt 2: Challenge erstellen für ein gewähltes Spiel
         st.subheader("Challenge für ein existierendes Spiel erstellen")
         if not challenge_games:
             st.info("Es ist noch kein Challenge-Spiel angelegt. Bitte erstelle oben das erste Spiel!")
@@ -420,6 +486,7 @@ elif page == "🎯 Challenges":
                         st.success("Challenge veröffentlicht!")
                         st.rerun()
 
+    # TAB 1: AKTIVE CHALLENGES
     with tab1:
         st.subheader("Übersicht aller Challenges")
         challenges = db.get("challenges", [])
@@ -444,8 +511,12 @@ elif page == "🎯 Challenges":
                     with col_img:
                         st.image(cover, use_container_width=True)
                     with col_info:
+                        # ERSTELLER FARBLICH HEVORGEHOBEN
                         st.markdown(f"### {c['title']} (`{cg_info['name']}`)")
-                        st.markdown(f"Schwierigkeit: <span class='{diff_class}'>{c['difficulty']}</span> | Erstellt von: **{c['creator']}** | Am: {c['timestamp']}", unsafe_allow_html=True)
+                        st.markdown(f"""
+                        <div class="creator-box">🛠️ ERSTELLER: {c['creator']}</div>
+                        <span class="{diff_class}">{c['difficulty']}</span> | Am: {c['timestamp']}
+                        """, unsafe_allow_html=True)
                         st.write(c["description"])
                     
                     st.markdown("#### 🌟 Absolvierte Versuche")
@@ -476,6 +547,59 @@ elif page == "🎯 Challenges":
                                     update_db()
                                     st.success("Erfolg eingetragen!")
                                     st.rerun()
+
+    # TAB 3: CHALLENGE STATISTIKEN
+    with tab3:
+        st.subheader("📊 Challenge Statistiken & Hall of Fame")
+        
+        if not player_list:
+            st.info("Keine Spieler im System.")
+        else:
+            # Stats berechnen
+            p_stats = {}
+            for p in player_list:
+                p_stats[p] = {
+                    "completed_count": 0,
+                    "completed_list": [],
+                    "created_count": 0,
+                    "created_list": [],
+                    "total_stars": 0
+                }
+            
+            challenges_list = db.get("challenges", [])
+            
+            for c in challenges_list:
+                creator = c.get("creator")
+                if creator in p_stats:
+                    p_stats[creator]["created_count"] += 1
+                    p_stats[creator]["created_list"].append(c["title"])
+                
+                for comp in c.get("completions", []):
+                    p_name = comp.get("player")
+                    if p_name in p_stats:
+                        p_stats[p_name]["completed_count"] += 1
+                        p_stats[p_name]["completed_list"].append(c["title"])
+                        p_stats[p_name]["total_stars"] += comp.get("rating", 5)
+
+            # Leaderboard anzeigen
+            st.markdown("#### 🏆 Spieler-Rankings & Abzeichen")
+            for p_name, data in sorted(p_stats.items(), key=lambda x: x[1]["completed_count"], reverse=True):
+                stars_avg = round(data["total_stars"] / data["completed_count"], 1) if data["completed_count"] > 0 else 0
+                
+                badge = ""
+                if data["completed_count"] >= 10: badge = "🥇 Challenge-Legende"
+                elif data["completed_count"] >= 5: badge = "🥈 Master-Meister"
+                elif data["completed_count"] >= 1: badge = "🥉 Herausforderer"
+                
+                with st.container(border=True):
+                    c1, c2, c3 = st.columns([2, 2, 2])
+                    c1.markdown(f"### **{p_name}** {badge}")
+                    c2.metric("Geschaffte Challenges", f"{data['completed_count']}", f"Ø {stars_avg} ⭐ Rating")
+                    c3.metric("Erstellte Challenges", f"{data['created_count']}")
+                    
+                    with st.expander(f"Details von {p_name} ansehen"):
+                        st.write(f"**Geschaffte Challenges:** {', '.join(data['completed_list']) if data['completed_list'] else 'Keine'}")
+                        st.write(f"**Erstellte Challenges:** {', '.join(data['created_list']) if data['created_list'] else 'Keine'}")
 
 # ------------------------------------------------------------------------------
 # 6. DOUBLE ELIMINATION BRACKET
@@ -614,7 +738,7 @@ elif page == "📩 Einspruch & Anträge":
                         st.rerun()
 
 # ------------------------------------------------------------------------------
-# 8. ADMIN-BEREICH
+# 8. ADMIN-BEREICH (STRUCTURED & FULL CONTROL)
 # ------------------------------------------------------------------------------
 elif page == "⚙️ Admin-Bereich":
     st.title("⚙️ ADMIN CONTROL PANEL")
@@ -628,90 +752,95 @@ elif page == "⚙️ Admin-Bereich":
         st.success("Authentifizierung erfolgreich.")
         
         tab_admin = st.tabs([
-            "🎮 KotH Spiele", 
-            "🎯 Challenges",
-            "👥 Spieler", 
+            "👑 KotH Verwaltung", 
+            "🎯 Challenge Verwaltung",
+            "👥 Spieler-Verwaltung", 
             "🌿 Brackets", 
-            "👑 KotH Overrides", 
             "🔒 Status", 
             "📩 Einsprüche", 
             "📊 Audit Logs", 
             "💾 Backup"
         ])
         
-        # TAB 1: KotH Spiele
+        # TAB 1: KotH Verwaltung & Full Override
         with tab_admin[0]:
-            st.subheader("👑 KotH Spiele & Match-Historie Löschen")
+            st.subheader("👑 King of the Hill Vollkontrolle & Bearbeitung")
             games = db.get("games", {})
             if not games:
                 st.info("Keine KotH-Spiele vorhanden.")
             else:
                 for g_id, g in list(games.items()):
                     with st.container(border=True):
-                        c1, c2 = st.columns([3, 1])
-                        c1.markdown(f"### ID {g_id}: {g['name']}")
-                        c1.write(f"Ersteller: **{g.get('creator', 'Admin')}** | Format: **{g.get('format', 'Bo3')}**")
+                        st.markdown(f"### ID {g_id}: {g['name']}")
+                        k_data = db["koth"].setdefault(g_id, {"king": None, "streak": 0, "history": []})
                         
-                        if c2.button(f"🗑️ Spiel komplett löschen", key=f"del_g_{g_id}"):
+                        # Direct Edit Form for Games
+                        with st.expander("✏️ KotH Spiel-Einstellungen & King anpassen"):
+                            c1, c2 = st.columns(2)
+                            edit_king = c1.selectbox("König festlegen", ["NIEMAND"] + list(db["players"].keys()), 
+                                                     index=0 if not k_data["king"] else (list(db["players"].keys()).index(k_data["king"]) + 1 if k_data["king"] in db["players"] else 0),
+                                                     key=f"adm_king_{g_id}")
+                            edit_streak = c2.number_input("Streak anpassen", min_value=0, value=k_data.get("streak", 0), key=f"adm_streak_{g_id}")
+                            
+                            edit_rules = st.text_area("Regeln / Waffen / Maps anpassen", value=g.get("rules", ""), key=f"adm_rules_{g_id}")
+                            edit_format = st.selectbox("Format anpassen", ["Best of 1 (Bo1)", "Best of 3 (Bo3)", "Best of 5 (Bo5)", "Best of 7 (Bo7)"], 
+                                                        index=["Best of 1 (Bo1)", "Best of 3 (Bo3)", "Best of 5 (Bo5)", "Best of 7 (Bo7)"].index(g.get("format", "Best of 3 (Bo3)")) if g.get("format") in ["Best of 1 (Bo1)", "Best of 3 (Bo3)", "Best of 5 (Bo5)", "Best of 7 (Bo7)"] else 1,
+                                                        key=f"adm_fmt_{g_id}")
+                            
+                            if st.button("KotH Änderungen Speichern", key=f"save_koth_{g_id}"):
+                                k_data["king"] = None if edit_king == "NIEMAND" else edit_king
+                                k_data["streak"] = edit_streak
+                                g["rules"] = edit_rules
+                                g["format"] = edit_format
+                                add_audit_log(db, f"KotH Spiel {g['name']} von Admin bearbeitet.", user="Admin")
+                                update_db()
+                                st.success("Änderungen gespeichert!")
+                                st.rerun()
+
+                        if st.button(f"🗑️ KotH Spiel komplett löschen", key=f"del_g_{g_id}"):
                             del games[g_id]
-                            if g_id in db.get("koth", {}): 
-                                del db["koth"][g_id]
+                            if g_id in db.get("koth", {}): del db["koth"][g_id]
                             add_audit_log(db, f"KotH Spiel '{g['name']}' gelöscht", user="Admin")
                             update_db()
                             st.rerun()
-                        
-                        k_hist = db.get("koth", {}).get(g_id, {}).get("history", [])
-                        if k_hist:
-                            with st.expander(f"Einzelne Matches von '{g['name']}' löschen ({len(k_hist)} Matches)"):
-                                for h_idx, h in enumerate(reversed(k_hist)):
-                                    real_idx = len(k_hist) - 1 - h_idx
-                                    col_m, col_btn = st.columns([4, 1])
-                                    col_m.write(f"Match #{real_idx+1}: **{h['winner']}** gewann ({h['timestamp']})")
-                                    if col_btn.button("Match Löschen", key=f"del_km_{g_id}_{real_idx}"):
-                                        k_hist.pop(real_idx)
-                                        add_audit_log(db, f"KotH Match #{real_idx+1} in {g['name']} gelöscht.", user="Admin")
-                                        update_db()
-                                        st.rerun()
 
-        # TAB 2: Challenges
+        # TAB 2: Challenge Verwaltung & Full Override
         with tab_admin[1]:
-            st.subheader("🎯 Challenges & Challenge-Spiele Verwalten / Löschen")
-            
-            st.markdown("#### 1. Einzelne Challenges löschen")
+            st.subheader("🎯 Challenge Vollkontrolle & Bearbeitung")
             challenges = db.get("challenges", [])
+            
             if not challenges:
                 st.write("Keine aktiven Challenges vorhanden.")
             else:
                 for c_idx, c in enumerate(list(challenges)):
                     with st.container(border=True):
-                        c1, c2 = st.columns([3, 1])
-                        c1.write(f"**Challenge #{c['id']}: {c['title']}** (Schwierigkeit: {c['difficulty']})")
-                        c1.caption(f"Erstellt von {c['creator']} am {c['timestamp']}")
+                        st.markdown(f"### Challenge #{c['id']}: {c['title']}")
+                        st.write(f"Ersteller: **{c['creator']}** | Schwierigkeit: **{c['difficulty']}**")
                         
-                        if c2.button("🗑️ Challenge Löschen", key=f"del_c_{c['id']}"):
+                        with st.expander("✏️ Challenge bearbeiten / korrigieren"):
+                            edit_title = st.text_input("Titel", value=c["title"], key=f"c_title_{c['id']}")
+                            edit_desc = st.text_area("Beschreibung", value=c["description"], key=f"c_desc_{c['id']}")
+                            edit_diff = st.select_slider("Schwierigkeit", options=["Leicht", "Mittel", "Schwer", "Extrem", "Unmöglich"], 
+                                                         value=c.get("difficulty", "Mittel"), key=f"c_diff_{c['id']}")
+                            
+                            if st.button("Challenge Speichern", key=f"save_c_{c['id']}"):
+                                c["title"] = edit_title
+                                c["description"] = edit_desc
+                                c["difficulty"] = edit_diff
+                                add_audit_log(db, f"Challenge #{c['id']} von Admin bearbeitet.", user="Admin")
+                                update_db()
+                                st.success("Challenge aktualisiert!")
+                                st.rerun()
+
+                        if st.button("🗑️ Challenge Löschen", key=f"del_c_{c['id']}"):
                             challenges.pop(c_idx)
                             add_audit_log(db, f"Challenge #{c['id']} ({c['title']}) gelöscht", user="Admin")
                             update_db()
                             st.rerun()
-            
-            st.markdown("---")
-            st.markdown("#### 2. Challenge-Spiele löschen")
-            c_games = db.get("challenge_games", {})
-            if not c_games:
-                st.write("Keine Challenge-Spiele vorhanden.")
-            else:
-                for cg_id, cg in list(c_games.items()):
-                    c1, c2 = st.columns([3, 1])
-                    c1.write(f"**ID {cg_id}: {cg['name']}**")
-                    if c2.button(f"🗑️ Challenge-Spiel Löschen", key=f"del_cg_{cg_id}"):
-                        del c_games[cg_id]
-                        add_audit_log(db, f"Challenge-Spiel '{cg['name']}' gelöscht", user="Admin")
-                        update_db()
-                        st.rerun()
 
-        # TAB 3: Spieler
+        # TAB 3: Spieler-Verwaltung
         with tab_admin[2]:
-            st.subheader("Spieler hinzufügen / löschen")
+            st.subheader("👥 Spieler verwalten")
             c1, c2 = st.columns(2)
             new_p = c1.text_input("Neuer Spieler Name")
             if c1.button("Spieler Anlegen") and new_p:
@@ -730,11 +859,9 @@ elif page == "⚙️ Admin-Bereich":
 
         # TAB 4: Brackets
         with tab_admin[3]:
-            st.subheader("🌿 Double Elimination Bracket Generator & Löschen")
-            
+            st.subheader("🌿 Double Elimination Brackets")
             brackets = db.get("brackets_de", [])
             if brackets:
-                st.markdown("#### Aktive Brackets löschen")
                 for b_idx, b in enumerate(list(brackets)):
                     c1, c2 = st.columns([3, 1])
                     c1.write(f"**Bracket #{b['id']}: {b['name']}** ({b.get('game_name', 'General')})")
@@ -745,12 +872,8 @@ elif page == "⚙️ Admin-Bereich":
                         st.rerun()
                 st.markdown("---")
 
-            st.markdown("#### Neues Bracket Erstellen")
             p_list = list(db["players"].keys())
-            
-            if len(p_list) < 2:
-                st.warning("Mindestens 2 Spieler erforderlich.")
-            else:
+            if len(p_list) >= 2:
                 b_name = st.text_input("Turnier Name", value="Turnier 1")
                 b_game = st.selectbox("Spiel zuordnen", [g["name"] for g in db.get("games", {}).values()] if db.get("games") else ["Allgemein"])
                 sel_players = st.multiselect("Teilnehmer wählen", p_list, default=p_list)
@@ -759,22 +882,16 @@ elif page == "⚙️ Admin-Bereich":
                     num_players = len(sel_players)
                     next_power = 2 ** math.ceil(math.log2(num_players))
                     byes_needed = next_power - num_players
-                    
                     padded_players = sel_players + ["BYE"] * byes_needed
                     num_rounds = int(math.log2(next_power))
                     
                     rounds_data = []
-                    r1_winners = []
-                    r1_losers = []
-                    
+                    r1_winners, r1_losers = [], []
                     match_id_counter = 1
+                    
                     for i in range(0, len(padded_players), 2):
-                        p1 = padded_players[i]
-                        p2 = padded_players[i+1]
-                        
-                        auto_winner = None
-                        if p2 == "BYE": auto_winner = p1
-                        elif p1 == "BYE": auto_winner = p2
+                        p1, p2 = padded_players[i], padded_players[i+1]
+                        auto_winner = p1 if p2 == "BYE" else (p2 if p1 == "BYE" else None)
                         
                         r1_winners.append({"id": match_id_counter, "p1": p1, "p2": p2, "winner": auto_winner})
                         r1_losers.append({"id": match_id_counter, "p1": "TBD", "p2": "TBD", "winner": None})
@@ -804,28 +921,8 @@ elif page == "⚙️ Admin-Bereich":
                     st.success("Bracket erfolgreich erstellt!")
                     st.rerun()
 
-        # TAB 5: KotH Overrides
+        # TAB 5: Status Control
         with tab_admin[4]:
-            st.subheader("👑 King of the Hill Override")
-            games = db.get("games", {})
-            if games:
-                ov_g = st.selectbox("Spiel", list(games.keys()), format_func=lambda x: games[x]["name"], key="ov_g")
-                k_data = db["koth"].setdefault(ov_g, {"king": None, "streak": 0, "history": []})
-                
-                c1, c2 = st.columns(2)
-                new_king = c1.selectbox("König", ["NIEMAND"] + list(db["players"].keys()))
-                new_streak = c2.number_input("Streak", min_value=0, value=k_data.get("streak", 0))
-                
-                if st.button("Überschreiben"):
-                    k_data["king"] = None if new_king == "NIEMAND" else new_king
-                    k_data["streak"] = new_streak
-                    add_audit_log(db, f"KotH Override ({games[ov_g]['name']}): {new_king} ({new_streak})", user="Admin")
-                    update_db()
-                    st.success("KotH geändert!")
-                    st.rerun()
-
-        # TAB 6: Status
-        with tab_admin[5]:
             st.subheader("🔒 Bracket Status")
             c1, c2 = st.columns(2)
             if c1.button("🟢 ÖFFNEN"):
@@ -837,8 +934,8 @@ elif page == "⚙️ Admin-Bereich":
                 update_db()
                 st.rerun()
 
-        # TAB 7: Einsprüche
-        with tab_admin[6]:
+        # TAB 6: Einsprüche
+        with tab_admin[5]:
             st.subheader("📩 Einsprüche bearbeiten / löschen")
             for a_idx, app in enumerate(list(db["appeals"])):
                 with st.container(border=True):
@@ -857,13 +954,13 @@ elif page == "⚙️ Admin-Bereich":
                         update_db()
                         st.rerun()
 
-        # TAB 8: Logs
-        with tab_admin[7]:
+        # TAB 7: Logs
+        with tab_admin[6]:
             st.subheader("📊 Audit Logs")
             st.dataframe(db["audit_logs"], use_container_width=True)
 
-        # TAB 9: Backup
-        with tab_admin[8]:
+        # TAB 8: Backup
+        with tab_admin[7]:
             st.subheader("💾 Backup & Restore")
             st.download_button("data.json herunterladen", data=json.dumps(db, indent=2, ensure_ascii=False), file_name="data_backup.json")
             up_file = st.file_uploader("Backup hochladen", type=["json"])
