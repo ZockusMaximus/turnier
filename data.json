@@ -23,24 +23,8 @@
       "created_at": "2026-08-01 14:05:22"
     }
   },
-  "games": {
-    "2": {
-      "name": "War Thunder",
-      "creator": "Jan",
-      "custom_cover": "",
-      "steam_appid": "",
-      "note": "",
-      "link": "",
-      "reason": ""
-    }
-  },
-  "koth": {
-    "2": {
-      "king": null,
-      "streak": 0,
-      "history": []
-    }
-  },
+  "games": {},
+  "koth": {},
   "challenges": [
     {
       "id": 1,
@@ -272,6 +256,11 @@
       "timestamp": "2026-08-01 14:26:16",
       "user": "Admin",
       "action": "KotH Spiel 'Counter-Strike 2' gelöscht"
+    },
+    {
+      "timestamp": "2026-08-01 14:26:18",
+      "user": "Admin",
+      "action": "KotH Spiel 'War Thunder' gelöscht"
     }
   ],
   "challenge_games": {}
