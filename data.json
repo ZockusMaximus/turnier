@@ -56,7 +56,117 @@
     }
   },
   "challenges": [],
-  "brackets_de": [],
+  "brackets_de": [
+    {
+      "id": 1,
+      "name": "Turnier 1",
+      "game_name": "Counter-Strike 2",
+      "rounds": [
+        {
+          "winners": [
+            {
+              "id": 1,
+              "p1": "Victor",
+              "p2": "Alexander",
+              "winner": null
+            },
+            {
+              "id": 2,
+              "p1": "Jan",
+              "p2": "Marcel",
+              "winner": null
+            },
+            {
+              "id": 3,
+              "p1": "Sascha",
+              "p2": "Stefan",
+              "winner": null
+            },
+            {
+              "id": 4,
+              "p1": "BYE",
+              "p2": "BYE",
+              "winner": "BYE"
+            }
+          ],
+          "losers": [
+            {
+              "id": 1,
+              "p1": "TBD",
+              "p2": "TBD",
+              "winner": null
+            },
+            {
+              "id": 2,
+              "p1": "TBD",
+              "p2": "TBD",
+              "winner": null
+            },
+            {
+              "id": 3,
+              "p1": "TBD",
+              "p2": "TBD",
+              "winner": null
+            },
+            {
+              "id": 4,
+              "p1": "TBD",
+              "p2": "TBD",
+              "winner": null
+            }
+          ]
+        },
+        {
+          "winners": [
+            {
+              "id": 5,
+              "p1": "TBD",
+              "p2": "TBD",
+              "winner": null
+            },
+            {
+              "id": 6,
+              "p1": "TBD",
+              "p2": "TBD",
+              "winner": null
+            }
+          ],
+          "losers": [
+            {
+              "id": 5,
+              "p1": "TBD",
+              "p2": "TBD",
+              "winner": null
+            },
+            {
+              "id": 6,
+              "p1": "TBD",
+              "p2": "TBD",
+              "winner": null
+            }
+          ]
+        },
+        {
+          "winners": [
+            {
+              "id": 7,
+              "p1": "TBD",
+              "p2": "TBD",
+              "winner": null
+            }
+          ],
+          "losers": [
+            {
+              "id": 7,
+              "p1": "TBD",
+              "p2": "TBD",
+              "winner": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "appeals": [],
   "audit_logs": [
     {
@@ -98,6 +208,11 @@
       "timestamp": "2026-08-01 14:07:40",
       "user": "Jan",
       "action": "Spiel 'War Thunder' hinzugefügt von Jan"
+    },
+    {
+      "timestamp": "2026-08-01 14:13:01",
+      "user": "Admin",
+      "action": "DE Bracket 'Turnier 1' generiert (6 Spieler, 2 Freilose)."
     }
   ]
 }
