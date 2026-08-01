@@ -100,6 +100,16 @@
           "timestamp": "2026-08-01 14:53:41"
         }
       ]
+    },
+    {
+      "id": 2,
+      "creator": "Victor",
+      "challenge_game_id": "1",
+      "title": "No Hit run",
+      "description": "No Hits",
+      "difficulty": "Leicht",
+      "timestamp": "2026-08-01 14:54:49",
+      "completions": []
     }
   ],
   "brackets_de": [],
@@ -334,6 +344,11 @@
       "timestamp": "2026-08-01 14:53:41",
       "user": "Jan",
       "action": "Challenge #1 von Jan absolviert."
+    },
+    {
+      "timestamp": "2026-08-01 14:54:49",
+      "user": "Victor",
+      "action": "Challenge 'No Hit run' von Victor erstellt."
     }
   ],
   "challenge_games": {
