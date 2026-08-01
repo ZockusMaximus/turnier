@@ -57,12 +57,19 @@
     },
     "2": {
       "king": "Jan",
-      "streak": 1,
+      "streak": 2,
       "history": [
         {
           "timestamp": "2026-08-01 14:51:32",
           "defender": "Jan",
           "challenger": "Thron-Gründung",
+          "winner": "Jan",
+          "format": "Best of 1 (Bo1)"
+        },
+        {
+          "timestamp": "2026-08-01 14:52:19",
+          "defender": "Jan",
+          "challenger": "Marcel",
           "winner": "Jan",
           "format": "Best of 1 (Bo1)"
         }
@@ -282,6 +289,11 @@
       "timestamp": "2026-08-01 14:51:32",
       "user": "Jan",
       "action": "KotH Spiel 'Rocket League' angelegt von Jan. King: Jan"
+    },
+    {
+      "timestamp": "2026-08-01 14:52:19",
+      "user": "Jan",
+      "action": "KotH (Rocket League): Jan gewann gegen Marcel"
     }
   ],
   "challenge_games": {}
