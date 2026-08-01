@@ -484,6 +484,11 @@
       "timestamp": "2026-08-01 20:43:13",
       "user": "Sascha",
       "action": "Bracket Single (Blood Bowl 2): Sascha gewinnt Match R1_M2"
+    },
+    {
+      "timestamp": "2026-08-01 20:43:19",
+      "user": "Jan",
+      "action": "Bracket Single (Blood Bowl 2): Jan gewinnt Match R1_M3"
     }
   ],
   "challenge_games": {
@@ -577,7 +582,7 @@
             "id": "R1_M3",
             "p1": "Jan",
             "p2": "Alexander",
-            "winner": null
+            "winner": "Jan"
           },
           {
             "id": "R1_M4",
@@ -595,7 +600,7 @@
           },
           {
             "id": "R2_M2",
-            "p1": "TBD",
+            "p1": "Jan",
             "p2": "BYE (Freilos)",
             "winner": null
           }
