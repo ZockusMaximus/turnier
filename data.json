@@ -24,15 +24,6 @@
     }
   },
   "games": {
-    "1": {
-      "name": "Counter-Strike 2",
-      "creator": "Victor",
-      "custom_cover": "",
-      "steam_appid": "",
-      "note": "",
-      "link": "",
-      "reason": ""
-    },
     "2": {
       "name": "War Thunder",
       "creator": "Jan",
@@ -44,11 +35,6 @@
     }
   },
   "koth": {
-    "1": {
-      "king": null,
-      "streak": 0,
-      "history": []
-    },
     "2": {
       "king": null,
       "streak": 0,
@@ -281,6 +267,12 @@
       "timestamp": "2026-08-01 14:16:44",
       "user": "Jan",
       "action": "Challenge 'dum die dum' von Jan erstellt."
+    },
+    {
+      "timestamp": "2026-08-01 14:26:16",
+      "user": "Admin",
+      "action": "KotH Spiel 'Counter-Strike 2' gelöscht"
     }
-  ]
+  ],
+  "challenge_games": {}
 }
