@@ -27,23 +27,6 @@
   "koth": {},
   "challenges": [
     {
-      "id": 1,
-      "creator": "Victor",
-      "game_id": "1",
-      "title": "sei der schnellste",
-      "description": "Dies das",
-      "difficulty": "Schwer",
-      "timestamp": "2026-08-01 14:14:59",
-      "completions": [
-        {
-          "player": "Alexander",
-          "rating": 3,
-          "comment": "",
-          "timestamp": "2026-08-01 14:15:30"
-        }
-      ]
-    },
-    {
       "id": 2,
       "creator": "Jan",
       "game_id": "2",
@@ -261,6 +244,11 @@
       "timestamp": "2026-08-01 14:26:18",
       "user": "Admin",
       "action": "KotH Spiel 'War Thunder' gelöscht"
+    },
+    {
+      "timestamp": "2026-08-01 14:26:22",
+      "user": "Admin",
+      "action": "Challenge #1 (sei der schnellste) gelöscht"
     }
   ],
   "challenge_games": {}
