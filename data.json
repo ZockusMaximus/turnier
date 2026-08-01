@@ -704,7 +704,7 @@
             "id": "W_R3_M1",
             "p1": "Alexander",
             "p2": "Stefan",
-            "winner": null
+            "winner": "Alexander"
           }
         ]
       ],
@@ -750,7 +750,7 @@
       ],
       "grand_final": {
         "id": "GF_M1",
-        "p1": "TBD",
+        "p1": "Alexander",
         "p2": "TBD",
         "winner": null
       },
