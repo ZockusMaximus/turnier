@@ -68,7 +68,7 @@
               "id": 1,
               "p1": "Victor",
               "p2": "Alexander",
-              "winner": null
+              "winner": "Alexander"
             },
             {
               "id": 2,
@@ -92,7 +92,7 @@
           "losers": [
             {
               "id": 1,
-              "p1": "TBD",
+              "p1": "Victor",
               "p2": "TBD",
               "winner": null
             },
@@ -120,7 +120,7 @@
           "winners": [
             {
               "id": 5,
-              "p1": "TBD",
+              "p1": "Alexander",
               "p2": "TBD",
               "winner": null
             },
@@ -213,6 +213,11 @@
       "timestamp": "2026-08-01 14:13:01",
       "user": "Admin",
       "action": "DE Bracket 'Turnier 1' generiert (6 Spieler, 2 Freilose)."
+    },
+    {
+      "timestamp": "2026-08-01 14:13:10",
+      "user": "System",
+      "action": "Bracket 'Turnier 1': Alexander schlägt Victor"
     }
   ]
 }
