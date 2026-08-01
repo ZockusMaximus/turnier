@@ -31,6 +31,14 @@
       "link": "https://store.steampowered.com/app/730/",
       "format": "Best of 1 (Bo1)",
       "rules": "nur avp auf map xy"
+    },
+    "2": {
+      "name": "Rocket League",
+      "creator": "Jan",
+      "custom_cover": "https://via.placeholder.com/460x215/1e293b/00f0ff?text=KEIN+COVER",
+      "link": "",
+      "format": "Best of 1 (Bo1)",
+      "rules": "Meisten tore"
     }
   },
   "koth": {
@@ -43,6 +51,19 @@
           "defender": "Victor",
           "challenger": "Thron-Gründung",
           "winner": "Victor",
+          "format": "Best of 1 (Bo1)"
+        }
+      ]
+    },
+    "2": {
+      "king": "Jan",
+      "streak": 1,
+      "history": [
+        {
+          "timestamp": "2026-08-01 14:51:32",
+          "defender": "Jan",
+          "challenger": "Thron-Gründung",
+          "winner": "Jan",
           "format": "Best of 1 (Bo1)"
         }
       ]
@@ -256,6 +277,11 @@
       "timestamp": "2026-08-01 14:51:06",
       "user": "Victor",
       "action": "KotH Spiel 'CS2' angelegt von Victor. King: Victor"
+    },
+    {
+      "timestamp": "2026-08-01 14:51:32",
+      "user": "Jan",
+      "action": "KotH Spiel 'Rocket League' angelegt von Jan. King: Jan"
     }
   ],
   "challenge_games": {}
