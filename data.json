@@ -56,6 +56,16 @@
       "difficulty": "Mittel",
       "timestamp": "2026-08-01 14:29:20",
       "completions": []
+    },
+    {
+      "id": 2,
+      "creator": "Jan",
+      "challenge_game_id": "2",
+      "title": "Be best",
+      "description": "super",
+      "difficulty": "Unmöglich",
+      "timestamp": "2026-08-01 14:30:06",
+      "completions": []
     }
   ],
   "brackets_de": [
@@ -285,6 +295,11 @@
       "timestamp": "2026-08-01 14:29:20",
       "user": "Victor",
       "action": "Challenge 'dasd' von Victor erstellt."
+    },
+    {
+      "timestamp": "2026-08-01 14:30:06",
+      "user": "Jan",
+      "action": "Challenge 'Be best' von Jan erstellt."
     }
   ],
   "challenge_games": {
