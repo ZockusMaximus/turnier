@@ -564,10 +564,76 @@
       "content_html": "🏆 <b>Victor</b> hat die Challenge <b>1 Panzer Challange</b> (<span style='color:#00f0ff;'><b>War Thunder</b></span>) erfolgreich gemeistert!",
       "category": "CHALLENGE",
       "custom_color": ""
+    },
+    {
+      "id": 7,
+      "timestamp": "2026-08-01 21:09:41",
+      "title": "🏆 Neues Double Elimination Turnier: Blood Bowl 2",
+      "content_html": "Das Turnier in <b>Blood Bowl 2</b> wurde gestartet! 6 Teilnehmer.",
+      "category": "GENERAL",
+      "custom_color": "#00f0ff"
     }
   ],
   "brackets": {
     "single": null,
-    "double": null
+    "double": {
+      "game_name": "Blood Bowl 2",
+      "cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/236690/header.jpg",
+      "rules": "Standard Rule Set",
+      "link": "https://store.steampowered.com/app/236690/",
+      "type": "double",
+      "created_at": "2026-08-01 21:09:41",
+      "champion": null,
+      "rounds": [
+        [
+          {
+            "id": "R1_M1",
+            "p1": "Stefan",
+            "p2": "Alexander",
+            "winner": null
+          },
+          {
+            "id": "R1_M2",
+            "p1": "Sascha",
+            "p2": "Marcel",
+            "winner": null
+          },
+          {
+            "id": "R1_M3",
+            "p1": "Victor",
+            "p2": "Jan",
+            "winner": null
+          },
+          {
+            "id": "R1_M4",
+            "p1": "BYE (Freilos)",
+            "p2": "BYE (Freilos)",
+            "winner": "BYE (Freilos)"
+          }
+        ],
+        [
+          {
+            "id": "R2_M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null
+          },
+          {
+            "id": "R2_M2",
+            "p1": "TBD",
+            "p2": "BYE (Freilos)",
+            "winner": null
+          }
+        ],
+        [
+          {
+            "id": "R3_M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null
+          }
+        ]
+      ]
+    }
   }
 }
