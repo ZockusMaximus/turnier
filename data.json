@@ -9,6 +9,9 @@
     },
     "Alexander": {
       "created_at": "2026-08-01 14:04:59"
+    },
+    "Jan": {
+      "created_at": "2026-08-01 14:05:02"
     }
   },
   "games": {},
@@ -26,6 +29,11 @@
       "timestamp": "2026-08-01 14:04:59",
       "user": "Admin",
       "action": "Spieler angelegt: Alexander"
+    },
+    {
+      "timestamp": "2026-08-01 14:05:02",
+      "user": "Admin",
+      "action": "Spieler angelegt: Jan"
     }
   ]
 }
