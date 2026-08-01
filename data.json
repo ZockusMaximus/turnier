@@ -670,14 +670,14 @@
             "id": "L_R2_M2",
             "p1": "Sascha",
             "p2": "Marcel",
-            "winner": null,
+            "winner": "Sascha",
             "type": "loser"
           }
         ],
         [
           {
             "id": "L_R3_M1",
-            "p1": "TBD",
+            "p1": "Sascha",
             "p2": "TBD",
             "winner": null,
             "type": "loser"
