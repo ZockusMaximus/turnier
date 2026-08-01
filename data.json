@@ -596,10 +596,147 @@
       "content_html": "<b>Victor</b> hat das Turnier <b>Blood Bowl 2</b> gewonnen!",
       "category": "BRACKET",
       "custom_color": "#f59e0b"
+    },
+    {
+      "id": 11,
+      "timestamp": "2026-08-01 22:45:10",
+      "title": "🏆 Neues Double Elimination Turnier: Blood Bowl 2",
+      "content_html": "Das Turnier in <b>Blood Bowl 2</b> wurde gestartet! 6 Teilnehmer.",
+      "category": "GENERAL",
+      "custom_color": "#00f0ff"
     }
   ],
   "brackets": {
     "single": null,
-    "double": null
+    "double": {
+      "game_name": "Blood Bowl 2",
+      "cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/236690/header.jpg",
+      "rules": "",
+      "link": "https://store.steampowered.com/app/236690/",
+      "type": "double",
+      "created_at": "2026-08-01 22:45:10",
+      "champion": null,
+      "rounds": [
+        [
+          {
+            "id": "W1M1",
+            "p1": "Jan",
+            "p2": "BYE (Freilos)",
+            "winner": "Jan",
+            "p1_origin": null,
+            "p2_origin": null
+          },
+          {
+            "id": "W1M2",
+            "p1": "Stefan",
+            "p2": "Victor",
+            "winner": null,
+            "p1_origin": null,
+            "p2_origin": null
+          },
+          {
+            "id": "W1M3",
+            "p1": "Marcel",
+            "p2": "Sascha",
+            "winner": null,
+            "p1_origin": null,
+            "p2_origin": null
+          },
+          {
+            "id": "W1M4",
+            "p1": "Alexander",
+            "p2": "BYE (Freilos)",
+            "winner": "Alexander",
+            "p1_origin": null,
+            "p2_origin": null
+          }
+        ],
+        [
+          {
+            "id": "W2M1",
+            "p1": "Jan",
+            "p2": "TBD",
+            "p1_origin": "Gewinner W1M1",
+            "p2_origin": "Gewinner W1M2",
+            "winner": null
+          },
+          {
+            "id": "W2M2",
+            "p1": "TBD",
+            "p2": "Alexander",
+            "p1_origin": "Gewinner W1M3",
+            "p2_origin": "Gewinner W1M4",
+            "winner": null
+          }
+        ],
+        [
+          {
+            "id": "W3M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "p1_origin": "Gewinner W2M1",
+            "p2_origin": "Gewinner W2M2",
+            "winner": null
+          }
+        ]
+      ],
+      "losers_rounds": [
+        [
+          {
+            "id": "L1M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "p1_origin": "Verlierer W1M2",
+            "p2_origin": "Verlierer W1M3",
+            "winner": null
+          }
+        ],
+        [
+          {
+            "id": "L2M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "p1_origin": "Sieger L1M1",
+            "p2_origin": "Verlierer W2M1",
+            "winner": null
+          },
+          {
+            "id": "L2M2",
+            "p1": "TBD",
+            "p2": "BYE (Freilos)",
+            "p1_origin": "Verlierer W2M2",
+            "p2_origin": "Freilos",
+            "winner": null
+          }
+        ],
+        [
+          {
+            "id": "L3M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "p1_origin": "Sieger L2M1",
+            "p2_origin": "Verlierer W3M1",
+            "winner": null
+          }
+        ]
+      ],
+      "grand_final": {
+        "id": "GF_M1",
+        "p1": "TBD",
+        "p2": "TBD",
+        "p1_origin": "Winner Champ",
+        "p2_origin": "Loser Champ",
+        "winner": null
+      },
+      "grand_final_reset": {
+        "id": "GF_RESET",
+        "p1": "TBD",
+        "p2": "TBD",
+        "p1_origin": "Winner Champ",
+        "p2_origin": "Loser Champ",
+        "winner": null,
+        "active": false
+      }
+    }
   }
 }
