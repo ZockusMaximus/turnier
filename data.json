@@ -53,25 +53,7 @@
       ]
     }
   },
-  "challenges": [
-    {
-      "id": 1,
-      "creator": "Victor",
-      "challenge_game_id": "1",
-      "title": "Speed Run",
-      "description": "Nimm dein Hut",
-      "difficulty": "Mittel",
-      "timestamp": "2026-08-01 14:41:36",
-      "completions": [
-        {
-          "player": "Victor",
-          "rating": 2,
-          "comment": "eigentlich ganz easy",
-          "timestamp": "2026-08-01 14:42:17"
-        }
-      ]
-    }
-  ],
+  "challenges": [],
   "brackets_de": [],
   "appeals": [],
   "audit_logs": [
@@ -264,6 +246,11 @@
       "timestamp": "2026-08-01 14:43:37",
       "user": "Admin",
       "action": "Challenge-Spiel 'Elden Ring' gelöscht"
+    },
+    {
+      "timestamp": "2026-08-01 14:43:39",
+      "user": "Admin",
+      "action": "Challenge #1 (Speed Run) gelöscht"
     }
   ],
   "challenge_games": {}
