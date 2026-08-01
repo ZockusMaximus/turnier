@@ -33,7 +33,7 @@
   },
   "koth": {
     "1": {
-      "king": "Victor",
+      "king": "Alexander",
       "streak": 1,
       "history": [
         {
@@ -42,6 +42,13 @@
           "challenger": "Thron-Gründung",
           "winner": "Victor",
           "format": "Kröne dich selbst"
+        },
+        {
+          "timestamp": "2026-08-01 14:36:10",
+          "defender": "Victor",
+          "challenger": "Alexander",
+          "winner": "Alexander",
+          "format": "Best of 1 (Bo1)"
         }
       ]
     }
@@ -219,6 +226,11 @@
       "timestamp": "2026-08-01 14:34:23",
       "user": "Victor",
       "action": "Spiel 'Counter Strike 2' angelegt. Erster King: Victor"
+    },
+    {
+      "timestamp": "2026-08-01 14:36:10",
+      "user": "Alexander",
+      "action": "KotH (Counter Strike 2): Alexander gewann gegen Victor"
     }
   ],
   "challenge_games": {}
