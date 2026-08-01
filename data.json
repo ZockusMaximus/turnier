@@ -588,14 +588,6 @@
       "content_html": "Das Turnier in <b>Blood Bowl 2</b> wurde gestartet! 6 Teilnehmer.",
       "category": "GENERAL",
       "custom_color": "#00f0ff"
-    },
-    {
-      "id": 10,
-      "timestamp": "2026-08-01 21:46:05",
-      "title": "🏆 Neues Single Elimination Turnier: Mortal Kombat 1",
-      "content_html": "Das Turnier in <b>Mortal Kombat 1</b> wurde gestartet! 6 Teilnehmer.",
-      "category": "GENERAL",
-      "custom_color": "#00f0ff"
     }
   ],
   "brackets": {
