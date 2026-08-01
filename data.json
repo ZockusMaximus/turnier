@@ -564,10 +564,150 @@
       "content_html": "🏆 <b>Victor</b> hat die Challenge <b>1 Panzer Challange</b> (<span style='color:#00f0ff;'><b>War Thunder</b></span>) erfolgreich gemeistert!",
       "category": "CHALLENGE",
       "custom_color": ""
+    },
+    {
+      "id": 7,
+      "timestamp": "2026-08-01 21:56:42",
+      "title": "🏆 Neues Double Elimination Turnier: Blood Bowl 2",
+      "content_html": "Das Turnier in <b>Blood Bowl 2</b> wurde gestartet! 6 Teilnehmer.",
+      "category": "GENERAL",
+      "custom_color": "#00f0ff"
     }
   ],
   "brackets": {
     "single": null,
-    "double": null
+    "double": {
+      "game_name": "Blood Bowl 2",
+      "cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/236690/header.jpg",
+      "rules": "Standard Rule Set",
+      "link": "https://store.steampowered.com/app/236690/",
+      "type": "double",
+      "created_at": "2026-08-01 21:56:42",
+      "champion": null,
+      "rounds": [
+        [
+          {
+            "id": "W_R1_M1",
+            "p1": "Stefan",
+            "p2": "BYE (Freilos)",
+            "winner": "Stefan",
+            "type": "winner"
+          },
+          {
+            "id": "W_R1_M2",
+            "p1": "Victor",
+            "p2": "BYE (Freilos)",
+            "winner": "Victor",
+            "type": "winner"
+          },
+          {
+            "id": "W_R1_M3",
+            "p1": "Jan",
+            "p2": "Sascha",
+            "winner": null,
+            "type": "winner"
+          },
+          {
+            "id": "W_R1_M4",
+            "p1": "Marcel",
+            "p2": "Alexander",
+            "winner": null,
+            "type": "winner"
+          }
+        ],
+        [
+          {
+            "id": "W_R2_M1",
+            "p1": "Stefan",
+            "p2": "Victor",
+            "winner": null,
+            "type": "winner"
+          },
+          {
+            "id": "W_R2_M2",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null,
+            "type": "winner"
+          }
+        ],
+        [
+          {
+            "id": "W_R3_M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null,
+            "type": "winner"
+          }
+        ]
+      ],
+      "losers_rounds": [
+        [
+          {
+            "id": "L_R1_M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null,
+            "type": "loser"
+          },
+          {
+            "id": "L_R1_M2",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null,
+            "type": "loser"
+          }
+        ],
+        [
+          {
+            "id": "L_R2_M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null,
+            "type": "loser"
+          },
+          {
+            "id": "L_R2_M2",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null,
+            "type": "loser"
+          }
+        ],
+        [
+          {
+            "id": "L_R3_M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null,
+            "type": "loser"
+          }
+        ],
+        [
+          {
+            "id": "L_R4_M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null,
+            "type": "loser"
+          }
+        ]
+      ],
+      "grand_final": {
+        "id": "GF_M1",
+        "p1": "TBD",
+        "p2": "TBD",
+        "winner": null,
+        "type": "gf"
+      },
+      "grand_final_reset": {
+        "id": "GF_RESET",
+        "p1": "TBD",
+        "p2": "TBD",
+        "winner": null,
+        "active": false,
+        "type": "gf_reset"
+      }
+    }
   }
 }
