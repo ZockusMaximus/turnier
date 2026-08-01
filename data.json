@@ -580,14 +580,6 @@
       "content_html": "Das Turnier in <b>Mortal Kombat 1</b> wurde gestartet! 6 Teilnehmer.",
       "category": "GENERAL",
       "custom_color": "#00f0ff"
-    },
-    {
-      "id": 9,
-      "timestamp": "2026-08-01 21:38:23",
-      "title": "👑 CHAMPION GEKRÖNT: Marcel",
-      "content_html": "<b>Marcel</b> hat soeben das Turnier <span style='color:#00f0ff;'><b>Mortal Kombat 1</b></span> gewonnen!",
-      "category": "BRACKET",
-      "custom_color": "#f59e0b"
     }
   ],
   "brackets": {
