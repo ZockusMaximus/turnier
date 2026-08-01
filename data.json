@@ -122,7 +122,7 @@
               "id": 5,
               "p1": "Alexander",
               "p2": "Jan",
-              "winner": null
+              "winner": "Alexander"
             },
             {
               "id": 6,
@@ -134,7 +134,7 @@
           "losers": [
             {
               "id": 5,
-              "p1": "TBD",
+              "p1": "Jan",
               "p2": "TBD",
               "winner": null
             },
@@ -150,7 +150,7 @@
           "winners": [
             {
               "id": 7,
-              "p1": "TBD",
+              "p1": "Alexander",
               "p2": "TBD",
               "winner": null
             }
@@ -228,6 +228,11 @@
       "timestamp": "2026-08-01 14:13:16",
       "user": "System",
       "action": "Bracket 'Turnier 1': Sascha schlägt Stefan"
+    },
+    {
+      "timestamp": "2026-08-01 14:13:57",
+      "user": "System",
+      "action": "Bracket 'Turnier 1': Alexander schlägt Jan"
     }
   ]
 }
