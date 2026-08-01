@@ -288,13 +288,14 @@
       "timestamp": "2026-08-01 14:32:38",
       "user": "Admin",
       "action": "Challenge #2 (Be best) gelöscht"
+    },
+    {
+      "timestamp": "2026-08-01 14:32:40",
+      "user": "Admin",
+      "action": "Challenge-Spiel 'Elden Ring' gelöscht"
     }
   ],
   "challenge_games": {
-    "1": {
-      "name": "Elden Ring",
-      "cover": ""
-    },
     "2": {
       "name": "Counter Strike",
       "cover": ""
