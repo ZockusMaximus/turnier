@@ -3,6 +3,7 @@ import json
 import os
 import requests
 import base64
+import re
 import math
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -17,7 +18,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Dark Metal Aesthetic
 st.markdown("""
 <style>
     .stApp {
@@ -73,18 +73,17 @@ st.markdown("""
         box-shadow: 0 0 10px rgba(0, 240, 255, 0.5) !important;
     }
     
-    .koth-card {
-        border: 1px solid #334155;
-        background: #1e293b;
-        padding: 15px;
-        border-radius: 6px;
-        text-align: center;
-    }
+    /* Difficulty Badges */
+    .diff-leicht { background-color: #10b981; color: #000; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
+    .diff-mittel { background-color: #f59e0b; color: #000; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
+    .diff-schwer { background-color: #f97316; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
+    .diff-extrem { background-color: #ef4444; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
+    .diff-unmoeglich { background-color: #a855f7; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: bold; box-shadow: 0 0 8px #a855f7; }
 </style>
 """, unsafe_allow_html=True)
 
 # ------------------------------------------------------------------------------
-# 2. PERSISTENZ & UTILS
+# 2. PERSISTENZ & RELIABLE STEAM IMAGE ENGINE
 # ------------------------------------------------------------------------------
 DATA_FILE = "data.json"
 BERLIN_TZ = ZoneInfo("Europe/Berlin")
@@ -99,7 +98,8 @@ def get_default_data():
             "current_season": 1
         },
         "players": {},
-        "games": {}, # KPL. LEER - Keine Vorab-Spiele
+        "games": {},           # KotH Spiele
+        "challenge_games": {}, # KPL. SEPARATE Spiele-Datenbank für Challenges
         "koth": {},
         "challenges": [],
         "brackets_de": [],
@@ -138,7 +138,9 @@ def load_data():
         return default
     try:
         with open(DATA_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
+            data.setdefault("challenge_games", {})
+            return data
     except Exception:
         return get_default_data()
 
@@ -159,11 +161,37 @@ def add_audit_log(data, action, user="System"):
         "action": action
     })
 
-def get_steam_cover(appid, custom_override=""):
-    if custom_override:
-        return custom_override
+def resolve_steam_cover(input_val, custom_cover=""):
+    """Zuverlässiges Zielen auf Steam Cover oder Custom URLs."""
+    if custom_cover and custom_cover.strip():
+        return custom_cover.strip()
+    
+    if not input_val:
+        return "https://via.placeholder.com/460x215/1e293b/00f0ff?text=KEIN+COVER"
+    
+    input_str = str(input_val).strip()
+    
+    # 1. Wenn es bereits eine direkte Bild-URL ist
+    if input_str.startswith("http") and any(input_str.endswith(ext) for ext in [".jpg", ".png", ".jpeg", ".webp"]):
+        return input_str
+
+    # 2. Extrahiere AppID aus Steam-URL oder Reine Zahl
+    appid_match = re.search(r'/app/(\d+)', input_str)
+    if appid_match:
+        appid = appid_match.group(1)
+    elif input_str.isdigit():
+        appid = input_str
+    else:
+        appid = None
+
     if appid:
+        # Steam Header Banner API URL
         return f"https://cdn.cloudflare.steamstatic.com/steam/apps/{appid}/header.jpg"
+        
+    # Falls es ein normaler Web-Link ohne extrahierbare AppID ist
+    if input_str.startswith("http"):
+        return input_str
+        
     return "https://via.placeholder.com/460x215/1e293b/00f0ff?text=KEIN+COVER"
 
 if "db" not in st.session_state:
@@ -173,46 +201,6 @@ def update_db():
     save_data(st.session_state.db)
 
 db = st.session_state.db
-
-# ------------------------------------------------------------------------------
-# HILFSFUNKTION: NEUES SPIEL FORMULAR (GEMÄSS SCREENSHOT)
-# ------------------------------------------------------------------------------
-def render_add_game_form():
-    with st.expander("➕ Neues Spiel vorschlagen / anlegen"):
-        player_list = list(db["players"].keys())
-        creator = st.selectbox("Dein Name (Ersteller):", ["-- Bitte wählen --"] + player_list)
-        
-        c1, c2 = st.columns(2)
-        g_name = c1.text_input("Spielname eingeben:", placeholder="z.B. Valheim")
-        g_cover = c2.text_input("Cover Bild-URL (optional):", placeholder="Leer für Steam / Bild-Link")
-        
-        c3, c4 = st.columns(2)
-        g_note = c3.text_input("Notiz / Kommentar (z.B. 6 Player Mod):")
-        g_link = c4.text_input("Website / Store Link (optional):", placeholder="https://...")
-        
-        g_reason = st.text_area("Begründung / Meinung (Warum sollte es hinzugefügt werden?):", placeholder="Erhöht den Spaß, hat super Koop-Modus...")
-        
-        if st.button("Vorschlag einreichen"):
-            if creator == "-- Bitte wählen --":
-                st.error("Bitte wähle deinen Namen als Ersteller aus.")
-            elif not g_name:
-                st.error("Bitte gib einen Spielnamen ein.")
-            else:
-                new_id = str(len(db.get("games", {})) + 1)
-                db.setdefault("games", {})[new_id] = {
-                    "name": g_name,
-                    "creator": creator,
-                    "custom_cover": g_cover,
-                    "steam_appid": "",
-                    "note": g_note,
-                    "link": g_link,
-                    "reason": g_reason
-                }
-                db.setdefault("koth", {})[new_id] = {"king": None, "streak": 0, "history": []}
-                add_audit_log(db, f"Spiel '{g_name}' hinzugefügt von {creator}", user=creator)
-                update_db()
-                st.success(f"Spiel '{g_name}' wurde erfolgreich hinzugefügt!")
-                st.rerun()
 
 # ------------------------------------------------------------------------------
 # 3. SIDEBAR NAVIGATION
@@ -227,22 +215,63 @@ page = st.sidebar.radio(
 )
 
 # ------------------------------------------------------------------------------
-# 4. KING OF THE HILL
+# 4. KING OF THE HILL (MIT DIREKT-KÖNIG ERSTELLUNG)
 # ------------------------------------------------------------------------------
 if page == "👑 King of the Hill":
     st.title("👑 KING OF THE HILL")
     
-    render_add_game_form()
-    
+    with st.expander("➕ Spiel eintragen & König werden"):
+        player_list = list(db["players"].keys())
+        if not player_list:
+            st.warning("Bitte erstelle zuerst mindestens einen Spieler im Admin-Bereich!")
+        else:
+            creator = st.selectbox("Dein Name (Ersteller / Erster König):", ["-- Bitte wählen --"] + player_list)
+            
+            c1, c2 = st.columns(2)
+            g_name = c1.text_input("Spielname eingeben:", placeholder="z.B. Valheim")
+            g_cover = c2.text_input("Cover Bild-URL oder Steam Store Link:", placeholder="Leer lassen oder Steam Link / Image URL")
+            g_link = st.text_input("Website / Store Link (optional):", placeholder="https://...")
+            
+            if st.button("Werde König"):
+                if creator == "-- Bitte wählen --":
+                    st.error("Bitte wähle deinen Namen aus!")
+                elif not g_name:
+                    st.error("Bitte gib einen Spielnamen ein!")
+                else:
+                    new_id = str(len(db.get("games", {})) + 1)
+                    db.setdefault("games", {})[new_id] = {
+                        "name": g_name,
+                        "creator": creator,
+                        "custom_cover": g_cover,
+                        "link": g_link
+                    }
+                    # Direkt der erste King werden!
+                    db.setdefault("koth", {})[new_id] = {
+                        "king": creator, 
+                        "streak": 1, 
+                        "history": [{
+                            "timestamp": get_now_str(),
+                            "defender": creator,
+                            "challenger": "Thron-Gründung",
+                            "winner": creator,
+                            "format": "Kröne dich selbst",
+                            "comment": "Thron gegründet"
+                        }]
+                    }
+                    add_audit_log(db, f"Spiel '{g_name}' angelegt. Erster King: {creator}", user=creator)
+                    update_db()
+                    st.success(f"Spiel '{g_name}' angelegt! Du bist jetzt der König!")
+                    st.rerun()
+
     games = db.get("games", {})
     if not games:
-        st.info("Noch keine Spiele vorhanden. Benutze das Formular oben oder den Admin-Bereich, um das erste Spiel anzulegen.")
+        st.info("Noch keine Spiele vorhanden. Benutze das Formular oben, um ein Spiel anzulegen und direkt König zu werden.")
     else:
         st.subheader("🔥 Aktuelle Könige Übersicht")
         cols = st.columns(min(len(games), 4))
         for idx, (g_id, g_info) in enumerate(games.items()):
             k_data = db["koth"].get(g_id, {"king": None, "streak": 0})
-            cover = get_steam_cover(g_info.get("steam_appid"), g_info.get("custom_cover"))
+            cover = resolve_steam_cover(g_info.get("custom_cover"))
             
             with cols[idx % len(cols)]:
                 with st.container(border=True):
@@ -259,11 +288,10 @@ if page == "👑 King of the Hill":
         
         col_img, col_detail = st.columns([1, 2])
         with col_img:
-            st.image(get_steam_cover(g_info.get("steam_appid"), g_info.get("custom_cover")), use_container_width=True)
+            st.image(resolve_steam_cover(g_info.get("custom_cover")), use_container_width=True)
         with col_detail:
             st.markdown(f"## {g_info['name']}")
-            st.write(f"Erstellt von: `{g_info.get('creator', 'Admin')}`")
-            if g_info.get('note'): st.write(f"Notiz: *{g_info['note']}*")
+            st.write(f"Gründer: `{g_info.get('creator', 'Admin')}`")
             if g_info.get('link'): st.markdown(f"[Store / Website Link]({g_info['link']})")
             st.write(f"Aktueller King: **{k_data['king'] or 'Thron unbesetzt'}** (Streak: **{k_data['streak']}**) ")
 
@@ -287,7 +315,6 @@ if page == "👑 King of the Hill":
                 
                 format_choice = st.selectbox("Format", ["Best of 1 (Bo1)", "Best of 3 (Bo3)", "Best of 5 (Bo5)", "Best of 7 (Bo7)"])
                 winner = st.selectbox("Sieger", [defender, challenger])
-                comment = st.text_input("Match-Kommentar")
                 
                 if st.form_submit_button("Ergebnis eintragen"):
                     if winner == k_data["king"]:
@@ -301,8 +328,7 @@ if page == "👑 King of the Hill":
                         "defender": defender,
                         "challenger": challenger,
                         "winner": winner,
-                        "format": format_choice,
-                        "comment": comment
+                        "format": format_choice
                     })
                     add_audit_log(db, f"KotH ({g_info['name']}): {winner} gewann gegen {defender if winner == challenger else challenger}", user=winner)
                     update_db()
@@ -315,50 +341,66 @@ if page == "👑 King of the Hill":
             with st.container(border=True):
                 st.write(f"🏆 **Sieger: {entry['winner']}** ({entry['format']}) | {entry['timestamp']}")
                 st.caption(f"{entry['defender']} vs {entry['challenger']}")
-                if entry.get("comment"): st.info(f"Kommentar: {entry['comment']}")
 
 # ------------------------------------------------------------------------------
-# 5. NEUE SEKTION: CHALLENGES
+# 5. CHALLENGES (FARBIGE DIFFICULTY BADGES & SEPARATE SPIELE-DATENBANK)
 # ------------------------------------------------------------------------------
 elif page == "🎯 Challenges":
     st.title("🎯 CHALLENGES & HERAUSFORDERUNGEN")
     
-    tab1, tab2 = st.tabs(["🔥 Aktive Challenges", "➕ Challenge Generieren"])
+    tab1, tab2 = st.tabs(["🔥 Aktive Challenges", "➕ Challenge Erstellen"])
     
-    games = db.get("games", {})
+    challenge_games = db.setdefault("challenge_games", {})
     player_list = list(db["players"].keys())
     
     with tab2:
-        st.subheader("Neue Spiel-Challenge erstellen")
-        if not games:
-            st.error("Lege zuerst mindestens ein Spiel an!")
-        elif not player_list:
+        st.subheader("Neue Challenge erstellen")
+        if not player_list:
             st.error("Lege zuerst Spieler im Admin-Bereich an!")
         else:
-            with st.form("create_challenge_form", clear_on_submit=True):
-                creator = st.selectbox("Ersteller", player_list)
-                game_id = st.selectbox("Spiel wählen", list(games.keys()), format_func=lambda x: games[x]["name"])
-                c_title = st.text_input("Challenge Titel", placeholder="z.B. Speedrun unter 10 Minuten / No Hit Boss")
-                c_desc = st.text_area("Detaillierte Beschreibung / Regeln", placeholder="Erkläre exakt, was getan werden muss...")
-                c_difficulty = st.select_slider("Schwierigkeitsgrad", options=["Leicht", "Mittel", "Schwer", "Extrem", "Unmöglich"])
-                
-                if st.form_submit_button("Challenge Veröffentlichen"):
-                    if c_title and c_desc:
-                        new_c = {
-                            "id": len(db.get("challenges", [])) + 1,
-                            "creator": creator,
-                            "game_id": game_id,
-                            "title": c_title,
-                            "description": c_desc,
-                            "difficulty": c_difficulty,
-                            "timestamp": get_now_str(),
-                            "completions": []
+            # Option ein Challenge-Spiel direkt anzulegen
+            with st.expander("➕ Neues Spiel für Challenges anlegen (Separat von KotH)"):
+                cg_name = st.text_input("Challenge-Spiel Name", placeholder="z.B. Elden Ring")
+                cg_cover = st.text_input("Cover Bild-URL oder Steam Link", placeholder="Steam Link / Bild URL")
+                if st.button("Challenge-Spiel Speichern"):
+                    if cg_name:
+                        new_cg_id = str(len(challenge_games) + 1)
+                        challenge_games[new_cg_id] = {
+                            "name": cg_name,
+                            "cover": cg_cover
                         }
-                        db.setdefault("challenges", []).append(new_c)
-                        add_audit_log(db, f"Challenge '{c_title}' von {creator} erstellt.", user=creator)
                         update_db()
-                        st.success("Challenge erstellt!")
+                        st.success(f"Challenge-Spiel '{cg_name}' wurde separat hinzugefügt!")
                         st.rerun()
+            
+            if not challenge_games:
+                st.info("Bitte lege zuerst ein Spiel für die Challenges an (siehe Klappmenü oben).")
+            else:
+                with st.form("create_challenge_form", clear_on_submit=True):
+                    creator = st.selectbox("Ersteller", player_list)
+                    cg_id = st.selectbox("Challenge-Spiel wählen", list(challenge_games.keys()), format_func=lambda x: challenge_games[x]["name"])
+                    c_title = st.text_input("Challenge Titel", placeholder="z.B. Speedrun unter 10 Minuten / No Hit Boss")
+                    c_desc = st.text_area("Detaillierte Beschreibung / Regeln", placeholder="Erkläre exakt, was getan werden muss...")
+                    
+                    c_difficulty = st.select_slider("Schwierigkeitsgrad", options=["Leicht", "Mittel", "Schwer", "Extrem", "Unmöglich"])
+                    
+                    if st.form_submit_button("Challenge Veröffentlichen"):
+                        if c_title and c_desc:
+                            new_c = {
+                                "id": len(db.get("challenges", [])) + 1,
+                                "creator": creator,
+                                "challenge_game_id": cg_id,
+                                "title": c_title,
+                                "description": c_desc,
+                                "difficulty": c_difficulty,
+                                "timestamp": get_now_str(),
+                                "completions": []
+                            }
+                            db.setdefault("challenges", []).append(new_c)
+                            add_audit_log(db, f"Challenge '{c_title}' von {creator} erstellt.", user=creator)
+                            update_db()
+                            st.success("Challenge erstellt!")
+                            st.rerun()
 
     with tab1:
         st.subheader("Übersicht aller Challenges")
@@ -366,29 +408,38 @@ elif page == "🎯 Challenges":
         if not challenges:
             st.info("Noch keine Challenges vorhanden.")
         else:
+            diff_css_map = {
+                "Leicht": "diff-leicht",
+                "Mittel": "diff-mittel",
+                "Schwer": "diff-schwer",
+                "Extrem": "diff-extrem",
+                "Unmöglich": "diff-unmoeglich"
+            }
+            
             for c in reversed(challenges):
-                g_info = games.get(c["game_id"], {"name": "Unbekannt", "steam_appid": "", "custom_cover": ""})
-                cover = get_steam_cover(g_info.get("steam_appid"), g_info.get("custom_cover"))
+                cg_info = challenge_games.get(c.get("challenge_game_id"), {"name": "Allgemein", "cover": ""})
+                cover = resolve_steam_cover(cg_info.get("cover"))
+                
+                diff_class = diff_css_map.get(c['difficulty'], 'diff-mittel')
                 
                 with st.container(border=True):
                     col_img, col_info = st.columns([1, 3])
                     with col_img:
                         st.image(cover, use_container_width=True)
                     with col_info:
-                        st.markdown(f"### {c['title']} (`{g_info['name']}`)")
-                        st.caption(f"Erstellt von: **{c['creator']}** | Schwierigkeit: **{c['difficulty']}** | Am: {c['timestamp']}")
+                        st.markdown(f"### {c['title']} (`{cg_info['name']}`)")
+                        st.markdown(f"Schwierigkeit: <span class='{diff_class}'>{c['difficulty']}</span> | Erstellt von: **{c['creator']}** | Am: {c['timestamp']}", unsafe_allow_html=True)
                         st.write(c["description"])
                     
-                    st.markdown("#### 🌟 Absolvierte Versuche / Success-List")
+                    st.markdown("#### 🌟 Absolvierte Versuche")
                     completions = c.get("completions", [])
                     if completions:
                         for comp in completions:
                             st.write(f"✅ **{comp['player']}** | Rating: **{comp['rating']} ⭐** | Kommentar: *\"{comp['comment']}\"* ({comp['timestamp']})")
                     else:
-                        st.caption("Noch niemand hat diese Challenge als absolviert eingetragen.")
+                        st.caption("Noch niemand hat diese Challenge geschafft.")
                     
-                    # Formular zum Absolvieren
-                    with st.expander(f"Eintragen: Challenge geschafft!"):
+                    with st.expander("Eintragen: Challenge geschafft!"):
                         if not player_list:
                             st.warning("Keine Spieler registriert.")
                         else:
@@ -410,7 +461,7 @@ elif page == "🎯 Challenges":
                                     st.rerun()
 
 # ------------------------------------------------------------------------------
-# 6. DOUBLE ELIMINATION BRACKET (DYNAMISCH MIT FREILOS / BYE FIX)
+# 6. DOUBLE ELIMINATION BRACKET
 # ------------------------------------------------------------------------------
 elif page == "🌿 Double Elimination Bracket":
     st.title("🌿 DOUBLE ELIMINATION BRACKET")
@@ -457,7 +508,6 @@ elif page == "🌿 Double Elimination Bracket":
                                     m["winner"] = win_choice
                                     loser = p2 if win_choice == p1 else p1
                                     
-                                    # Gewinner rückt in nächste Winners-Runde vor
                                     if r_idx + 1 < len(rounds):
                                         next_m = rounds[r_idx + 1]["winners"][m_idx // 2]
                                         if m_idx % 2 == 0:
@@ -465,7 +515,6 @@ elif page == "🌿 Double Elimination Bracket":
                                         else:
                                             next_m["p2"] = win_choice
                                     
-                                    # Verlierer ins Losers Bracket verschieben
                                     if loser != "BYE":
                                         l_target = rounds[r_idx]["losers"]
                                         for lm in l_target:
@@ -553,7 +602,6 @@ elif page == "📩 Einspruch & Anträge":
 elif page == "⚙️ Admin-Bereich":
     st.title("⚙️ ADMIN CONTROL PANEL")
     
-    # PASSWORT STRIKT GEÄNDERT AUF: zm1234
     admin_pw = st.secrets.get("ADMIN_PASSWORD", "zm1234")
     input_pw = st.text_input("Admin-Passwort eingeben", type="password")
     
@@ -575,14 +623,11 @@ elif page == "⚙️ Admin-Bereich":
         
         # TAB 1: Spiele Verwaltung
         with tab_admin[0]:
-            st.subheader("Spiele verwalten")
-            render_add_game_form()
-            
-            st.markdown("---")
+            st.subheader("KotH Spiele verwalten")
             games = db.get("games", {})
             for g_id, g in list(games.items()):
                 c1, c2 = st.columns([3, 1])
-                c1.write(f"**ID {g_id}: {g['name']}** (Ersteller: {g.get('creator', 'Admin')})")
+                c1.write(f"**ID {g_id}: {g['name']}** (Gründer: {g.get('creator', 'Admin')})")
                 if c2.button(f"Löschen #{g_id}", key=f"del_g_{g_id}"):
                     del games[g_id]
                     if g_id in db["koth"]: del db["koth"][g_id]
@@ -608,7 +653,7 @@ elif page == "⚙️ Admin-Bereich":
                 update_db()
                 st.rerun()
 
-        # TAB 3: Double Elimination Bracket Generator (FIXED FÜR UNGERADE ANZAHL & AUTOMATIK)
+        # TAB 3: Double Elimination Bracket Generator
         with tab_admin[2]:
             st.subheader("🌿 Double Elimination Bracket Generator")
             p_list = list(db["players"].keys())
@@ -622,7 +667,6 @@ elif page == "⚙️ Admin-Bereich":
                 
                 if st.button("DOUBLE ELIMINATION BRACKET ERSTELLEN"):
                     num_players = len(sel_players)
-                    # Nächste 2er-Potenz ermitteln (für ausgeglichene Brackets)
                     next_power = 2 ** math.ceil(math.log2(num_players))
                     byes_needed = next_power - num_players
                     
@@ -630,8 +674,6 @@ elif page == "⚙️ Admin-Bereich":
                     num_rounds = int(math.log2(next_power))
                     
                     rounds_data = []
-                    
-                    # Runde 1 aufbauen
                     r1_winners = []
                     r1_losers = []
                     
@@ -640,33 +682,19 @@ elif page == "⚙️ Admin-Bereich":
                         p1 = padded_players[i]
                         p2 = padded_players[i+1]
                         
-                        # Freilos Automatik
                         auto_winner = None
                         if p2 == "BYE": auto_winner = p1
                         elif p1 == "BYE": auto_winner = p2
                         
-                        r1_winners.append({
-                            "id": match_id_counter,
-                            "p1": p1,
-                            "p2": p2,
-                            "winner": auto_winner
-                        })
-                        
-                        r1_losers.append({
-                            "id": match_id_counter,
-                            "p1": "TBD",
-                            "p2": "TBD",
-                            "winner": None
-                        })
+                        r1_winners.append({"id": match_id_counter, "p1": p1, "p2": p2, "winner": auto_winner})
+                        r1_losers.append({"id": match_id_counter, "p1": "TBD", "p2": "TBD", "winner": None})
                         match_id_counter += 1
                         
                     rounds_data.append({"winners": r1_winners, "losers": r1_losers})
                     
-                    # Folgerunden mit Platzhaltern generieren
                     curr_matches = len(r1_winners) // 2
                     for r in range(1, num_rounds):
-                        r_win = []
-                        r_los = []
+                        r_win, r_los = [], []
                         for _ in range(curr_matches):
                             r_win.append({"id": match_id_counter, "p1": "TBD", "p2": "TBD", "winner": None})
                             r_los.append({"id": match_id_counter, "p1": "TBD", "p2": "TBD", "winner": None})
@@ -681,9 +709,9 @@ elif page == "⚙️ Admin-Bereich":
                         "rounds": rounds_data
                     }
                     db.setdefault("brackets_de", []).append(new_bracket)
-                    add_audit_log(db, f"DE Bracket '{b_name}' generiert ({num_players} Spieler, {byes_needed} Freilose).", user="Admin")
+                    add_audit_log(db, f"DE Bracket '{b_name}' generiert.", user="Admin")
                     update_db()
-                    st.success("Bracket erfolgreich und komplett automatisiert erstellt!")
+                    st.success("Bracket erfolgreich erstellt!")
                     st.rerun()
 
         # TAB 4: KotH Overrides
