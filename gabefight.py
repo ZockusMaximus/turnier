@@ -82,14 +82,14 @@ st.markdown("""
         border-radius: 2px;
     }
     
-    /* Challenge Block mit kompletter Blauer Bordüre inkl. Versuchen */
+    /* KOMPLETT ZUSAMMENHÄNGENDE CHALLENGE CARD INKLUSIVE VERSUCHE */
     .full-challenge-card {
         border: 2px solid #00f0ff !important;
-        box-shadow: 0 0 15px rgba(0, 240, 255, 0.3), inset 0 0 10px rgba(0, 240, 255, 0.05) !important;
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.35), inset 0 0 10px rgba(0, 240, 255, 0.05) !important;
         background: #0f141d !important;
         border-radius: 8px !important;
-        padding: 18px;
-        margin-bottom: 25px;
+        padding: 20px;
+        margin-bottom: 35px;
     }
 
     /* Blauer Neon-Rahmen für Regeln */
@@ -105,15 +105,23 @@ st.markdown("""
     
     /* News Cards */
     .news-card {
-        border-left: 4px solid #00f0ff;
-        background: #131722;
-        padding: 15px;
-        border-radius: 4px;
-        margin-bottom: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        border-left: 5px solid #00f0ff;
+        background: #111520;
+        padding: 16px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        border-top: 1px solid #1e293b;
+        border-right: 1px solid #1e293b;
+        border-bottom: 1px solid #1e293b;
     }
     .news-card-koth { border-left-color: #f59e0b; }
     .news-card-challenge { border-left-color: #10b981; }
+    .news-card-admin { 
+        border-left-color: #a855f7 !important; 
+        background: linear-gradient(135deg, #181124 0%, #111520 100%) !important;
+        box-shadow: 0 0 12px rgba(168, 85, 247, 0.3) !important;
+    }
     
     /* Difficulty Badges */
     .diff-leicht { background-color: #10b981; color: #000; padding: 4px 10px; border-radius: 4px; font-weight: 800; }
@@ -168,7 +176,7 @@ def get_default_data():
         "config": {
             "current_season": 1
         },
-        "news": [],            # Automatische News-Einträge
+        "news": [],            # Automatische & Admin News-Einträge
         "players": {},
         "games": {},           # KotH Spiele
         "challenge_games": {}, # Separate Spiele-Datenbank für Challenges
@@ -233,13 +241,15 @@ def add_audit_log(data, action, user="System"):
         "action": action
     })
 
-def add_news(data, title, content, category="GENERAL"):
+def add_news(data, title, content_html, category="GENERAL", custom_color=""):
     """Fügt eine neue Nachricht zum News-Feed hinzu."""
     data.setdefault("news", []).append({
+        "id": len(data.get("news", [])) + 1,
         "timestamp": get_now_str(),
         "title": title,
-        "content": content,
-        "category": category # KOTH, CHALLENGE, GENERAL
+        "content_html": content_html,
+        "category": category, # KOTH, CHALLENGE, ADMIN, GENERAL
+        "custom_color": custom_color
     })
 
 def fetch_steam_info(game_name, custom_cover=""):
@@ -279,7 +289,7 @@ def update_db():
 db = st.session_state.db
 
 # ------------------------------------------------------------------------------
-# 3. SIDEBAR NAVIGATION (NEWS ANZUGESETZT AN ERSTE STELLE)
+# 3. SIDEBAR NAVIGATION
 # ------------------------------------------------------------------------------
 st.sidebar.markdown("# ⚔️ COMPETUS")
 st.sidebar.markdown("### MAXIMUS")
@@ -292,11 +302,11 @@ page = st.sidebar.radio(
 )
 
 # ------------------------------------------------------------------------------
-# 4. NEWS BEREICH (AUTOMATISCH BEFÜLLT)
+# 4. NEWS BEREICH (MIT OPTIONALEN FARBLICHEN ADMIN-HIGHLIGTS)
 # ------------------------------------------------------------------------------
 if page == "📰 News":
     st.title("📰 ARENA NEWS & HIGHLIGHTS")
-    st.caption("Echtzeit-Updates über neue Kings, geschaffte Challenges und Eröffnungen.")
+    st.caption("Echtzeit-Updates über neue Kings, geschaffte Challenges und Admin-Ankündigungen.")
     
     news_list = db.get("news", [])
     
@@ -305,28 +315,46 @@ if page == "📰 News":
     else:
         for item in reversed(news_list):
             cat = item.get("category", "GENERAL")
+            custom_color = item.get("custom_color", "")
+            
             card_class = "news-card"
             badge = "📢 NEWS"
+            badge_color = "#00f0ff"
+            
             if cat == "KOTH":
                 card_class += " news-card-koth"
                 badge = "👑 KOTH UPDATE"
+                badge_color = "#f59e0b"
             elif cat == "CHALLENGE":
                 card_class += " news-card-challenge"
                 badge = "🎯 CHALLENGE UPDATE"
+                badge_color = "#10b981"
+            elif cat == "ADMIN":
+                card_class += " news-card-admin"
+                badge = "📢 ADMIN ANKÜNDIGUNG"
+                badge_color = "#a855f7"
                 
+            # Falls Admin eine spezifische Farbe gewählt hat
+            custom_style = ""
+            if custom_color:
+                custom_style = f"border-left-color: {custom_color} !important;"
+                badge_color = custom_color
+                
+            content_display = item.get("content_html") if "content_html" in item else item.get("content", "")
+            
             st.markdown(f"""
-            <div class="{card_class}">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-weight: 800; color: #00f0ff;">{badge}</span>
-                    <span style="color: #64748b; font-size: 0.85em;">{item['timestamp']}</span>
+            <div class="{card_class}" style="{custom_style}">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="font-weight: 800; color: {badge_color}; letter-spacing: 1px;">{badge}</span>
+                    <span style="color: #64748b; font-size: 0.85em; font-weight: 600;">{item['timestamp']}</span>
                 </div>
-                <h3 style="margin: 8px 0 4px 0;">{item['title']}</h3>
-                <p style="font-size: 1.05em; margin: 0;">{item['content']}</p>
+                <h3 style="margin: 0 0 8px 0; color: #ffffff !important;">{item['title']}</h3>
+                <div style="font-size: 1.05em; color: #e2e8f0; line-height: 1.5;">{content_display}</div>
             </div>
             """, unsafe_allow_html=True)
 
 # ------------------------------------------------------------------------------
-# 5. KING OF THE HILL (UMBENANNTE SEKTIONEN & BLUE RULES BORDER)
+# 5. KING OF THE HILL
 # ------------------------------------------------------------------------------
 elif page == "👑 King of the Hill":
     st.title("👑 KING OF THE HILL")
@@ -385,14 +413,14 @@ elif page == "👑 King of the Hill":
                         }
                         add_audit_log(db, f"KotH Spiel '{g_name}' angelegt von {creator}. King: {creator}", user=creator)
                         
-                        # AUTOMATISCHE NEWS
-                        add_news(db, f"👑 Neuer Thron errichtet: {g_name}", f"**{creator}** hat den Thron für **{g_name}** errichtet und ist der erste König!", category="KOTH")
+                        news_html = f"<b>{creator}</b> hat den Thron für <span style='color:#00f0ff;'><b>{g_name}</b></span> errichtet und ist der erste König!"
+                        add_news(db, f"👑 Neuer Thron errichtet: {g_name}", news_html, category="KOTH")
                         
                         update_db()
                         st.success(f"KotH Arena für '{g_name}' eröffnet! Du bist der aktuelle King!")
                         st.rerun()
 
-    # TAB 1: ÜBERSICHT (UMBENANNT)
+    # TAB 1: ÜBERSICHT
     with tab_koth_active:
         if not games:
             st.info("Noch keine KotH-Spiele vorhanden. Wechsel in den Reiter 'Neues KotH-Spiel & Thron gründen', um das erste Spiel zu starten.")
@@ -415,7 +443,6 @@ elif page == "👑 King of the Hill":
                         </div>
                         """, unsafe_allow_html=True)
                         
-                        # REGELN AUFFÄLLIG IN EINEM BLAUEN RAHMEN
                         if rules_preview:
                             st.markdown(f"""
                             <div class="rules-blue-box">
@@ -425,10 +452,8 @@ elif page == "👑 King of the Hill":
 
             st.markdown("<div class='glowing-divider'></div>", unsafe_allow_html=True)
             
-            # NEUE BEZEICHNUNG: HERAUSFORDERUNGS-WAHL
             st.markdown("## ⚡ HERAUSFORDERUNGS-WAHL")
             
-            # DROPDOWN ZEIGT JETZT REGELN ANSTATT NUR DEN KÖNIG
             selected_g_id = st.selectbox(
                 "HERAUSFORDERUNGS-WAHL", 
                 list(games.keys()), 
@@ -484,11 +509,11 @@ elif page == "👑 King of the Hill":
                         old_king = k_data["king"]
                         if winner == k_data["king"]:
                             k_data["streak"] += 1
-                            news_txt = f"**{winner}** hat seinen Thron in **{g_info['name']}** erfolgreich verteidigt! (Streak: {k_data['streak']})"
+                            news_html = f"<b>{winner}</b> hat seinen Thron in <span style='color:#00f0ff;'><b>{g_info['name']}</b></span> erfolgreich verteidigt! (Streak: <b>{k_data['streak']}</b>)"
                         else:
                             k_data["king"] = winner
                             k_data["streak"] = 1
-                            news_txt = f"👑 **ENTTHRONUNG!** **{winner}** hat **{old_king}** besiegt und ist der neue King in **{g_info['name']}**!"
+                            news_html = f"👑 <span style='color:#ef4444;'><b>ENTTHRONUNG!</b></span> <b>{winner}</b> hat <b>{old_king}</b> besiegt und ist der neue King in <span style='color:#00f0ff;'><b>{g_info['name']}</b></span>!"
                         
                         k_data.setdefault("history", []).append({
                             "timestamp": get_now_str(),
@@ -499,8 +524,7 @@ elif page == "👑 King of the Hill":
                         })
                         add_audit_log(db, f"KotH ({g_info['name']}): {winner} gewann gegen {defender if winner == challenger else challenger}", user=winner)
                         
-                        # AUTOMATISCHE NEWS
-                        add_news(db, f"⚔️ Thronkampf in {g_info['name']}", news_txt, category="KOTH")
+                        add_news(db, f"⚔️ Thronkampf in {g_info['name']}", news_html, category="KOTH")
                         
                         update_db()
                         st.success(f"Match gespeichert! Neuer King: {k_data['king']}")
@@ -566,7 +590,7 @@ elif page == "👑 King of the Hill":
                 st.progress(percent / 100)
 
 # ------------------------------------------------------------------------------
-# 6. CHALLENGES (FULL BORDER INKL. VERSUCHE & SPIEL-NAME IN STATS)
+# 6. CHALLENGES
 # ------------------------------------------------------------------------------
 elif page == "🎯 Challenges":
     st.title("🎯 CHALLENGES")
@@ -628,15 +652,15 @@ elif page == "🎯 Challenges":
                         db.setdefault("challenges", []).append(new_c)
                         add_audit_log(db, f"Challenge '{c_title}' von {creator} erstellt.", user=creator)
                         
-                        # AUTOMATISCHE NEWS
                         cg_game_name = challenge_games.get(cg_id, {}).get("name", "Unbekannt")
-                        add_news(db, f"🎯 Neue Challenge: {c_title}", f"**{creator}** hat eine neue Challenge für **{cg_game_name}** herausgegeben! Schwierigkeit: **{c_difficulty}**", category="CHALLENGE")
+                        news_html = f"<b>{creator}</b> hat eine neue Challenge für <span style='color:#00f0ff;'><b>{cg_game_name}</b></span> herausgegeben! Schwierigkeit: <b>{c_difficulty}</b>"
+                        add_news(db, f"🎯 Neue Challenge: {c_title}", news_html, category="CHALLENGE")
                         
                         update_db()
                         st.success("Challenge veröffentlicht!")
                         st.rerun()
 
-    # TAB 1: AKTIVE CHALLENGES (VOLLSTÄNDIGER BLAUER NEON RAHMEN INKL. VERSUCHE)
+    # TAB 1: AKTIVE CHALLENGES
     with tab1:
         st.subheader("Übersicht aller Challenges")
         challenges = db.get("challenges", [])
@@ -657,22 +681,20 @@ elif page == "🎯 Challenges":
                 diff_class = diff_css_map.get(c['difficulty'], 'diff-mittel')
                 completions = c.get("completions", [])
                 
-                # DER GESAMTE BLOCK JETZT IN DER BLAUEN BORDÜRE
                 st.markdown(f"""
                 <div class="full-challenge-card">
-                    <div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 15px;">
+                    <div style="display: flex; gap: 20px; align-items: flex-start;">
                         <img src="{cover}" style="width: 240px; border-radius: 4px; border: 1.5px solid #00f0ff;">
                         <div style="flex-grow: 1;">
-                            <h3 style="margin-top: 0; color: #00f0ff;">{c['title']} <span style="font-size: 0.8em; color: #94a3b8;">({cg_info['name']})</span></h3>
+                            <h3 style="margin-top: 0; color: #00f0ff !important;">{c['title']} <span style="font-size: 0.8em; color: #94a3b8;">({cg_info['name']})</span></h3>
                             <div class="creator-box">🛠️ ERSTELLER: {c['creator']}</div>
                             <span class="{diff_class}">{c['difficulty']}</span> <span style="color: #64748b; font-size: 0.85em;">| {c['timestamp']}</span>
-                            <p style="margin-top: 10px; font-size: 1.05em; color: #e2e8f0;">{c['description']}</p>
+                            <p style="margin-top: 12px; font-size: 1.05em; color: #e2e8f0;">{c['description']}</p>
                         </div>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # ABSOLVIERTE VERSUCHE
                 with st.container(border=True):
                     st.markdown("#### 🌟 Absolvierte Versuche")
                     if completions:
@@ -699,14 +721,14 @@ elif page == "🎯 Challenges":
                                     })
                                     add_audit_log(db, f"Challenge #{c['id']} von {p_name} absolviert.", user=p_name)
                                     
-                                    # AUTOMATISCHE NEWS
-                                    add_news(db, f"🏆 Challenge Meisterschaft!", f"**{p_name}** hat die Challenge **{c['title']}** ({cg_info['name']}) erfolgreich gemeistert!", category="CHALLENGE")
+                                    news_html = f"🏆 <b>{p_name}</b> hat die Challenge <b>{c['title']}</b> (<span style='color:#00f0ff;'><b>{cg_info['name']}</b></span>) erfolgreich gemeistert!"
+                                    add_news(db, f"🏆 Challenge Meisterschaft!", news_html, category="CHALLENGE")
                                     
                                     update_db()
                                     st.success("Erfolg eingetragen!")
                                     st.rerun()
 
-    # TAB 3: CHALLENGE STATISTIKEN (GESCHAFFTE CHALLENGES INKL. GAME-NAME)
+    # TAB 3: CHALLENGE STATISTIKEN
     with tab3:
         st.subheader("📊 Challenge Statistiken & Hall of Fame")
         
@@ -808,7 +830,7 @@ elif page == "📩 Einspruch & Anträge":
                         st.rerun()
 
 # ------------------------------------------------------------------------------
-# 8. ADMIN-BEREICH
+# 8. ADMIN-BEREICH (INKLUSIVE NEWS VERWALTUNG & CUSTOM NEWS ERSTELLUNG)
 # ------------------------------------------------------------------------------
 elif page == "⚙️ Admin-Bereich":
     st.title("⚙️ ADMIN CONTROL PANEL")
@@ -822,6 +844,7 @@ elif page == "⚙️ Admin-Bereich":
         st.success("Authentifizierung erfolgreich.")
         
         tab_admin = st.tabs([
+            "📰 News Verwaltung",
             "👑 KotH Verwaltung", 
             "🎯 Challenge Verwaltung",
             "👥 Spieler-Verwaltung", 
@@ -830,9 +853,59 @@ elif page == "⚙️ Admin-Bereich":
             "💾 Backup"
         ])
         
-        # TAB 1: KotH
+        # TAB 1: NEWS VERWALTUNG & CUSTOM NEWS POSTEN
         with tab_admin[0]:
-            st.subheader("👑 King of the Hill Vollkontrolle")
+            st.subheader("📰 Arena-News & Ankündigungen verwalten")
+            
+            with st.expander("➕ Eigene Admin-News / Ankündigung verfassen", expanded=True):
+                with st.form("admin_create_news_form", clear_on_submit=True):
+                    news_title = st.text_input("News Überschrift", placeholder="z.B. 🔥 Großes Sommer-Turnier startet Freitag!")
+                    news_content = st.text_area("Inhalt / Ankündigungstext (HTML-Tags erlaubt)", placeholder="z.B. Wir starten dieses Wochenende mit neuem Reglement...")
+                    
+                    c1, c2 = st.columns(2)
+                    news_cat = c1.selectbox("Kategorie", ["ADMIN", "GENERAL", "KOTH", "CHALLENGE"])
+                    custom_color = c2.selectbox("Auffällige Akzentfarbe wählen", ["#a855f7 (Purple)", "#00f0ff (Cyan)", "#f59e0b (Gold)", "#ef4444 (Rot)", "#10b981 (Grün)"])
+                    
+                    if st.form_submit_button("📢 News Veröffentlichen"):
+                        if news_title and news_content:
+                            color_hex = custom_color.split(" ")[0]
+                            add_news(db, news_title, news_content, category=news_cat, custom_color=color_hex)
+                            add_audit_log(db, f"Admin News '{news_title}' erstellt.", user="Admin")
+                            update_db()
+                            st.success("Ankündigung veröffentlicht!")
+                            st.rerun()
+
+            st.markdown("---")
+            st.markdown("#### 📜 Bestehende News bearbeiten oder löschen")
+            news_list = db.get("news", [])
+            
+            if not news_list:
+                st.info("Keine News vorhanden.")
+            else:
+                for idx, n in enumerate(list(reversed(news_list))):
+                    real_idx = len(news_list) - 1 - idx
+                    with st.container(border=True):
+                        st.write(f"**#{n.get('id', real_idx+1)}: {n['title']}** ({n['timestamp']})")
+                        
+                        with st.expander("✏️ Bearbeiten"):
+                            e_title = st.text_input("Titel", value=n['title'], key=f"news_t_{real_idx}")
+                            e_content = st.text_area("Inhalt", value=n.get('content_html', n.get('content', '')), key=f"news_c_{real_idx}")
+                            
+                            if st.button("Änderungen Speichern", key=f"save_news_{real_idx}"):
+                                n['title'] = e_title
+                                n['content_html'] = e_content
+                                update_db()
+                                st.success("News aktualisiert!")
+                                st.rerun()
+
+                        if st.button("🗑️ News Löschen", key=f"del_news_{real_idx}"):
+                            news_list.pop(real_idx)
+                            update_db()
+                            st.rerun()
+
+        # TAB 2: KotH
+        with tab_admin[1]:
+            st.subheader("👑 King of the Hill Vollkontrolle & Spiel-Informationen anpassen")
             games = db.get("games", {})
             if not games:
                 st.info("Keine KotH-Spiele vorhanden.")
@@ -878,8 +951,8 @@ elif page == "⚙️ Admin-Bereich":
                             update_db()
                             st.rerun()
 
-        # TAB 2: Challenge Verwaltung
-        with tab_admin[1]:
+        # TAB 3: Challenge Verwaltung
+        with tab_admin[2]:
             st.subheader("🎯 Challenge-Spiele & Challenges verwalten")
             
             st.markdown("#### 1. Challenge-Spiele bearbeiten")
@@ -942,8 +1015,8 @@ elif page == "⚙️ Admin-Bereich":
                             update_db()
                             st.rerun()
 
-        # TAB 3: Spieler-Verwaltung
-        with tab_admin[2]:
+        # TAB 4: Spieler-Verwaltung
+        with tab_admin[3]:
             st.subheader("👥 Spieler verwalten")
             c1, c2 = st.columns(2)
             new_p = c1.text_input("Neuer Spieler Name")
@@ -961,8 +1034,8 @@ elif page == "⚙️ Admin-Bereich":
                 update_db()
                 st.rerun()
 
-        # TAB 4: Einsprüche
-        with tab_admin[3]:
+        # TAB 5: Einsprüche
+        with tab_admin[4]:
             st.subheader("📩 Einsprüche bearbeiten / löschen")
             for a_idx, app in enumerate(list(db["appeals"])):
                 with st.container(border=True):
@@ -981,13 +1054,13 @@ elif page == "⚙️ Admin-Bereich":
                         update_db()
                         st.rerun()
 
-        # TAB 5: Logs
-        with tab_admin[4]:
+        # TAB 6: Logs
+        with tab_admin[5]:
             st.subheader("📊 Audit Logs")
             st.dataframe(db["audit_logs"], use_container_width=True)
 
-        # TAB 6: Backup
-        with tab_admin[5]:
+        # TAB 7: Backup
+        with tab_admin[6]:
             st.subheader("💾 Backup & Restore")
             st.download_button("data.json herunterladen", data=json.dumps(db, indent=2, ensure_ascii=False), file_name="data_backup.json")
             up_file = st.file_uploader("Backup hochladen", type=["json"])
