@@ -628,10 +628,90 @@
       "content_html": "<b>Sascha</b> hat das Turnier <b>Blood Bowl 2</b> gewonnen!",
       "category": "BRACKET",
       "custom_color": "#f59e0b"
+    },
+    {
+      "id": 15,
+      "timestamp": "2026-08-01 22:51:17",
+      "title": "🏆 Neues Single Elimination Turnier: Mortal Kombat 1",
+      "content_html": "Das Turnier in <b>Mortal Kombat 1</b> wurde gestartet! 6 Teilnehmer.",
+      "category": "GENERAL",
+      "custom_color": "#00f0ff"
     }
   ],
   "brackets": {
-    "single": null,
+    "single": {
+      "game_name": "Mortal Kombat 1",
+      "cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/1971870/header.jpg",
+      "rules": "",
+      "link": "https://store.steampowered.com/app/1971870/",
+      "type": "single",
+      "created_at": "2026-08-01 22:51:17",
+      "champion": null,
+      "rounds": [
+        [
+          {
+            "id": "W1M1",
+            "p1": "Victor",
+            "p2": "BYE (Freilos)",
+            "winner": "Victor",
+            "p1_origin": null,
+            "p2_origin": null
+          },
+          {
+            "id": "W1M2",
+            "p1": "Stefan",
+            "p2": "Jan",
+            "winner": null,
+            "p1_origin": null,
+            "p2_origin": null
+          },
+          {
+            "id": "W1M3",
+            "p1": "Marcel",
+            "p2": "Alexander",
+            "winner": null,
+            "p1_origin": null,
+            "p2_origin": null
+          },
+          {
+            "id": "W1M4",
+            "p1": "Sascha",
+            "p2": "BYE (Freilos)",
+            "winner": "Sascha",
+            "p1_origin": null,
+            "p2_origin": null
+          }
+        ],
+        [
+          {
+            "id": "W2M1",
+            "p1": "Victor",
+            "p2": "TBD",
+            "p1_origin": "Gewinner W1M1",
+            "p2_origin": "Gewinner W1M2",
+            "winner": null
+          },
+          {
+            "id": "W2M2",
+            "p1": "TBD",
+            "p2": "Sascha",
+            "p1_origin": "Gewinner W1M3",
+            "p2_origin": "Gewinner W1M4",
+            "winner": null
+          }
+        ],
+        [
+          {
+            "id": "W3M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "p1_origin": "Gewinner W2M1",
+            "p2_origin": "Gewinner W2M2",
+            "winner": null
+          }
+        ]
+      ]
+    },
     "double": {
       "game_name": "Blood Bowl 2",
       "cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/236690/header.jpg",
