@@ -25,38 +25,7 @@
   },
   "games": {},
   "koth": {},
-  "challenges": [
-    {
-      "id": 2,
-      "creator": "Stefan",
-      "challenge_game_id": "2",
-      "title": "Schnellste Runde",
-      "custom_cover": "",
-      "description": "Schnellste runde in Map xy",
-      "difficulty": "Mittel",
-      "timestamp": "2026-08-01 15:12:00",
-      "completions": [
-        {
-          "player": "Victor",
-          "rating": 1,
-          "comment": "",
-          "timestamp": "2026-08-01 15:12:13"
-        },
-        {
-          "player": "Sascha",
-          "rating": 3,
-          "comment": "https://youtu.be/Aq5WXmQQooo?si=0mcs_m-du9NMnTtc",
-          "timestamp": "2026-08-01 15:13:05"
-        },
-        {
-          "player": "Jan",
-          "rating": 4,
-          "comment": "Trust me bro",
-          "timestamp": "2026-08-01 19:05:10"
-        }
-      ]
-    }
-  ],
+  "challenges": [],
   "brackets_de": [],
   "appeals": [],
   "audit_logs": [
@@ -384,6 +353,11 @@
       "timestamp": "2026-08-01 19:06:04",
       "user": "Admin",
       "action": "Challenge #1 (Speedrun ) gelöscht"
+    },
+    {
+      "timestamp": "2026-08-01 19:06:06",
+      "user": "Admin",
+      "action": "Challenge #2 (Schnellste Runde) gelöscht"
     }
   ],
   "challenge_games": {},
