@@ -720,14 +720,14 @@
             "id": "L_R1_M2",
             "p1": "Jan",
             "p2": "Victor",
-            "winner": null
+            "winner": "Jan"
           }
         ],
         [
           {
             "id": "L_R2_M1",
             "p1": "TBD",
-            "p2": "TBD",
+            "p2": "Jan",
             "winner": null
           }
         ],
