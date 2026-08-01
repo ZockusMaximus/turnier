@@ -55,7 +55,18 @@
       "history": []
     }
   },
-  "challenges": [],
+  "challenges": [
+    {
+      "id": 1,
+      "creator": "Victor",
+      "game_id": "1",
+      "title": "sei der schnellste",
+      "description": "Dies das",
+      "difficulty": "Schwer",
+      "timestamp": "2026-08-01 14:14:59",
+      "completions": []
+    }
+  ],
   "brackets_de": [
     {
       "id": 1,
@@ -238,6 +249,11 @@
       "timestamp": "2026-08-01 14:14:01",
       "user": "System",
       "action": "Loser Match 'Turnier 1': Victor gewinnt"
+    },
+    {
+      "timestamp": "2026-08-01 14:14:59",
+      "user": "Victor",
+      "action": "Challenge 'sei der schnellste' von Victor erstellt."
     }
   ]
 }
