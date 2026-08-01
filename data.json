@@ -97,7 +97,14 @@
       "description": "Steige nur mit einem Panzer ein und überlebe.",
       "difficulty": "Mittel",
       "timestamp": "2026-08-01 19:19:52",
-      "completions": []
+      "completions": [
+        {
+          "player": "Victor",
+          "rating": 1,
+          "comment": "Viel zu einfach ",
+          "timestamp": "2026-08-01 19:20:15"
+        }
+      ]
     }
   ],
   "brackets_de": [],
@@ -457,6 +464,11 @@
       "timestamp": "2026-08-01 19:19:52",
       "user": "Sascha",
       "action": "Challenge '1 Panzer Challange' von Sascha erstellt."
+    },
+    {
+      "timestamp": "2026-08-01 19:20:15",
+      "user": "Victor",
+      "action": "Challenge #2 von Victor absolviert."
     }
   ],
   "challenge_games": {
@@ -507,6 +519,14 @@
       "timestamp": "2026-08-01 19:19:52",
       "title": "🎯 Neue Challenge: 1 Panzer Challange",
       "content_html": "<b>Sascha</b> hat eine neue Challenge für <span style='color:#00f0ff;'><b>War Thunder</b></span> herausgegeben! Schwierigkeit: <b>Mittel</b>",
+      "category": "CHALLENGE",
+      "custom_color": ""
+    },
+    {
+      "id": 6,
+      "timestamp": "2026-08-01 19:20:15",
+      "title": "🏆 Challenge Meisterschaft!",
+      "content_html": "🏆 <b>Victor</b> hat die Challenge <b>1 Panzer Challange</b> (<span style='color:#00f0ff;'><b>War Thunder</b></span>) erfolgreich gemeistert!",
       "category": "CHALLENGE",
       "custom_color": ""
     }
