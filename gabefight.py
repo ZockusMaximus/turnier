@@ -8,7 +8,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 # ------------------------------------------------------------------------------
-# 1. KONFIGURATION & STYLES (DARK METAL THEME)
+# 1. KONFIGURATION & STYLES (MARTIAL DARK METAL / NEON GLOW THEME)
 # ------------------------------------------------------------------------------
 st.set_page_config(
     page_title="COMPETUS MAXIMUS",
@@ -19,67 +19,116 @@ st.set_page_config(
 
 st.markdown("""
 <style>
+    /* Dark Metal Base */
     .stApp {
-        background-color: #0c0d10;
+        background-color: #08090c;
         color: #e2e8f0;
         font-family: 'Segoe UI', Roboto, sans-serif;
     }
     
+    /* Neon Cyan Headers */
     h1, h2, h3 {
-        color: #e2e8f0 !important;
-        letter-spacing: 1px;
-        font-weight: 700 !important;
+        color: #00f0ff !important;
+        letter-spacing: 1.5px;
+        font-weight: 800 !important;
+        text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
     }
     
+    /* Prominente Sidebar Navigation */
+    section[data-testid="stSidebar"] {
+        background-color: #0e1117 !important;
+        border-right: 2px solid #00f0ff !important;
+    }
+    section[data-testid="stSidebar"] .stRadio label {
+        font-size: 1.25rem !important;
+        font-weight: 800 !important;
+        padding: 10px !important;
+        color: #00f0ff !important;
+        text-transform: uppercase;
+    }
+    
+    /* Custom Neon Containers */
     div[data-testid="stExpander"], div[data-testid="stForm"], div[data-testid="stContainer"] {
-        border: 1px solid #2d3748 !important;
-        background-color: #14171d !important;
+        border: 1px solid #1e293b !important;
+        background-color: #11141c !important;
         border-radius: 6px !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
         margin-bottom: 15px;
     }
 
+    /* Buttons */
     .stButton>button {
-        background: linear-gradient(180deg, #2b303c 0%, #1a1d24 100%) !important;
+        background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
         color: #00f0ff !important;
-        border: 1px solid #00f0ff !important;
+        border: 1.5px solid #00f0ff !important;
         border-radius: 4px !important;
-        font-weight: bold !important;
+        font-weight: 800 !important;
+        font-size: 1.05rem !important;
+        text-transform: uppercase;
         transition: all 0.2s ease-in-out !important;
     }
     .stButton>button:hover {
         background: #00f0ff !important;
         color: #000000 !important;
-        box-shadow: 0 0 10px rgba(0, 240, 255, 0.5) !important;
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.8) !important;
+    }
+
+    /* Exciting Neon Divider */
+    .glowing-divider {
+        height: 4px;
+        background: linear-gradient(90deg, #00f0ff 0%, #f59e0b 50%, #00f0ff 100%);
+        box-shadow: 0 0 12px #00f0ff;
+        margin: 35px 0;
+        border-radius: 2px;
+    }
+    
+    /* Krelle Neon Card Umrandung für Challenges */
+    .neon-challenge-card {
+        border: 2px solid #00f0ff !important;
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.35), inset 0 0 10px rgba(0, 240, 255, 0.1) !important;
+        background: #0f141d !important;
+        border-radius: 8px !important;
+        padding: 16px;
+        margin-bottom: 20px;
     }
     
     /* Difficulty Badges */
-    .diff-leicht { background-color: #10b981; color: #000; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
-    .diff-mittel { background-color: #f59e0b; color: #000; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
-    .diff-schwer { background-color: #f97316; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
-    .diff-extrem { background-color: #ef4444; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
-    .diff-unmoeglich { background-color: #a855f7; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: bold; box-shadow: 0 0 8px #a855f7; }
+    .diff-leicht { background-color: #10b981; color: #000; padding: 4px 10px; border-radius: 4px; font-weight: 800; }
+    .diff-mittel { background-color: #f59e0b; color: #000; padding: 4px 10px; border-radius: 4px; font-weight: 800; }
+    .diff-schwer { background-color: #f97316; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: 800; }
+    .diff-extrem { background-color: #ef4444; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: 800; }
+    .diff-unmoeglich { background-color: #a855f7; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: 800; box-shadow: 0 0 10px #a855f7; }
 
-    /* Highlights */
+    /* Creator & King Boxes */
     .creator-box {
-        background: rgba(0, 240, 255, 0.08);
-        border: 1px solid #00f0ff;
+        background: rgba(0, 240, 255, 0.12);
+        border: 1.5px solid #00f0ff;
         padding: 6px 12px;
         border-radius: 4px;
         color: #00f0ff;
-        font-weight: bold;
+        font-weight: 800;
         display: inline-block;
         margin-bottom: 8px;
     }
     .king-highlight-box {
-        background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(180, 83, 9, 0.3) 100%);
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(180, 83, 9, 0.4) 100%);
         border: 2px solid #f59e0b;
         padding: 10px 15px;
         border-radius: 6px;
         color: #fbbf24;
-        font-weight: bold;
-        text-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+        font-weight: 800;
+        text-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
         margin-bottom: 10px;
+    }
+    
+    /* Exciting Leaderboard Card */
+    .leaderboard-card {
+        background: linear-gradient(90deg, #141a24 0%, #0d121a 100%);
+        border-left: 5px solid #f59e0b;
+        padding: 12px 20px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -198,11 +247,12 @@ def update_db():
 db = st.session_state.db
 
 # ------------------------------------------------------------------------------
-# 3. SIDEBAR NAVIGATION (BRACKETS ENTFERNT)
+# 3. SIDEBAR NAVIGATION (BENENNUNG UNVERÄNDERT, AUFFÄLLIGER PROPORTIONIERT)
 # ------------------------------------------------------------------------------
-st.sidebar.title("⚔️ COMPETUS MAXIMUS")
-st.sidebar.caption(f"Deutschland (Berlin) | {get_now_str()}")
-st.sidebar.markdown("---")
+st.sidebar.markdown("# ⚔️ COMPETUS")
+st.sidebar.markdown("### MAXIMUS")
+st.sidebar.caption(f"DEUTSCHLAND (BERLIN) | {get_now_str()}")
+st.sidebar.markdown("<div class='glowing-divider' style='margin: 15px 0;'></div>", unsafe_allow_html=True)
 
 page = st.sidebar.radio(
     "NAVIGATION",
@@ -282,6 +332,7 @@ if page == "👑 King of the Hill":
             for idx, (g_id, g_info) in enumerate(games.items()):
                 k_data = db["koth"].get(g_id, {"king": None, "streak": 0})
                 cover = g_info.get("custom_cover") or "https://via.placeholder.com/460x215/1e293b/00f0ff?text=KEIN+COVER"
+                rules_preview = g_info.get("rules", "")
                 
                 with cols[idx % len(cols)]:
                     with st.container(border=True):
@@ -293,10 +344,22 @@ if page == "👑 King of the Hill":
                             🔥 Streak: <b>{k_data['streak']} Siege</b>
                         </div>
                         """, unsafe_allow_html=True)
+                        # REGELN DIREKT IN DER ÜBERSICHT SICHTBAR
+                        if rules_preview:
+                            st.caption(f"📜 **Regeln:** {rules_preview}")
+
+            # KLARE, MARKANTE ABTRENNUNG ZWISCHEN ÜBERSICHT UND WÄHLE EIN SPIEL
+            st.markdown("<div class='glowing-divider'></div>", unsafe_allow_html=True)
             
-            st.markdown("---")
+            # GROSSES, PRÄGNANTES DROPDOWN
+            st.markdown("## ⚡ WÄHLE EIN SPIEL AUS DER ARENA")
+            selected_g_id = st.selectbox(
+                "WÄHLE EIN SPIEL AUS", 
+                list(games.keys()), 
+                format_func=lambda x: f"⚔️ {games[x]['name']} (King: {db['koth'].get(x, {}).get('king', 'Niemand')})",
+                label_visibility="collapsed"
+            )
             
-            selected_g_id = st.selectbox("Wähle ein Spiel aus", list(games.keys()), format_func=lambda x: games[x]["name"])
             g_info = games[selected_g_id]
             k_data = db["koth"].setdefault(selected_g_id, {"king": None, "streak": 0, "history": []})
             
@@ -310,7 +373,7 @@ if page == "👑 King of the Hill":
                 if g_info.get('rules'): st.info(f"📜 **Regeln & Waffen/Maps:** {g_info['rules']}")
                 
                 st.markdown(f"""
-                <div class="king-highlight-box" style="font-size: 1.2em;">
+                <div class="king-highlight-box" style="font-size: 1.25em;">
                     👑 AKTUELLER KÖNIG: <b>{k_data['king'] or 'Thron unbesetzt'}</b> (Streak: <b>{k_data['streak']} Siege</b>)
                 </div>
                 """, unsafe_allow_html=True)
@@ -320,7 +383,6 @@ if page == "👑 King of the Hill":
                 st.warning("Mindestens 2 registrierte Spieler erforderlich.")
             else:
                 current_king = k_data['king']
-                
                 c1, c2 = st.columns(2)
                 if current_king:
                     defender = current_king
@@ -362,9 +424,9 @@ if page == "👑 King of the Hill":
                     st.write(f"🏆 **Sieger: {entry['winner']}** ({entry.get('format', 'Bo3')}) | {entry['timestamp']}")
                     st.caption(f"Kampf: {entry['defender']} vs {entry['challenger']}")
 
-    # TAB 3: KOTH STATISTIKEN
+    # TAB 3: KOTH STATISTIKEN (EXCITING ANPASSUNG)
     with tab_koth_stats:
-        st.subheader("📊 King of the Hill Leaderboards & Statistiken")
+        st.subheader("📊 King of the Hill Leaderboards & Hall of Fame")
         
         king_counts = {}
         max_streaks = {}
@@ -391,46 +453,63 @@ if page == "👑 King of the Hill":
             for p_name, count in sorted(king_counts.items(), key=lambda x: x[1], reverse=True):
                 st.write(f"👑 **{p_name}**: Hält aktuell **{count}** King of the Hill Titel (Höchste Streak: {max_streaks.get(p_name, 0)} Siege)")
 
-        st.markdown("---")
-        st.markdown("#### 🏆 Gesamte KotH Match-Siege")
+        st.markdown("<div class='glowing-divider'></div>", unsafe_allow_html=True)
+        
+        # EXCITING GESAMTE KOTH MATCH-SIEGE DESIGN
+        st.markdown("## 🔥 GESAMTE KOTH MATCH-SIEGE (LEADERBOARD)")
         if not total_wins:
-            st.write("Noch keine Matches ausgetragen.")
+            st.write("Noch keine KotH Kämpfe ausgetragen.")
         else:
-            stats_table = [{"Spieler": p, "Gesamt KotH Siege": w} for p, w in sorted(total_wins.items(), key=lambda x: x[1], reverse=True)]
-            st.dataframe(stats_table, use_container_width=True)
+            sorted_wins = sorted(total_wins.items(), key=lambda x: x[1], reverse=True)
+            max_val = sorted_wins[0][1] if sorted_wins else 1
+            
+            for rank_idx, (p_name, w_count) in enumerate(sorted_wins):
+                medal = "🥇" if rank_idx == 0 else ("🥈" if rank_idx == 1 else ("🥉" if rank_idx == 2 else "⚔️"))
+                percent = int((w_count / max_val) * 100)
+                
+                st.markdown(f"""
+                <div class="leaderboard-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 1.3em; font-weight: 800;">{medal} Rang #{rank_idx+1}: {p_name}</span>
+                        <span style="font-size: 1.4em; font-weight: 900; color: #00f0ff;">{w_count} Siege</span>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                st.progress(percent / 100)
 
 # ------------------------------------------------------------------------------
-# 5. CHALLENGES
+# 5. CHALLENGES (UBERSCHRIFT ANPASSUNG, KRELLE UMRANDUNG & GAME-NAME IN STATS)
 # ------------------------------------------------------------------------------
 elif page == "🎯 Challenges":
-    st.title("🎯 CHALLENGES & HERAUSFORDERUNGEN")
+    # EINFACHE ÜBERSCHRIFT GESETZT
+    st.title("🎯 CHALLENGES")
     
     tab1, tab2, tab3 = st.tabs(["🔥 Aktive Challenges", "➕ Challenge Erstellen", "📊 Challenge Statistiken"])
     
     challenge_games = db.setdefault("challenge_games", {})
     player_list = list(db["players"].keys())
     
-    # TAB 2: ERSTELLUNG
+    # TAB 2: ERSTELLUNG (REGISTRIERUNGS-TEXT ANGEPASST & KLARE ABTRENNUNG)
     with tab2:
-        st.subheader("Neues Challenge-Spiel registrieren oder bestehendes wählen")
+        st.subheader("➕ Neues Challenge-Spiel registrieren")
         
-        with st.expander("➕ Ein neues Spiel zur Challenge-Datenbank hinzufügen"):
-            cg_name = st.text_input("Spielname eingeben", placeholder="z.B. Elden Ring, Hollow Knight")
-            cg_cover_custom = st.text_input("Custom Cover Bild-URL / Steam-Link (optional):", placeholder="https://...")
-            
-            if st.button("Spiel in Challenge-Datenbank Speichern"):
-                if cg_name:
-                    cover_url, _ = fetch_steam_info(cg_name, cg_cover_custom)
-                    new_cg_id = str(len(challenge_games) + 1)
-                    challenge_games[new_cg_id] = {
-                        "name": cg_name,
-                        "cover": cover_url
-                    }
-                    update_db()
-                    st.success(f"Spiel '{cg_name}' wurde für Challenges hinzugefügt!")
-                    st.rerun()
+        cg_name = st.text_input("Spielname eingeben", placeholder="z.B. Elden Ring, Hollow Knight")
+        cg_cover_custom = st.text_input("Custom Cover Bild-URL / Steam-Link (optional):", placeholder="https://...")
+        
+        if st.button("Spiel in Challenge-Datenbank Speichern"):
+            if cg_name:
+                cover_url, _ = fetch_steam_info(cg_name, cg_cover_custom)
+                new_cg_id = str(len(challenge_games) + 1)
+                challenge_games[new_cg_id] = {
+                    "name": cg_name,
+                    "cover": cover_url
+                }
+                update_db()
+                st.success(f"Spiel '{cg_name}' wurde für Challenges hinzugefügt!")
+                st.rerun()
 
-        st.markdown("---")
+        st.markdown("<div class='glowing-divider'></div>", unsafe_allow_html=True)
+        
         st.subheader("Challenge für ein existierendes Spiel erstellen")
         if not challenge_games:
             st.info("Es ist noch kein Challenge-Spiel angelegt. Bitte erstelle oben das erste Spiel!")
@@ -465,7 +544,7 @@ elif page == "🎯 Challenges":
                         st.success("Challenge veröffentlicht!")
                         st.rerun()
 
-    # TAB 1: AKTIVE CHALLENGES
+    # TAB 1: AKTIVE CHALLENGES (MIT KRELLER UMRANDUNG)
     with tab1:
         st.subheader("Übersicht aller Challenges")
         challenges = db.get("challenges", [])
@@ -485,18 +564,22 @@ elif page == "🎯 Challenges":
                 cover = c.get("custom_cover") if c.get("custom_cover") else cg_info.get("cover")
                 diff_class = diff_css_map.get(c['difficulty'], 'diff-mittel')
                 
+                # KRELLE NEON UMRANDUNG
+                st.markdown(f"""
+                <div class="neon-challenge-card">
+                    <div style="display: flex; gap: 20px; align-items: flex-start;">
+                        <img src="{cover}" style="width: 250px; border-radius: 4px; border: 1px solid #00f0ff;">
+                        <div style="flex-grow: 1;">
+                            <h3 style="margin-top: 0;">{c['title']} <span style="font-size: 0.8em; color: #94a3b8;">({cg_info['name']})</span></h3>
+                            <div class="creator-box">🛠️ ERSTELLER: {c['creator']}</div>
+                            <span class="{diff_class}">{c['difficulty']}</span> <span style="color: #64748b; font-size: 0.85em;">| {c['timestamp']}</span>
+                            <p style="margin-top: 10px; font-size: 1.05em;">{c['description']}</p>
+                        </div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                
                 with st.container(border=True):
-                    col_img, col_info = st.columns([1, 3])
-                    with col_img:
-                        st.image(cover, use_container_width=True)
-                    with col_info:
-                        st.markdown(f"### {c['title']} (`{cg_info['name']}`)")
-                        st.markdown(f"""
-                        <div class="creator-box">🛠️ ERSTELLER: {c['creator']}</div>
-                        <span class="{diff_class}">{c['difficulty']}</span> | Am: {c['timestamp']}
-                        """, unsafe_allow_html=True)
-                        st.write(c["description"])
-                    
                     st.markdown("#### 🌟 Absolvierte Versuche")
                     completions = c.get("completions", [])
                     if completions:
@@ -526,7 +609,7 @@ elif page == "🎯 Challenges":
                                     st.success("Erfolg eingetragen!")
                                     st.rerun()
 
-    # TAB 3: CHALLENGE STATISTIKEN
+    # TAB 3: CHALLENGE STATISTIKEN (MIT SPIELNAMEN IN GESCHAFFTE CHALLENGES)
     with tab3:
         st.subheader("📊 Challenge Statistiken & Hall of Fame")
         
@@ -547,15 +630,19 @@ elif page == "🎯 Challenges":
             
             for c in challenges_list:
                 creator = c.get("creator")
+                cg_info = challenge_games.get(c.get("challenge_game_id"), {"name": "Unbekannt"})
+                game_title_str = f"{c['title']} ({cg_info['name']})"
+                
                 if creator in p_stats:
                     p_stats[creator]["created_count"] += 1
-                    p_stats[creator]["created_list"].append(c["title"])
+                    p_stats[creator]["created_list"].append(game_title_str)
                 
                 for comp in c.get("completions", []):
                     p_name = comp.get("player")
                     if p_name in p_stats:
                         p_stats[p_name]["completed_count"] += 1
-                        p_stats[p_name]["completed_list"].append(c["title"])
+                        # SPIELNAME BEI GESCHAFFTEN CHALLENGES HINZUGEFÜGT
+                        p_stats[p_name]["completed_list"].append(game_title_str)
                         p_stats[p_name]["total_stars"] += comp.get("rating", 5)
 
             st.markdown("#### 🏆 Spieler-Rankings & Abzeichen")
@@ -574,7 +661,7 @@ elif page == "🎯 Challenges":
                     c3.metric("Erstellte Challenges", f"{data['created_count']}")
                     
                     with st.expander(f"Details von {p_name} ansehen"):
-                        st.write(f"**Geschaffte Challenges:** {', '.join(data['completed_list']) if data['completed_list'] else 'Keine'}")
+                        st.write(f"**Geschaffte Challenges (inkl. Spiel):** {', '.join(data['completed_list']) if data['completed_list'] else 'Keine'}")
                         st.write(f"**Erstellte Challenges:** {', '.join(data['created_list']) if data['created_list'] else 'Keine'}")
 
 # ------------------------------------------------------------------------------
@@ -625,7 +712,7 @@ elif page == "📩 Einspruch & Anträge":
                         st.rerun()
 
 # ------------------------------------------------------------------------------
-# 7. ADMIN-BEREICH (MIT SPIEL-ANPASSUNGEN BILDER/LINKS & OHNE BRACKETS)
+# 7. ADMIN-BEREICH
 # ------------------------------------------------------------------------------
 elif page == "⚙️ Admin-Bereich":
     st.title("⚙️ ADMIN CONTROL PANEL")
@@ -647,7 +734,7 @@ elif page == "⚙️ Admin-Bereich":
             "💾 Backup"
         ])
         
-        # TAB 1: KotH Spiele bearbeiten / Overrides
+        # TAB 1: KotH Spiele bearbeiten
         with tab_admin[0]:
             st.subheader("👑 King of the Hill Vollkontrolle & Spiel-Informationen anpassen")
             games = db.get("games", {})
@@ -695,7 +782,7 @@ elif page == "⚙️ Admin-Bereich":
                             update_db()
                             st.rerun()
 
-        # TAB 2: Challenge Verwaltung & Challenge-Spiele bearbeiten
+        # TAB 2: Challenge Verwaltung
         with tab_admin[1]:
             st.subheader("🎯 Challenge-Spiele & Challenges verwalten")
             
