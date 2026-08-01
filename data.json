@@ -96,7 +96,14 @@
       "description": "Schnellste runde in Map xy",
       "difficulty": "Mittel",
       "timestamp": "2026-08-01 15:12:00",
-      "completions": []
+      "completions": [
+        {
+          "player": "Victor",
+          "rating": 1,
+          "comment": "",
+          "timestamp": "2026-08-01 15:12:13"
+        }
+      ]
     }
   ],
   "brackets_de": [],
@@ -371,6 +378,11 @@
       "timestamp": "2026-08-01 15:12:00",
       "user": "Stefan",
       "action": "Challenge 'Schnellste Runde' von Stefan erstellt."
+    },
+    {
+      "timestamp": "2026-08-01 15:12:13",
+      "user": "Victor",
+      "action": "Challenge #2 von Victor absolviert."
     }
   ],
   "challenge_games": {
