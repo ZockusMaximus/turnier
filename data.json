@@ -87,6 +87,17 @@
           "timestamp": "2026-08-01 19:18:44"
         }
       ]
+    },
+    {
+      "id": 2,
+      "creator": "Sascha",
+      "challenge_game_id": "2",
+      "title": "1 Panzer Challange",
+      "custom_cover": "",
+      "description": "Steige nur mit einem Panzer ein und überlebe.",
+      "difficulty": "Mittel",
+      "timestamp": "2026-08-01 19:19:52",
+      "completions": []
     }
   ],
   "brackets_de": [],
@@ -441,6 +452,11 @@
       "timestamp": "2026-08-01 19:18:44",
       "user": "Victor",
       "action": "Challenge #1 von Victor absolviert."
+    },
+    {
+      "timestamp": "2026-08-01 19:19:52",
+      "user": "Sascha",
+      "action": "Challenge '1 Panzer Challange' von Sascha erstellt."
     }
   ],
   "challenge_games": {
@@ -483,6 +499,14 @@
       "timestamp": "2026-08-01 19:18:44",
       "title": "🏆 Challenge Meisterschaft!",
       "content_html": "🏆 <b>Victor</b> hat die Challenge <b>1er Boss No Hit</b> (<span style='color:#00f0ff;'><b>Elden Ring</b></span>) erfolgreich gemeistert!",
+      "category": "CHALLENGE",
+      "custom_color": ""
+    },
+    {
+      "id": 5,
+      "timestamp": "2026-08-01 19:19:52",
+      "title": "🎯 Neue Challenge: 1 Panzer Challange",
+      "content_html": "<b>Sascha</b> hat eine neue Challenge für <span style='color:#00f0ff;'><b>War Thunder</b></span> herausgegeben! Schwierigkeit: <b>Mittel</b>",
       "category": "CHALLENGE",
       "custom_color": ""
     }
