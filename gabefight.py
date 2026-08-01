@@ -3,110 +3,88 @@ import json
 import os
 import requests
 import base64
+import math
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
 # ------------------------------------------------------------------------------
-# 1. KONFIGURATION & STYLES (MARTIAL BLACK METAL & BLOOD THEME)
+# 1. KONFIGURATION & STYLES (DARK METAL THEME)
 # ------------------------------------------------------------------------------
 st.set_page_config(
     page_title="COMPETUS MAXIMUS",
-    page_icon="🩸",
+    page_icon="⚔️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Dark Martial / Black Metal / Blood Design
+# Dark Metal Aesthetic
 st.markdown("""
 <style>
-    /* Raw Metal & Blood Base Background */
     .stApp {
-        background-color: #050505;
-        color: #d1d5db;
-        font-family: 'Cinzel', 'Courier New', monospace, serif;
+        background-color: #0c0d10;
+        color: #e2e8f0;
+        font-family: 'Segoe UI', Roboto, sans-serif;
     }
     
-    /* Blood Red Headers */
     h1, h2, h3 {
-        color: #ff003c !important;
-        text-shadow: 2px 2px 10px rgba(255, 0, 60, 0.7), 0 0 20px #8b0000;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        font-weight: 900 !important;
+        color: #e2e8f0 !important;
+        letter-spacing: 1px;
+        font-weight: 700 !important;
     }
     
-    /* Grim Metal Containers */
     div[data-testid="stExpander"], div[data-testid="stForm"], div[data-testid="stContainer"] {
-        border: 2px solid #3a0007 !important;
-        background: linear-gradient(180deg, #110305 0%, #080808 100%) !important;
-        border-radius: 4px !important;
-        box-shadow: inset 0 0 15px rgba(139, 0, 0, 0.4), 0 4px 15px rgba(0, 0, 0, 0.9);
+        border: 1px solid #2d3748 !important;
+        background-color: #14171d !important;
+        border-radius: 6px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         margin-bottom: 15px;
     }
     
-    /* Martial Status Badges */
     .status-open {
-        background-color: rgba(185, 28, 28, 0.3);
-        border: 2px solid #ef4444;
-        color: #fca5a5;
-        padding: 8px 12px;
-        border-radius: 2px;
+        background-color: rgba(16, 185, 129, 0.15);
+        border: 1px solid #10b981;
+        color: #34d399;
+        padding: 6px 12px;
+        border-radius: 4px;
         font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 1px;
         text-align: center;
-        box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
     }
     .status-closed {
-        background-color: rgba(30, 41, 59, 0.5);
-        border: 2px solid #475569;
-        color: #94a3b8;
-        padding: 8px 12px;
-        border-radius: 2px;
+        background-color: rgba(239, 68, 68, 0.15);
+        border: 1px solid #ef4444;
+        color: #f87171;
+        padding: 6px 12px;
+        border-radius: 4px;
         font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 1px;
         text-align: center;
     }
 
-    /* Blood Buttons */
     .stButton>button {
-        background: linear-gradient(180deg, #8b0000 0%, #3a0007 100%) !important;
-        color: #ffffff !important;
-        border: 1px solid #ff003c !important;
-        border-radius: 2px !important;
+        background: linear-gradient(180deg, #2b303c 0%, #1a1d24 100%) !important;
+        color: #00f0ff !important;
+        border: 1px solid #00f0ff !important;
+        border-radius: 4px !important;
         font-weight: bold !important;
-        text-transform: uppercase !important;
-        letter-spacing: 1px !important;
         transition: all 0.2s ease-in-out !important;
     }
     .stButton>button:hover {
-        background: linear-gradient(180deg, #ff003c 0%, #8b0000 100%) !important;
-        box-shadow: 0 0 15px rgba(255, 0, 60, 0.8) !important;
-        color: #ffffff !important;
+        background: #00f0ff !important;
+        color: #000000 !important;
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.5) !important;
     }
     
-    /* Blood Cards */
-    .blood-card {
-        border-left: 4px solid #ff003c;
-        background: rgba(20, 5, 8, 0.8);
+    .koth-card {
+        border: 1px solid #334155;
+        background: #1e293b;
         padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 2px;
-    }
-    
-    .king-card {
-        border: 2px solid #ff003c;
-        background: radial-gradient(circle, rgba(60, 0, 15, 0.6) 0%, rgba(10, 2, 4, 0.9) 100%);
-        padding: 15px;
+        border-radius: 6px;
         text-align: center;
-        box-shadow: 0 0 20px rgba(255, 0, 60, 0.3);
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ------------------------------------------------------------------------------
-# 2. DATA ARCHITECTURE & PERSISTENCE
+# 2. PERSISTENZ & UTILS
 # ------------------------------------------------------------------------------
 DATA_FILE = "data.json"
 BERLIN_TZ = ZoneInfo("Europe/Berlin")
@@ -117,28 +95,14 @@ def get_now_str():
 def get_default_data():
     return {
         "config": {
-            "bracket_tournament_status": "OPEN", # "OPEN", "CLOSED"
+            "bracket_tournament_status": "OPEN",
             "current_season": 1
         },
         "players": {},
-        "games": {
-            "1": {
-                "name": "Tekken 8",
-                "steam_appid": "1778820",
-                "custom_cover": ""
-            },
-            "2": {
-                "name": "Street Fighter 6",
-                "steam_appid": "1364780",
-                "custom_cover": ""
-            }
-        },
-        "koth": {
-            # "game_id": {"king": "PlayerName", "streak": 5, "history": []}
-            "1": {"king": None, "streak": 0, "history": []},
-            "2": {"king": None, "streak": 0, "history": []}
-        },
-        "brackets_de": [], # Double elimination brackets
+        "games": {}, # KPL. LEER - Keine Vorab-Spiele
+        "koth": {},
+        "challenges": [],
+        "brackets_de": [],
         "appeals": [],
         "audit_logs": []
     }
@@ -200,7 +164,7 @@ def get_steam_cover(appid, custom_override=""):
         return custom_override
     if appid:
         return f"https://cdn.cloudflare.steamstatic.com/steam/apps/{appid}/header.jpg"
-    return "https://via.placeholder.com/460x215/100000/ff003c?text=NO+GAME+COVER"
+    return "https://via.placeholder.com/460x215/1e293b/00f0ff?text=KEIN+COVER"
 
 if "db" not in st.session_state:
     st.session_state.db = load_data()
@@ -211,31 +175,71 @@ def update_db():
 db = st.session_state.db
 
 # ------------------------------------------------------------------------------
+# HILFSFUNKTION: NEUES SPIEL FORMULAR (GEMÄSS SCREENSHOT)
+# ------------------------------------------------------------------------------
+def render_add_game_form():
+    with st.expander("➕ Neues Spiel vorschlagen / anlegen"):
+        player_list = list(db["players"].keys())
+        creator = st.selectbox("Dein Name (Ersteller):", ["-- Bitte wählen --"] + player_list)
+        
+        c1, c2 = st.columns(2)
+        g_name = c1.text_input("Spielname eingeben:", placeholder="z.B. Valheim")
+        g_cover = c2.text_input("Cover Bild-URL (optional):", placeholder="Leer für Steam / Bild-Link")
+        
+        c3, c4 = st.columns(2)
+        g_note = c3.text_input("Notiz / Kommentar (z.B. 6 Player Mod):")
+        g_link = c4.text_input("Website / Store Link (optional):", placeholder="https://...")
+        
+        g_reason = st.text_area("Begründung / Meinung (Warum sollte es hinzugefügt werden?):", placeholder="Erhöht den Spaß, hat super Koop-Modus...")
+        
+        if st.button("Vorschlag einreichen"):
+            if creator == "-- Bitte wählen --":
+                st.error("Bitte wähle deinen Namen als Ersteller aus.")
+            elif not g_name:
+                st.error("Bitte gib einen Spielnamen ein.")
+            else:
+                new_id = str(len(db.get("games", {})) + 1)
+                db.setdefault("games", {})[new_id] = {
+                    "name": g_name,
+                    "creator": creator,
+                    "custom_cover": g_cover,
+                    "steam_appid": "",
+                    "note": g_note,
+                    "link": g_link,
+                    "reason": g_reason
+                }
+                db.setdefault("koth", {})[new_id] = {"king": None, "streak": 0, "history": []}
+                add_audit_log(db, f"Spiel '{g_name}' hinzugefügt von {creator}", user=creator)
+                update_db()
+                st.success(f"Spiel '{g_name}' wurde erfolgreich hinzugefügt!")
+                st.rerun()
+
+# ------------------------------------------------------------------------------
 # 3. SIDEBAR NAVIGATION
 # ------------------------------------------------------------------------------
-st.sidebar.title("🩸 COMPETE MAXIMUS")
-st.sidebar.caption(f"DEUTSCHLAND (BERLIN)\n{get_now_str()}")
-
+st.sidebar.title("⚔️ COMPETUS MAXIMUS")
+st.sidebar.caption(f"Deutschland (Berlin) | {get_now_str()}")
 st.sidebar.markdown("---")
+
 page = st.sidebar.radio(
     "NAVIGATION",
-    ["👑 King of the Hill", "🌿 Double Elimination Bracket", "📩 Einspruch & Anträge", "⚙️ Admin-Bereich"]
+    ["👑 King of the Hill", "🎯 Challenges", "🌿 Double Elimination Bracket", "📩 Einspruch & Anträge", "⚙️ Admin-Bereich"]
 )
 
 # ------------------------------------------------------------------------------
-# 4. KING OF THE HILL SECTION
+# 4. KING OF THE HILL
 # ------------------------------------------------------------------------------
 if page == "👑 King of the Hill":
     st.title("👑 KING OF THE HILL")
-    st.caption("BEHAUPTE DICH AN DER SPITZE ODER GEHE IM BLUT UNTER.")
+    
+    render_add_game_form()
     
     games = db.get("games", {})
     if not games:
-        st.info("Keine Spiele angelegt. Bitte erstelle Spiele im Admin-Bereich.")
+        st.info("Noch keine Spiele vorhanden. Benutze das Formular oben oder den Admin-Bereich, um das erste Spiel anzulegen.")
     else:
-        # Dashboard Overview of all Kings
-        st.subheader("🔥 AKTUELLE KÖNIGE (ÜBERSICHT)")
-        cols = st.columns(len(games))
+        st.subheader("🔥 Aktuelle Könige Übersicht")
+        cols = st.columns(min(len(games), 4))
         for idx, (g_id, g_info) in enumerate(games.items()):
             k_data = db["koth"].get(g_id, {"king": None, "streak": 0})
             cover = get_steam_cover(g_info.get("steam_appid"), g_info.get("custom_cover"))
@@ -244,165 +248,272 @@ if page == "👑 King of the Hill":
                 with st.container(border=True):
                     st.image(cover, use_container_width=True)
                     st.markdown(f"### {g_info['name']}")
-                    st.markdown(f"👑 **König:** `{k_data['king'] or 'NIEMAND'}`")
-                    st.markdown(f"🔥 **Win-Streak:** `{k_data['streak']}` Siege")
+                    st.write(f"👑 King: **{k_data['king'] or 'Niemand'}**")
+                    st.write(f"🔥 Streak: **{k_data['streak']} Siege**")
         
         st.markdown("---")
         
-        # Interactive Challenge Area per Game
-        selected_g_id = st.selectbox("WÄHLE EIN SPIEL ZUM HERAUSFORDERN / AUSWERTEN", list(games.keys()), format_func=lambda x: games[x]["name"])
+        selected_g_id = st.selectbox("Wähle ein Spiel", list(games.keys()), format_func=lambda x: games[x]["name"])
         g_info = games[selected_g_id]
         k_data = db["koth"].setdefault(selected_g_id, {"king": None, "streak": 0, "history": []})
         
         col_img, col_detail = st.columns([1, 2])
         with col_img:
             st.image(get_steam_cover(g_info.get("steam_appid"), g_info.get("custom_cover")), use_container_width=True)
-        
         with col_detail:
-            st.markdown(f"## {g_info['name']} Arena")
-            st.write(f"Aktueller Herrscher: **{k_data['king'] or 'Der Thron ist leer!'}**")
-            st.write(f"Aktuelle Streak: **{k_data['streak']} Siege**")
-        
-        st.markdown("### ⚔️ KING HERAUSFORDERN")
+            st.markdown(f"## {g_info['name']}")
+            st.write(f"Erstellt von: `{g_info.get('creator', 'Admin')}`")
+            if g_info.get('note'): st.write(f"Notiz: *{g_info['note']}*")
+            if g_info.get('link'): st.markdown(f"[Store / Website Link]({g_info['link']})")
+            st.write(f"Aktueller King: **{k_data['king'] or 'Thron unbesetzt'}** (Streak: **{k_data['streak']}**) ")
+
+        st.markdown("### ⚔️ King herausfordern")
         player_list = list(db["players"].keys())
         
         if len(player_list) < 2:
-            st.warning("Es werden mindestens 2 registrierte Spieler benötigt.")
+            st.warning("Mindestens 2 registrierte Spieler erforderlich.")
         else:
             with st.form(f"koth_challenge_form_{selected_g_id}", clear_on_submit=True):
                 c1, c2 = st.columns(2)
-                
-                # If there's no king, anyone can challenge anyone for the throne
                 current_king = k_data['king']
+                
                 if current_king:
                     defender = current_king
-                    c1.text_input("König (Verteidiger)", value=defender, disabled=True)
+                    c1.text_input("King (Verteidiger)", value=defender, disabled=True)
                     challenger = c2.selectbox("Herausforderer", [p for p in player_list if p != defender])
                 else:
-                    defender = c1.selectbox("Spieler 1 (Thronanwärter)", player_list)
-                    challenger = c2.selectbox("Spieler 2 (Thronanwärter)", [p for p in player_list if p != defender])
+                    defender = c1.selectbox("Spieler 1 (Anwärter)", player_list)
+                    challenger = c2.selectbox("Spieler 2 (Anwärter)", [p for p in player_list if p != defender])
                 
                 format_choice = st.selectbox("Format", ["Best of 1 (Bo1)", "Best of 3 (Bo3)", "Best of 5 (Bo5)", "Best of 7 (Bo7)"])
-                winner = st.selectbox("Sieger des Matches", [defender, challenger])
-                comment = st.text_input("Match-Kommentar / Beweis-Notiz")
+                winner = st.selectbox("Sieger", [defender, challenger])
+                comment = st.text_input("Match-Kommentar")
                 
-                if st.form_submit_button("KING HERAUSFORDERN & ERGEBNIS EINTRAGEN"):
-                    # Update KotH logic
+                if st.form_submit_button("Ergebnis eintragen"):
                     if winner == k_data["king"]:
                         k_data["streak"] += 1
                     else:
                         k_data["king"] = winner
                         k_data["streak"] = 1
                     
-                    history_entry = {
+                    k_data.setdefault("history", []).append({
                         "timestamp": get_now_str(),
                         "defender": defender,
                         "challenger": challenger,
                         "winner": winner,
                         "format": format_choice,
                         "comment": comment
-                    }
-                    k_data.setdefault("history", []).append(history_entry)
-                    add_audit_log(db, f"KotH ({g_info['name']}): {winner} gewann gegen {defender if winner == challenger else challenger} ({format_choice})", user=winner)
+                    })
+                    add_audit_log(db, f"KotH ({g_info['name']}): {winner} gewann gegen {defender if winner == challenger else challenger}", user=winner)
                     update_db()
-                    st.success(f"Ergebnis eingetragen! Neuer König: {k_data['king']} (Streak: {k_data['streak']})")
+                    st.success(f"Match gespeichert! Neuer King: {k_data['king']}")
                     st.rerun()
 
-        # Stats & History for selected game
         st.markdown("---")
-        st.subheader("📊 SPIEL-STATISTIK & KOTH MATCH-HISTORIE")
-        if not k_data.get("history"):
-            st.write("Noch keine Kämpfe in diesem Spiel aufgezeichnet.")
-        else:
-            for entry in reversed(k_data["history"]):
-                with st.container(border=True):
-                    st.write(f"🏆 **Sieger: {entry['winner']}** | Format: `{entry['format']}` | Zeit: `{entry['timestamp']}`")
-                    st.caption(f"Verteidiger: {entry['defender']} vs Herausforderer: {entry['challenger']}")
-                    if entry.get("comment"):
-                        st.markdown(f"💬 *\"{entry['comment']}\"*")
+        st.subheader("📜 Match-Historie")
+        for entry in reversed(k_data.get("history", [])):
+            with st.container(border=True):
+                st.write(f"🏆 **Sieger: {entry['winner']}** ({entry['format']}) | {entry['timestamp']}")
+                st.caption(f"{entry['defender']} vs {entry['challenger']}")
+                if entry.get("comment"): st.info(f"Kommentar: {entry['comment']}")
 
 # ------------------------------------------------------------------------------
-# 5. DOUBLE ELIMINATION BRACKET SECTION
+# 5. NEUE SEKTION: CHALLENGES
+# ------------------------------------------------------------------------------
+elif page == "🎯 Challenges":
+    st.title("🎯 CHALLENGES & HERAUSFORDERUNGEN")
+    
+    tab1, tab2 = st.tabs(["🔥 Aktive Challenges", "➕ Challenge Generieren"])
+    
+    games = db.get("games", {})
+    player_list = list(db["players"].keys())
+    
+    with tab2:
+        st.subheader("Neue Spiel-Challenge erstellen")
+        if not games:
+            st.error("Lege zuerst mindestens ein Spiel an!")
+        elif not player_list:
+            st.error("Lege zuerst Spieler im Admin-Bereich an!")
+        else:
+            with st.form("create_challenge_form", clear_on_submit=True):
+                creator = st.selectbox("Ersteller", player_list)
+                game_id = st.selectbox("Spiel wählen", list(games.keys()), format_func=lambda x: games[x]["name"])
+                c_title = st.text_input("Challenge Titel", placeholder="z.B. Speedrun unter 10 Minuten / No Hit Boss")
+                c_desc = st.text_area("Detaillierte Beschreibung / Regeln", placeholder="Erkläre exakt, was getan werden muss...")
+                c_difficulty = st.select_slider("Schwierigkeitsgrad", options=["Leicht", "Mittel", "Schwer", "Extrem", "Unmöglich"])
+                
+                if st.form_submit_button("Challenge Veröffentlichen"):
+                    if c_title and c_desc:
+                        new_c = {
+                            "id": len(db.get("challenges", [])) + 1,
+                            "creator": creator,
+                            "game_id": game_id,
+                            "title": c_title,
+                            "description": c_desc,
+                            "difficulty": c_difficulty,
+                            "timestamp": get_now_str(),
+                            "completions": []
+                        }
+                        db.setdefault("challenges", []).append(new_c)
+                        add_audit_log(db, f"Challenge '{c_title}' von {creator} erstellt.", user=creator)
+                        update_db()
+                        st.success("Challenge erstellt!")
+                        st.rerun()
+
+    with tab1:
+        st.subheader("Übersicht aller Challenges")
+        challenges = db.get("challenges", [])
+        if not challenges:
+            st.info("Noch keine Challenges vorhanden.")
+        else:
+            for c in reversed(challenges):
+                g_info = games.get(c["game_id"], {"name": "Unbekannt", "steam_appid": "", "custom_cover": ""})
+                cover = get_steam_cover(g_info.get("steam_appid"), g_info.get("custom_cover"))
+                
+                with st.container(border=True):
+                    col_img, col_info = st.columns([1, 3])
+                    with col_img:
+                        st.image(cover, use_container_width=True)
+                    with col_info:
+                        st.markdown(f"### {c['title']} (`{g_info['name']}`)")
+                        st.caption(f"Erstellt von: **{c['creator']}** | Schwierigkeit: **{c['difficulty']}** | Am: {c['timestamp']}")
+                        st.write(c["description"])
+                    
+                    st.markdown("#### 🌟 Absolvierte Versuche / Success-List")
+                    completions = c.get("completions", [])
+                    if completions:
+                        for comp in completions:
+                            st.write(f"✅ **{comp['player']}** | Rating: **{comp['rating']} ⭐** | Kommentar: *\"{comp['comment']}\"* ({comp['timestamp']})")
+                    else:
+                        st.caption("Noch niemand hat diese Challenge als absolviert eingetragen.")
+                    
+                    # Formular zum Absolvieren
+                    with st.expander(f"Eintragen: Challenge geschafft!"):
+                        if not player_list:
+                            st.warning("Keine Spieler registriert.")
+                        else:
+                            with st.form(f"complete_c_{c['id']}", clear_on_submit=True):
+                                p_name = st.selectbox("Dein Name", player_list, key=f"c_p_{c['id']}")
+                                rating = st.slider("Wie bewertest du diese Challenge? (1-5 Stars)", 1, 5, 5, key=f"c_r_{c['id']}")
+                                comment = st.text_input("Beweis-Link / Kommentar", placeholder="Link zum Video/Screenshot...", key=f"c_c_{c['id']}")
+                                
+                                if st.form_submit_button("Als Geschafft Markieren"):
+                                    c.setdefault("completions", []).append({
+                                        "player": p_name,
+                                        "rating": rating,
+                                        "comment": comment,
+                                        "timestamp": get_now_str()
+                                    })
+                                    add_audit_log(db, f"Challenge #{c['id']} von {p_name} absolviert.", user=p_name)
+                                    update_db()
+                                    st.success("Erfolg eingetragen!")
+                                    st.rerun()
+
+# ------------------------------------------------------------------------------
+# 6. DOUBLE ELIMINATION BRACKET (DYNAMISCH MIT FREILOS / BYE FIX)
 # ------------------------------------------------------------------------------
 elif page == "🌿 Double Elimination Bracket":
-    st.title("🌿 DOUBLE ELIMINATION BRACKETS")
+    st.title("🌿 DOUBLE ELIMINATION BRACKET")
     
-    # Status Banner
     status = db["config"].get("bracket_tournament_status", "OPEN")
     if status == "OPEN":
-        st.markdown('<div class="status-open">🟢 TURNIER GEÖFFNET - MATCH-EINGABEN ERLAUBT</div>', unsafe_allow_html=True)
+        st.markdown('<div class="status-open">🟢 TURNIER GEÖFFNET</div>', unsafe_allow_html=True)
     else:
-        st.markdown('<div class="status-closed">🔴 TURNIER GESPERRT - MATCH-EINGABEN BLOCKIERT</div>', unsafe_allow_html=True)
-    
+        st.markdown('<div class="status-closed">🔴 TURNIER GESPERRT</div>', unsafe_allow_html=True)
+        
     st.markdown("<br>", unsafe_allow_html=True)
     
     brackets = db.get("brackets_de", [])
     if not brackets:
-        st.info("Keine aktiven Brackets vorhanden. Der Admin kann im Admin-Bereich Brackets erstellen.")
+        st.info("Keine Brackets aktiv. Erstelle ein Turnier im Admin-Bereich.")
     else:
-        b_names = [f"{b['name']} ({b.get('game_name', 'Allgemein')})" for b in brackets]
-        selected_b_idx = st.selectbox("WÄHLE EIN TURNIER BRACKET", range(len(brackets)), format_func=lambda x: b_names[x])
-        bracket = brackets[selected_b_idx]
+        b_names = [f"{b['name']} ({b.get('game_name', 'General')})" for b in brackets]
+        sel_b = st.selectbox("Bracket auswählen", range(len(brackets)), format_func=lambda x: b_names[x])
+        bracket = brackets[sel_b]
         
-        st.subheader(f"Bracket: {bracket['name']}")
-        st.caption(f"Spiel: {bracket.get('game_name', 'Keine Angabe')} | Status: {bracket.get('status', 'OPEN')}")
+        st.subheader(f"Turnier: {bracket['name']}")
         
-        # Display Matches
-        w_matches = bracket.get("winners_matches", [])
-        l_matches = bracket.get("losers_matches", [])
-        
-        col_w, col_l = st.columns(2)
-        
-        with col_w:
-            st.markdown("### ⚔️ WINNERS BRACKET")
-            for idx, m in enumerate(w_matches):
-                with st.container(border=True):
-                    st.write(f"**Match #{idx+1}** ({m.get('format', 'Bo3')})")
-                    st.write(f"P1: **{m['p1']}**")
-                    st.write(f"P2: **{m['p2']}**")
-                    st.write(f"Gewinner: `{m.get('winner') or 'Ausstehend'}`")
-                    
-                    if not m.get('winner') and status == "OPEN":
-                        w_choice = st.selectbox("Sieger wählen", [m['p1'], m['p2']], key=f"w_sel_{bracket['id']}_{idx}")
-                        if st.button("Ergebnis eintragen", key=f"w_btn_{bracket['id']}_{idx}"):
-                            m['winner'] = w_choice
-                            add_audit_log(db, f"DE Bracket {bracket['name']} Winners Match #{idx+1} Sieger: {w_choice}")
-                            update_db()
-                            st.rerun()
+        rounds = bracket.get("rounds", [])
+        if not rounds:
+            st.warning("Turnierbaum noch nicht initialisiert.")
+        else:
+            col_w, col_l = st.columns(2)
+            
+            with col_w:
+                st.markdown("### ⚔️ WINNERS BRACKET")
+                for r_idx, r in enumerate(rounds):
+                    st.markdown(f"#### Runde {r_idx + 1}")
+                    for m_idx, m in enumerate(r["winners"]):
+                        with st.container(border=True):
+                            p1, p2 = m["p1"], m["p2"]
+                            w = m.get("winner")
+                            st.write(f"**Match #{m['id']}**")
+                            st.write(f"🟢 {p1}" if w == p1 else p1)
+                            st.write(f"🟢 {p2}" if w == p2 else p2)
+                            
+                            if not w and p1 != "TBD" and p2 != "TBD" and status == "OPEN":
+                                win_choice = st.selectbox("Sieger", [p1, p2], key=f"w_sel_{bracket['id']}_{r_idx}_{m_idx}")
+                                if st.button("Ergebnis Speichern", key=f"w_btn_{bracket['id']}_{r_idx}_{m_idx}"):
+                                    m["winner"] = win_choice
+                                    loser = p2 if win_choice == p1 else p1
+                                    
+                                    # Gewinner rückt in nächste Winners-Runde vor
+                                    if r_idx + 1 < len(rounds):
+                                        next_m = rounds[r_idx + 1]["winners"][m_idx // 2]
+                                        if m_idx % 2 == 0:
+                                            next_m["p1"] = win_choice
+                                        else:
+                                            next_m["p2"] = win_choice
+                                    
+                                    # Verlierer ins Losers Bracket verschieben
+                                    if loser != "BYE":
+                                        l_target = rounds[r_idx]["losers"]
+                                        for lm in l_target:
+                                            if lm["p1"] == "TBD":
+                                                lm["p1"] = loser
+                                                break
+                                            elif lm["p2"] == "TBD":
+                                                lm["p2"] = loser
+                                                break
+                                                
+                                    add_audit_log(db, f"Bracket '{bracket['name']}': {win_choice} schlägt {loser}")
+                                    update_db()
+                                    st.rerun()
 
-        with col_l:
-            st.markdown("### 💀 LOSERS BRACKET")
-            if not l_matches:
-                st.write("Keine Loser-Bracket Matches eingetragen.")
-            for idx, m in enumerate(l_matches):
-                with st.container(border=True):
-                    st.write(f"**Loser Match #{idx+1}** ({m.get('format', 'Bo3')})")
-                    st.write(f"P1: **{m['p1']}**")
-                    st.write(f"P2: **{m['p2']}**")
-                    st.write(f"Gewinner: `{m.get('winner') or 'Ausstehend'}`")
-                    
-                    if not m.get('winner') and status == "OPEN":
-                        w_choice = st.selectbox("Sieger wählen", [m['p1'], m['p2']], key=f"l_sel_{bracket['id']}_{idx}")
-                        if st.button("Ergebnis eintragen", key=f"l_btn_{bracket['id']}_{idx}"):
-                            m['winner'] = w_choice
-                            add_audit_log(db, f"DE Bracket {bracket['name']} Losers Match #{idx+1} Sieger: {w_choice}")
-                            update_db()
-                            st.rerun()
+            with col_l:
+                st.markdown("### 💀 LOSERS BRACKET")
+                for r_idx, r in enumerate(rounds):
+                    st.markdown(f"#### Loser Runde {r_idx + 1}")
+                    for m_idx, m in enumerate(r["losers"]):
+                        with st.container(border=True):
+                            p1, p2 = m["p1"], m["p2"]
+                            w = m.get("winner")
+                            st.write(f"**Loser Match #{m['id']}**")
+                            st.write(f"🟢 {p1}" if w == p1 else p1)
+                            st.write(f"🟢 {p2}" if w == p2 else p2)
+                            
+                            if not w and p1 not in ["TBD", "BYE"] and p2 not in ["TBD", "BYE"] and status == "OPEN":
+                                win_choice = st.selectbox("Sieger", [p1, p2], key=f"l_sel_{bracket['id']}_{r_idx}_{m_idx}")
+                                if st.button("Ergebnis Speichern", key=f"l_btn_{bracket['id']}_{r_idx}_{m_idx}"):
+                                    m["winner"] = win_choice
+                                    add_audit_log(db, f"Loser Match '{bracket['name']}': {win_choice} gewinnt")
+                                    update_db()
+                                    st.rerun()
 
 # ------------------------------------------------------------------------------
-# 6. EINSPRUCH & ANTRÄGE SECTION
+# 7. EINSPRUCH & ANTRÄGE
 # ------------------------------------------------------------------------------
 elif page == "📩 Einspruch & Anträge":
     st.title("📩 ANTRÄGE & EINSPRÜCHE")
     
     with st.form("appeal_form", clear_on_submit=True):
-        st.subheader("BLUTZENTRALE: EINSPRUCH OD. BANN-ANTRAG EINREICHEN")
+        st.subheader("Einspruch oder Antrag einreichen")
         player_list = list(db["players"].keys())
-        sender = st.selectbox("Dein Name (Antragsteller)", player_list if player_list else ["-"])
-        target = st.selectbox("Betroffener Spieler / Gegenstand", player_list if player_list else ["-"])
-        reason = st.text_area("Ausführliche Begründung / Vorfall schildern")
+        sender = st.selectbox("Antragsteller", player_list if player_list else ["-"])
+        target = st.selectbox("Betroffener Spieler / Match", player_list if player_list else ["-"])
+        reason = st.text_area("Begründung / Vorfall schildern")
         
-        if st.form_submit_button("ANTRAG ABSCHICKEN"):
+        if st.form_submit_button("Antrag einreichen"):
             if sender and reason:
                 new_appeal = {
                     "id": len(db["appeals"]) + 1,
@@ -414,220 +525,228 @@ elif page == "📩 Einspruch & Anträge":
                     "defense": ""
                 }
                 db["appeals"].append(new_appeal)
-                add_audit_log(db, f"Einspruch #{new_appeal['id']} eingereicht von {sender} gegen {target}", user=sender)
+                add_audit_log(db, f"Einspruch #{new_appeal['id']} von {sender} eingereicht", user=sender)
                 update_db()
                 st.success("Antrag eingereicht.")
                 st.rerun()
 
     st.markdown("---")
-    st.subheader("📜 LAUFENDE VERFAHREN & STELLUNGNAHMEN")
+    st.subheader("📜 Laufende Anträge")
     for app in db["appeals"]:
-        st.markdown(f"""
-        <div class="blood-card">
-            <h4>ANTRAG #{app['id']} - STATUS: {app['status']}</h4>
-            <p><b>Von:</b> {app['sender']} | <b>Gegen:</b> {app['target']} | <b>Zeit:</b> {app['timestamp']}</p>
-            <p><b>Begründung:</b> {app['reason']}</p>
-            <p><b>Stellungnahme:</b> {app['defense'] or 'Keine abgegeben'}</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        if app["status"] == "OFFEN":
-            with st.expander(f"Stellungnahme abgeben für Antrag #{app['id']}"):
-                def_text = st.text_input("Verteidigung / Gegen-Aussage", key=f"def_{app['id']}")
-                if st.button("Stellungnahme Speichern", key=f"btn_def_{app['id']}"):
-                    app["defense"] = def_text
-                    update_db()
-                    st.rerun()
+        with st.container(border=True):
+            st.write(f"**Antrag #{app['id']}** | Status: `{app['status']}` | Datum: {app['timestamp']}")
+            st.write(f"Von: **{app['sender']}** | Gegen: **{app['target']}**")
+            st.write(f"Begründung: *{app['reason']}*")
+            if app.get("defense"): st.write(f"Stellungnahme: *{app['defense']}*")
+            
+            if app["status"] == "OFFEN":
+                with st.expander("Stellungnahme abgeben"):
+                    def_t = st.text_input("Gegen-Aussage", key=f"def_{app['id']}")
+                    if st.button("Speichern", key=f"btn_def_{app['id']}"):
+                        app["defense"] = def_t
+                        update_db()
+                        st.rerun()
 
 # ------------------------------------------------------------------------------
-# 7. ADMIN-BEREICH (FULL CONTROL)
+# 8. ADMIN-BEREICH (PASSWORT: zm1234)
 # ------------------------------------------------------------------------------
 elif page == "⚙️ Admin-Bereich":
     st.title("⚙️ ADMIN CONTROL PANEL")
     
-    admin_pw = st.secrets.get("ADMIN_PASSWORD", "maximus123")
-    input_pw = st.text_input("ADMIN-PASSWORT EINGEBEN", type="password")
+    # PASSWORT STRIKT GEÄNDERT AUF: zm1234
+    admin_pw = st.secrets.get("ADMIN_PASSWORD", "zm1234")
+    input_pw = st.text_input("Admin-Passwort eingeben", type="password")
     
     if input_pw != admin_pw:
-        st.error("ZUGRIFF VERWEIGERT. ZUTRITT NUR FÜR DEN HERRSCHER.")
+        st.error("Zugriff verweigert. Bitte gültiges Admin-Passwort eingeben.")
     else:
-        st.success("AUTHENTIFIZIERUNG ERFOLGREICH.")
+        st.success("Authentifizierung erfolgreich.")
         
         tab_admin = st.tabs([
-            "🎮 Spiele & Steam API", 
+            "🎮 Spiele", 
             "👥 Spieler", 
             "🌿 Bracket Generator", 
             "👑 KotH Overrides", 
-            "🔒 Turnier-Status", 
+            "🔒 Status", 
             "📩 Einsprüche", 
-            "📊 Audit-Logs", 
+            "📊 Audit Logs", 
             "💾 Backup"
         ])
         
-        # TAB 1: Spiele & Steam Info
+        # TAB 1: Spiele Verwaltung
         with tab_admin[0]:
-            st.subheader("Spiel-Verwaltung (Steam AppID / Covers)")
-            games = db.setdefault("games", {})
-            
-            with st.form("add_game_form", clear_on_submit=True):
-                g_name = st.text_input("Spiel Name (z.B. Tekken 8)")
-                g_appid = st.text_input("Steam AppID (z.B. 1778820)")
-                g_cover = st.text_input("Custom Image URL (Optional - überschreibt Steam Banner)")
-                if st.form_submit_button("SPIEL HINZUFÜGEN"):
-                    if g_name:
-                        new_id = str(len(games) + 1)
-                        games[new_id] = {
-                            "name": g_name,
-                            "steam_appid": g_appid,
-                            "custom_cover": g_cover
-                        }
-                        db["koth"].setdefault(new_id, {"king": None, "streak": 0, "history": []})
-                        add_audit_log(db, f"Spiel hinzugefügt: {g_name} (Steam: {g_appid})", user="Admin")
-                        update_db()
-                        st.rerun()
+            st.subheader("Spiele verwalten")
+            render_add_game_form()
             
             st.markdown("---")
-            st.write("Vorhandene Spiele:")
+            games = db.get("games", {})
             for g_id, g in list(games.items()):
-                col1, col2 = st.columns([3, 1])
-                col1.write(f"**ID {g_id}: {g['name']}** (Steam AppID: {g['steam_appid'] or 'Keine'})")
-                if col2.button(f"Löschen #{g_id}", key=f"del_g_{g_id}"):
+                c1, c2 = st.columns([3, 1])
+                c1.write(f"**ID {g_id}: {g['name']}** (Ersteller: {g.get('creator', 'Admin')})")
+                if c2.button(f"Löschen #{g_id}", key=f"del_g_{g_id}"):
                     del games[g_id]
-                    if g_id in db["koth"]:
-                        del db["koth"][g_id]
+                    if g_id in db["koth"]: del db["koth"][g_id]
                     update_db()
                     st.rerun()
 
         # TAB 2: Spieler-Verwaltung
         with tab_admin[1]:
             st.subheader("Spieler hinzufügen / löschen")
-            col1, col2 = st.columns(2)
-            new_p = col1.text_input("Neuer Spieler Name")
-            if col1.button("Spieler Anlegen") and new_p:
+            c1, c2 = st.columns(2)
+            new_p = c1.text_input("Neuer Spieler Name")
+            if c1.button("Spieler Anlegen") and new_p:
                 if new_p not in db["players"]:
                     db["players"][new_p] = {"created_at": get_now_str()}
                     add_audit_log(db, f"Spieler angelegt: {new_p}", user="Admin")
                     update_db()
                     st.rerun()
             
-            del_p = col2.selectbox("Spieler entfernen", ["-"] + list(db["players"].keys()))
-            if col2.button("Spieler Löschen") and del_p != "-":
+            del_p = c2.selectbox("Spieler entfernen", ["-"] + list(db["players"].keys()))
+            if c2.button("Spieler Löschen") and del_p != "-":
                 del db["players"][del_p]
-                add_audit_log(db, f"Spieler entfernt: {del_p}", user="Admin")
+                add_audit_log(db, f"Spieler gelöscht: {del_p}", user="Admin")
                 update_db()
                 st.rerun()
 
-        # TAB 3: Bracket Generator (Double Elimination)
+        # TAB 3: Double Elimination Bracket Generator (FIXED FÜR UNGERADE ANZAHL & AUTOMATIK)
         with tab_admin[2]:
-            st.subheader("🌿 Double Elimination Bracket erstellen")
+            st.subheader("🌿 Double Elimination Bracket Generator")
             p_list = list(db["players"].keys())
             
             if len(p_list) < 2:
-                st.warning("Mindestens 2 Spieler erforderlich, um ein Bracket zu generieren.")
+                st.warning("Mindestens 2 Spieler erforderlich.")
             else:
-                b_name = st.text_input("Bracket / Turnier Name", value="Blutfehde 2026")
-                b_game = st.selectbox("Spiel zuordnen", [g["name"] for g in db.get("games", {}).values()])
-                selected_players = st.multiselect("Teilnehmende Spieler wählen", p_list, default=p_list)
+                b_name = st.text_input("Turnier Name", value="Turnier 1")
+                b_game = st.selectbox("Spiel zuordnen", [g["name"] for g in db.get("games", {}).values()] if db.get("games") else ["Allgemein"])
+                sel_players = st.multiselect("Teilnehmer wählen", p_list, default=p_list)
                 
-                if st.button("DOUBLE ELIMINATION BRACKET GENERIEREN"):
-                    w_matches = []
-                    # Paare für R1 bilden
-                    for i in range(0, len(selected_players)-1, 2):
-                        w_matches.append({
-                            "p1": selected_players[i],
-                            "p2": selected_players[i+1],
-                            "winner": None,
-                            "format": "Best of 3"
-                        })
+                if st.button("DOUBLE ELIMINATION BRACKET ERSTELLEN"):
+                    num_players = len(sel_players)
+                    # Nächste 2er-Potenz ermitteln (für ausgeglichene Brackets)
+                    next_power = 2 ** math.ceil(math.log2(num_players))
+                    byes_needed = next_power - num_players
                     
-                    new_b = {
+                    padded_players = sel_players + ["BYE"] * byes_needed
+                    num_rounds = int(math.log2(next_power))
+                    
+                    rounds_data = []
+                    
+                    # Runde 1 aufbauen
+                    r1_winners = []
+                    r1_losers = []
+                    
+                    match_id_counter = 1
+                    for i in range(0, len(padded_players), 2):
+                        p1 = padded_players[i]
+                        p2 = padded_players[i+1]
+                        
+                        # Freilos Automatik
+                        auto_winner = None
+                        if p2 == "BYE": auto_winner = p1
+                        elif p1 == "BYE": auto_winner = p2
+                        
+                        r1_winners.append({
+                            "id": match_id_counter,
+                            "p1": p1,
+                            "p2": p2,
+                            "winner": auto_winner
+                        })
+                        
+                        r1_losers.append({
+                            "id": match_id_counter,
+                            "p1": "TBD",
+                            "p2": "TBD",
+                            "winner": None
+                        })
+                        match_id_counter += 1
+                        
+                    rounds_data.append({"winners": r1_winners, "losers": r1_losers})
+                    
+                    # Folgerunden mit Platzhaltern generieren
+                    curr_matches = len(r1_winners) // 2
+                    for r in range(1, num_rounds):
+                        r_win = []
+                        r_los = []
+                        for _ in range(curr_matches):
+                            r_win.append({"id": match_id_counter, "p1": "TBD", "p2": "TBD", "winner": None})
+                            r_los.append({"id": match_id_counter, "p1": "TBD", "p2": "TBD", "winner": None})
+                            match_id_counter += 1
+                        rounds_data.append({"winners": r_win, "losers": r_los})
+                        curr_matches //= 2
+                    
+                    new_bracket = {
                         "id": len(db.get("brackets_de", [])) + 1,
                         "name": b_name,
                         "game_name": b_game,
-                        "status": "OPEN",
-                        "winners_matches": w_matches,
-                        "losers_matches": []
+                        "rounds": rounds_data
                     }
-                    db.setdefault("brackets_de", []).append(new_b)
-                    add_audit_log(db, f"DE Bracket '{b_name}' für {b_game} generiert.", user="Admin")
+                    db.setdefault("brackets_de", []).append(new_bracket)
+                    add_audit_log(db, f"DE Bracket '{b_name}' generiert ({num_players} Spieler, {byes_needed} Freilose).", user="Admin")
                     update_db()
-                    st.success("Bracket erfolgreich erstellt!")
+                    st.success("Bracket erfolgreich und komplett automatisiert erstellt!")
                     st.rerun()
 
         # TAB 4: KotH Overrides
         with tab_admin[3]:
-            st.subheader("👑 King of the Hill Manuelle Overrides")
+            st.subheader("👑 King of the Hill Override")
             games = db.get("games", {})
             if games:
-                ov_g = st.selectbox("Spiel wählen", list(games.keys()), format_func=lambda x: games[x]["name"], key="ov_g")
+                ov_g = st.selectbox("Spiel", list(games.keys()), format_func=lambda x: games[x]["name"], key="ov_g")
                 k_data = db["koth"].setdefault(ov_g, {"king": None, "streak": 0, "history": []})
                 
-                col1, col2 = st.columns(2)
-                new_king = col1.selectbox("König festlegen", ["NIEMAND"] + list(db["players"].keys()))
-                new_streak = col2.number_input("Streak anpassen", min_value=0, value=k_data.get("streak", 0))
+                c1, c2 = st.columns(2)
+                new_king = c1.selectbox("König", ["NIEMAND"] + list(db["players"].keys()))
+                new_streak = c2.number_input("Streak", min_value=0, value=k_data.get("streak", 0))
                 
-                if st.button("KotH Daten Manuell Überschreiben"):
+                if st.button("Überschreiben"):
                     k_data["king"] = None if new_king == "NIEMAND" else new_king
                     k_data["streak"] = new_streak
-                    add_audit_log(db, f"KotH Override ({games[ov_g]['name']}): King={new_king}, Streak={new_streak}", user="Admin")
+                    add_audit_log(db, f"KotH Override ({games[ov_g]['name']}): {new_king} ({new_streak})", user="Admin")
                     update_db()
-                    st.success("Erfolgreich überschrieben!")
+                    st.success("KotH geändert!")
                     st.rerun()
 
-        # TAB 5: Turnier-Status Control (Brackets)
+        # TAB 5: Status Control
         with tab_admin[4]:
-            st.subheader("🔒 Bracket Turnier-Status Kontrollzentrum")
-            st.caption("Steuert, ob Spieler in den Brackets Ergebnisse eintragen können.")
-            curr_s = db["config"].get("bracket_tournament_status", "OPEN")
-            
+            st.subheader("🔒 Bracket Status")
             c1, c2 = st.columns(2)
-            if c1.button("🟢 TURNIER ÖFFNEN (Eingaben Freischalten)"):
+            if c1.button("🟢 ÖFFNEN"):
                 db["config"]["bracket_tournament_status"] = "OPEN"
-                add_audit_log(db, "Turnier-Status auf GEÖFFNET gesetzt", user="Admin")
                 update_db()
                 st.rerun()
-                
-            if c2.button("🔴 TURNIER SPERREN (Eingaben Blockieren)"):
+            if c2.button("🔴 SPERREN"):
                 db["config"]["bracket_tournament_status"] = "CLOSED"
-                add_audit_log(db, "Turnier-Status auf GESPERRT gesetzt", user="Admin")
                 update_db()
                 st.rerun()
 
-        # TAB 6: Einsprüche verwalten
+        # TAB 6: Einsprüche
         with tab_admin[5]:
-            st.subheader("📩 Einsprüche & Anträge Verwalten")
+            st.subheader("📩 Einsprüche bearbeiten")
             for app in db["appeals"]:
-                st.write(f"#{app['id']} von {app['sender']} gegen {app['target']}: {app['reason']}")
-                col1, col2 = st.columns(2)
-                if col1.button("Akzeptieren / Klären", key=f"adm_app_acc_{app['id']}"):
+                st.write(f"#{app['id']} von {app['sender']} gegen {app['target']}")
+                c1, c2 = st.columns(2)
+                if c1.button("Klären", key=f"acc_{app['id']}"):
                     app["status"] = "GEKLÄRT"
-                    add_audit_log(db, f"Einspruch #{app['id']} als geklärt markiert", user="Admin")
                     update_db()
                     st.rerun()
-                if col2.button("Ablehnen / Verwerfen", key=f"adm_app_rej_{app['id']}"):
+                if c2.button("Ablehnen", key=f"rej_{app['id']}"):
                     app["status"] = "ABGELEHNT"
-                    add_audit_log(db, f"Einspruch #{app['id']} abgelehnt", user="Admin")
                     update_db()
                     st.rerun()
 
-        # TAB 7: Audit Logs
+        # TAB 7: Logs
         with tab_admin[6]:
             st.subheader("📊 Audit Logs")
             st.dataframe(db["audit_logs"], use_container_width=True)
 
-        # TAB 8: Backup & Recovery
+        # TAB 8: Backup
         with tab_admin[7]:
-            st.subheader("💾 Backup & Wiederherstellung")
-            json_str = json.dumps(db, indent=2, ensure_ascii=False)
-            st.download_button("data.json herunterladen", data=json_str, file_name="data_backup.json", mime="application/json")
-            
-            uploaded_file = st.file_uploader("Backup JSON hochladen", type=["json"])
-            if uploaded_file is not None:
-                try:
-                    data = json.load(uploaded_file)
-                    st.session_state.db = data
-                    save_data(data)
-                    st.success("Wiederherstellung erfolgreich!")
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"Fehler beim Backup: {e}")
+            st.subheader("💾 Backup & Restore")
+            st.download_button("data.json herunterladen", data=json.dumps(db, indent=2, ensure_ascii=False), file_name="data_backup.json")
+            up_file = st.file_uploader("Backup hochladen", type=["json"])
+            if up_file:
+                db_up = json.load(up_file)
+                st.session_state.db = db_up
+                save_data(db_up)
+                st.success("Backup wiederhergestellt!")
+                st.rerun()
