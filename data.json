@@ -129,6 +129,12 @@
           "rating": 3,
           "comment": "https://youtu.be/Aq5WXmQQooo?si=0mcs_m-du9NMnTtc",
           "timestamp": "2026-08-01 15:13:05"
+        },
+        {
+          "player": "Jan",
+          "rating": 4,
+          "comment": "Trust me bro",
+          "timestamp": "2026-08-01 19:05:10"
         }
       ]
     }
@@ -430,6 +436,11 @@
       "timestamp": "2026-08-01 19:01:33",
       "user": "Jan",
       "action": "KotH (CS2): Jan gewann gegen Victor"
+    },
+    {
+      "timestamp": "2026-08-01 19:05:10",
+      "user": "Jan",
+      "action": "Challenge #2 von Jan absolviert."
     }
   ],
   "challenge_games": {
@@ -448,6 +459,12 @@
       "title": "⚔️ Thronkampf in CS2",
       "content": "👑 **ENTTHRONUNG!** **Jan** hat **Victor** besiegt und ist der neue King in **CS2**!",
       "category": "KOTH"
+    },
+    {
+      "timestamp": "2026-08-01 19:05:10",
+      "title": "🏆 Challenge Meisterschaft!",
+      "content": "**Jan** hat die Challenge **Schnellste Runde** (Trackmania) erfolgreich gemeistert!",
+      "category": "CHALLENGE"
     }
   ]
 }
