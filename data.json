@@ -629,14 +629,14 @@
             "id": "W_R2_M2",
             "p1": "Victor",
             "p2": "Alexander",
-            "winner": null
+            "winner": "Alexander"
           }
         ],
         [
           {
             "id": "W_R3_M1",
             "p1": "TBD",
-            "p2": "TBD",
+            "p2": "Alexander",
             "winner": null
           }
         ]
