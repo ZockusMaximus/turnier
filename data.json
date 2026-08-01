@@ -56,8 +56,8 @@
       ]
     },
     "2": {
-      "king": "Jan",
-      "streak": 2,
+      "king": "Marcel",
+      "streak": 1,
       "history": [
         {
           "timestamp": "2026-08-01 14:51:32",
@@ -71,6 +71,13 @@
           "defender": "Jan",
           "challenger": "Marcel",
           "winner": "Jan",
+          "format": "Best of 1 (Bo1)"
+        },
+        {
+          "timestamp": "2026-08-01 14:52:33",
+          "defender": "Jan",
+          "challenger": "Marcel",
+          "winner": "Marcel",
           "format": "Best of 1 (Bo1)"
         }
       ]
@@ -294,6 +301,11 @@
       "timestamp": "2026-08-01 14:52:19",
       "user": "Jan",
       "action": "KotH (Rocket League): Jan gewann gegen Marcel"
+    },
+    {
+      "timestamp": "2026-08-01 14:52:33",
+      "user": "Marcel",
+      "action": "KotH (Rocket League): Marcel gewann gegen Jan"
     }
   ],
   "challenge_games": {}
