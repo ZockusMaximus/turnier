@@ -102,6 +102,12 @@
           "rating": 1,
           "comment": "",
           "timestamp": "2026-08-01 15:12:13"
+        },
+        {
+          "player": "Sascha",
+          "rating": 3,
+          "comment": "https://youtu.be/Aq5WXmQQooo?si=0mcs_m-du9NMnTtc",
+          "timestamp": "2026-08-01 15:13:05"
         }
       ]
     }
@@ -383,6 +389,11 @@
       "timestamp": "2026-08-01 15:12:13",
       "user": "Victor",
       "action": "Challenge #2 von Victor absolviert."
+    },
+    {
+      "timestamp": "2026-08-01 15:13:05",
+      "user": "Sascha",
+      "action": "Challenge #2 von Sascha absolviert."
     }
   ],
   "challenge_games": {
