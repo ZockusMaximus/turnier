@@ -474,6 +474,11 @@
       "timestamp": "2026-08-01 20:42:26",
       "user": "Admin",
       "action": "Neues Single-Elimination Bracket für Blood Bowl 2 generiert."
+    },
+    {
+      "timestamp": "2026-08-01 20:43:06",
+      "user": "Stefan",
+      "action": "Bracket Single (Blood Bowl 2): Stefan gewinnt Match R1_M1"
     }
   ],
   "challenge_games": {
@@ -555,7 +560,7 @@
             "id": "R1_M1",
             "p1": "Stefan",
             "p2": "Marcel",
-            "winner": null
+            "winner": "Stefan"
           },
           {
             "id": "R1_M2",
@@ -579,7 +584,7 @@
         [
           {
             "id": "R2_M1",
-            "p1": "TBD",
+            "p1": "Stefan",
             "p2": "TBD",
             "winner": null
           },
