@@ -53,7 +53,18 @@
       ]
     }
   },
-  "challenges": [],
+  "challenges": [
+    {
+      "id": 1,
+      "creator": "Victor",
+      "challenge_game_id": "1",
+      "title": "Speed Run",
+      "description": "Nimm dein Hut",
+      "difficulty": "Mittel",
+      "timestamp": "2026-08-01 14:41:36",
+      "completions": []
+    }
+  ],
   "brackets_de": [],
   "appeals": [],
   "audit_logs": [
@@ -231,6 +242,11 @@
       "timestamp": "2026-08-01 14:36:10",
       "user": "Alexander",
       "action": "KotH (Counter Strike 2): Alexander gewann gegen Victor"
+    },
+    {
+      "timestamp": "2026-08-01 14:41:36",
+      "user": "Victor",
+      "action": "Challenge 'Speed Run' von Victor erstellt."
     }
   ],
   "challenge_games": {
