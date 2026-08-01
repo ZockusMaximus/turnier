@@ -479,6 +479,11 @@
       "timestamp": "2026-08-01 20:43:06",
       "user": "Stefan",
       "action": "Bracket Single (Blood Bowl 2): Stefan gewinnt Match R1_M1"
+    },
+    {
+      "timestamp": "2026-08-01 20:43:13",
+      "user": "Sascha",
+      "action": "Bracket Single (Blood Bowl 2): Sascha gewinnt Match R1_M2"
     }
   ],
   "challenge_games": {
@@ -566,7 +571,7 @@
             "id": "R1_M2",
             "p1": "Sascha",
             "p2": "Victor",
-            "winner": null
+            "winner": "Sascha"
           },
           {
             "id": "R1_M3",
@@ -585,7 +590,7 @@
           {
             "id": "R2_M1",
             "p1": "Stefan",
-            "p2": "TBD",
+            "p2": "Sascha",
             "winner": null
           },
           {
