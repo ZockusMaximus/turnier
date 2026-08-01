@@ -83,7 +83,18 @@
       ]
     }
   },
-  "challenges": [],
+  "challenges": [
+    {
+      "id": 1,
+      "creator": "Victor",
+      "challenge_game_id": "1",
+      "title": "Speedrun ",
+      "description": "schneller als 5h",
+      "difficulty": "Extrem",
+      "timestamp": "2026-08-01 14:53:18",
+      "completions": []
+    }
+  ],
   "brackets_de": [],
   "appeals": [],
   "audit_logs": [
@@ -306,6 +317,11 @@
       "timestamp": "2026-08-01 14:52:33",
       "user": "Marcel",
       "action": "KotH (Rocket League): Marcel gewann gegen Jan"
+    },
+    {
+      "timestamp": "2026-08-01 14:53:18",
+      "user": "Victor",
+      "action": "Challenge 'Speedrun ' von Victor erstellt."
     }
   ],
   "challenge_games": {
