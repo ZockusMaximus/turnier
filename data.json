@@ -24,14 +24,6 @@
     }
   },
   "games": {
-    "1": {
-      "name": "CS2",
-      "creator": "Victor",
-      "custom_cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg",
-      "link": "https://store.steampowered.com/app/730/",
-      "format": "Best of 3 (Bo3)",
-      "rules": "1 on 1 Only AWP Map Dust 2"
-    },
     "2": {
       "name": "War Thunder",
       "creator": "Marcel",
@@ -42,26 +34,6 @@
     }
   },
   "koth": {
-    "1": {
-      "king": "Jan",
-      "streak": 1,
-      "history": [
-        {
-          "timestamp": "2026-08-01 14:51:06",
-          "defender": "Victor",
-          "challenger": "Thron-Gründung",
-          "winner": "Victor",
-          "format": "Best of 1 (Bo1)"
-        },
-        {
-          "timestamp": "2026-08-01 19:01:33",
-          "defender": "Victor",
-          "challenger": "Jan",
-          "winner": "Jan",
-          "format": "Best of 3 (Bo3)"
-        }
-      ]
-    },
     "2": {
       "king": "Sascha",
       "streak": 2,
@@ -441,6 +413,11 @@
       "timestamp": "2026-08-01 19:05:10",
       "user": "Jan",
       "action": "Challenge #2 von Jan absolviert."
+    },
+    {
+      "timestamp": "2026-08-01 19:05:54",
+      "user": "Admin",
+      "action": "KotH Spiel 'CS2' gelöscht"
     }
   ],
   "challenge_games": {
