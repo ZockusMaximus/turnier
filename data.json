@@ -25,25 +25,7 @@
   },
   "games": {},
   "koth": {},
-  "challenges": [
-    {
-      "id": 2,
-      "creator": "Jan",
-      "challenge_game_id": "2",
-      "title": "Be best",
-      "description": "super",
-      "difficulty": "Unmöglich",
-      "timestamp": "2026-08-01 14:30:06",
-      "completions": [
-        {
-          "player": "Victor",
-          "rating": 5,
-          "comment": "ez",
-          "timestamp": "2026-08-01 14:30:17"
-        }
-      ]
-    }
-  ],
+  "challenges": [],
   "brackets_de": [
     {
       "id": 1,
@@ -301,6 +283,11 @@
       "timestamp": "2026-08-01 14:32:36",
       "user": "Admin",
       "action": "Challenge #1 (dasd) gelöscht"
+    },
+    {
+      "timestamp": "2026-08-01 14:32:38",
+      "user": "Admin",
+      "action": "Challenge #2 (Be best) gelöscht"
     }
   ],
   "challenge_games": {
