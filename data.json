@@ -564,14 +564,6 @@
       "content_html": "🏆 <b>Victor</b> hat die Challenge <b>1 Panzer Challange</b> (<span style='color:#00f0ff;'><b>War Thunder</b></span>) erfolgreich gemeistert!",
       "category": "CHALLENGE",
       "custom_color": ""
-    },
-    {
-      "id": 7,
-      "timestamp": "2026-08-01 21:56:42",
-      "title": "🏆 Neues Double Elimination Turnier: Blood Bowl 2",
-      "content_html": "Das Turnier in <b>Blood Bowl 2</b> wurde gestartet! 6 Teilnehmer.",
-      "category": "GENERAL",
-      "custom_color": "#00f0ff"
     }
   ],
   "brackets": {
