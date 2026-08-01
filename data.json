@@ -580,10 +580,129 @@
       "content_html": "Das Turnier in <b>Mortal Kombat 1</b> wurde gestartet! 6 Teilnehmer.",
       "category": "GENERAL",
       "custom_color": "#00f0ff"
+    },
+    {
+      "id": 9,
+      "timestamp": "2026-08-01 21:45:57",
+      "title": "🏆 Neues Double Elimination Turnier: Blood Bowl 2",
+      "content_html": "Das Turnier in <b>Blood Bowl 2</b> wurde gestartet! 6 Teilnehmer.",
+      "category": "GENERAL",
+      "custom_color": "#00f0ff"
     }
   ],
   "brackets": {
     "single": null,
-    "double": null
+    "double": {
+      "game_name": "Blood Bowl 2",
+      "cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/236690/header.jpg",
+      "rules": "Standard Rules",
+      "link": "https://store.steampowered.com/app/236690/",
+      "type": "double",
+      "created_at": "2026-08-01 21:45:57",
+      "champion": null,
+      "rounds": [
+        [
+          {
+            "id": "W_R1_M1",
+            "p1": "Sascha",
+            "p2": "BYE (Freilos)",
+            "winner": "Sascha"
+          },
+          {
+            "id": "W_R1_M2",
+            "p1": "Stefan",
+            "p2": "BYE (Freilos)",
+            "winner": "Stefan"
+          },
+          {
+            "id": "W_R1_M3",
+            "p1": "Marcel",
+            "p2": "Victor",
+            "winner": null
+          },
+          {
+            "id": "W_R1_M4",
+            "p1": "Alexander",
+            "p2": "Jan",
+            "winner": null
+          }
+        ],
+        [
+          {
+            "id": "W_R2_M1",
+            "p1": "Sascha",
+            "p2": "Stefan",
+            "winner": null
+          },
+          {
+            "id": "W_R2_M2",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null
+          }
+        ],
+        [
+          {
+            "id": "W_R3_M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null
+          }
+        ]
+      ],
+      "losers_rounds": [
+        [
+          {
+            "id": "L_R1_M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null
+          },
+          {
+            "id": "L_R1_M2",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null
+          }
+        ],
+        [
+          {
+            "id": "L_R2_M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null
+          }
+        ],
+        [
+          {
+            "id": "L_R3_M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null
+          }
+        ],
+        [
+          {
+            "id": "L_R4_M1",
+            "p1": "TBD",
+            "p2": "TBD",
+            "winner": null
+          }
+        ]
+      ],
+      "grand_final": {
+        "id": "GF_M1",
+        "p1": "TBD",
+        "p2": "TBD",
+        "winner": null
+      },
+      "grand_final_reset": {
+        "id": "GF_RESET",
+        "p1": "TBD",
+        "p2": "TBD",
+        "winner": null,
+        "active": false
+      }
+    }
   }
 }
