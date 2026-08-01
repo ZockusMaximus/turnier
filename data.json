@@ -31,14 +31,6 @@
       "link": "https://store.steampowered.com/app/730/",
       "format": "Best of 3 (Bo3)",
       "rules": "1 on 1 Only AWP Map Dust 2"
-    },
-    "2": {
-      "name": "Rocket League",
-      "creator": "Jan",
-      "custom_cover": "https://via.placeholder.com/460x215/1e293b/00f0ff?text=KEIN+COVER",
-      "link": "",
-      "format": "Best of 1 (Bo1)",
-      "rules": "Meiste Tore Gewinnt"
     }
   },
   "koth": {
@@ -51,33 +43,6 @@
           "defender": "Victor",
           "challenger": "Thron-Gründung",
           "winner": "Victor",
-          "format": "Best of 1 (Bo1)"
-        }
-      ]
-    },
-    "2": {
-      "king": "Marcel",
-      "streak": 1,
-      "history": [
-        {
-          "timestamp": "2026-08-01 14:51:32",
-          "defender": "Jan",
-          "challenger": "Thron-Gründung",
-          "winner": "Jan",
-          "format": "Best of 1 (Bo1)"
-        },
-        {
-          "timestamp": "2026-08-01 14:52:19",
-          "defender": "Jan",
-          "challenger": "Marcel",
-          "winner": "Jan",
-          "format": "Best of 1 (Bo1)"
-        },
-        {
-          "timestamp": "2026-08-01 14:52:33",
-          "defender": "Jan",
-          "challenger": "Marcel",
-          "winner": "Marcel",
           "format": "Best of 1 (Bo1)"
         }
       ]
@@ -359,6 +324,11 @@
       "timestamp": "2026-08-01 15:05:13",
       "user": "Admin",
       "action": "Challenge #2 (No Hit run) gelöscht"
+    },
+    {
+      "timestamp": "2026-08-01 15:05:57",
+      "user": "Admin",
+      "action": "KotH Spiel 'Rocket League' gelöscht"
     }
   ],
   "challenge_games": {
