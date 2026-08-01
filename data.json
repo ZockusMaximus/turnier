@@ -26,117 +26,7 @@
   "games": {},
   "koth": {},
   "challenges": [],
-  "brackets_de": [
-    {
-      "id": 1,
-      "name": "Turnier 1",
-      "game_name": "Counter-Strike 2",
-      "rounds": [
-        {
-          "winners": [
-            {
-              "id": 1,
-              "p1": "Victor",
-              "p2": "Alexander",
-              "winner": "Alexander"
-            },
-            {
-              "id": 2,
-              "p1": "Jan",
-              "p2": "Marcel",
-              "winner": "Jan"
-            },
-            {
-              "id": 3,
-              "p1": "Sascha",
-              "p2": "Stefan",
-              "winner": "Sascha"
-            },
-            {
-              "id": 4,
-              "p1": "BYE",
-              "p2": "BYE",
-              "winner": "BYE"
-            }
-          ],
-          "losers": [
-            {
-              "id": 1,
-              "p1": "Victor",
-              "p2": "Marcel",
-              "winner": "Victor"
-            },
-            {
-              "id": 2,
-              "p1": "Stefan",
-              "p2": "TBD",
-              "winner": null
-            },
-            {
-              "id": 3,
-              "p1": "TBD",
-              "p2": "TBD",
-              "winner": null
-            },
-            {
-              "id": 4,
-              "p1": "TBD",
-              "p2": "TBD",
-              "winner": null
-            }
-          ]
-        },
-        {
-          "winners": [
-            {
-              "id": 5,
-              "p1": "Alexander",
-              "p2": "Jan",
-              "winner": "Alexander"
-            },
-            {
-              "id": 6,
-              "p1": "Sascha",
-              "p2": "TBD",
-              "winner": null
-            }
-          ],
-          "losers": [
-            {
-              "id": 5,
-              "p1": "Jan",
-              "p2": "TBD",
-              "winner": null
-            },
-            {
-              "id": 6,
-              "p1": "TBD",
-              "p2": "TBD",
-              "winner": null
-            }
-          ]
-        },
-        {
-          "winners": [
-            {
-              "id": 7,
-              "p1": "Alexander",
-              "p2": "TBD",
-              "winner": null
-            }
-          ],
-          "losers": [
-            {
-              "id": 7,
-              "p1": "TBD",
-              "p2": "TBD",
-              "winner": null
-            }
-          ]
-        }
-      ]
-    }
-  ],
+  "brackets_de": [],
   "appeals": [],
   "audit_logs": [
     {
@@ -298,6 +188,11 @@
       "timestamp": "2026-08-01 14:32:41",
       "user": "Admin",
       "action": "Challenge-Spiel 'Counter Strike' gelöscht"
+    },
+    {
+      "timestamp": "2026-08-01 14:32:44",
+      "user": "Admin",
+      "action": "Bracket 'Turnier 1' gelöscht"
     }
   ],
   "challenge_games": {}
