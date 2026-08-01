@@ -38,7 +38,7 @@
       "custom_cover": "https://via.placeholder.com/460x215/1e293b/00f0ff?text=KEIN+COVER",
       "link": "",
       "format": "Best of 1 (Bo1)",
-      "rules": "Meisten tore"
+      "rules": "Meiste Tore Gewinnt"
     }
   },
   "koth": {
@@ -354,6 +354,11 @@
       "timestamp": "2026-08-01 15:04:14",
       "user": "Admin",
       "action": "KotH Spiel CS2 von Admin bearbeitet."
+    },
+    {
+      "timestamp": "2026-08-01 15:04:37",
+      "user": "Admin",
+      "action": "KotH Spiel Rocket League von Admin bearbeitet."
     }
   ],
   "challenge_games": {
