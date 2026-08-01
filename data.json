@@ -43,7 +43,7 @@
   },
   "koth": {
     "1": {
-      "king": "Victor",
+      "king": "Jan",
       "streak": 1,
       "history": [
         {
@@ -52,6 +52,13 @@
           "challenger": "Thron-Gründung",
           "winner": "Victor",
           "format": "Best of 1 (Bo1)"
+        },
+        {
+          "timestamp": "2026-08-01 19:01:33",
+          "defender": "Victor",
+          "challenger": "Jan",
+          "winner": "Jan",
+          "format": "Best of 3 (Bo3)"
         }
       ]
     },
@@ -418,6 +425,11 @@
       "timestamp": "2026-08-01 15:14:09",
       "user": "Sascha",
       "action": "KotH (War Thunder): Sascha gewann gegen Victor"
+    },
+    {
+      "timestamp": "2026-08-01 19:01:33",
+      "user": "Jan",
+      "action": "KotH (CS2): Jan gewann gegen Victor"
     }
   ],
   "challenge_games": {
@@ -429,5 +441,13 @@
       "name": "Trackmania",
       "cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/2225070/header.jpg"
     }
-  }
+  },
+  "news": [
+    {
+      "timestamp": "2026-08-01 19:01:33",
+      "title": "⚔️ Thronkampf in CS2",
+      "content": "👑 **ENTTHRONUNG!** **Jan** hat **Victor** besiegt und ist der neue King in **CS2**!",
+      "category": "KOTH"
+    }
+  ]
 }
