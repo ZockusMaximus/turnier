@@ -656,7 +656,7 @@
             "id": "L_R2_M1",
             "p1": "Sascha",
             "p2": "Victor",
-            "winner": null
+            "winner": "Sascha"
           },
           {
             "id": "L_R2_M2",
@@ -668,7 +668,7 @@
         [
           {
             "id": "L_R3_M1",
-            "p1": "TBD",
+            "p1": "Sascha",
             "p2": "TBD",
             "winner": null
           }
