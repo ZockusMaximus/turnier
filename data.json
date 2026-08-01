@@ -627,7 +627,7 @@
             "id": "W_R2_M2",
             "p1": "Jan",
             "p2": "Marcel",
-            "winner": null,
+            "winner": "Jan",
             "type": "winner"
           }
         ],
@@ -635,7 +635,7 @@
           {
             "id": "W_R3_M1",
             "p1": "Stefan",
-            "p2": "TBD",
+            "p2": "Jan",
             "winner": null,
             "type": "winner"
           }
@@ -669,7 +669,7 @@
           {
             "id": "L_R2_M2",
             "p1": "Sascha",
-            "p2": "TBD",
+            "p2": "Marcel",
             "winner": null,
             "type": "loser"
           }
