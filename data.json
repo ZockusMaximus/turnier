@@ -638,7 +638,7 @@
             "id": "W1M3",
             "p1": "Marcel",
             "p2": "Sascha",
-            "winner": null,
+            "winner": "Marcel",
             "p1_origin": null,
             "p2_origin": null
           },
@@ -662,7 +662,7 @@
           },
           {
             "id": "W2M2",
-            "p1": "TBD",
+            "p1": "Marcel",
             "p2": "Alexander",
             "p1_origin": "Gewinner W1M3",
             "p2_origin": "Gewinner W1M4",
@@ -685,7 +685,7 @@
           {
             "id": "L1M1",
             "p1": "Victor",
-            "p2": "TBD",
+            "p2": "Sascha",
             "p1_origin": "Verlierer W1M2",
             "p2_origin": "Verlierer W1M3",
             "winner": null
