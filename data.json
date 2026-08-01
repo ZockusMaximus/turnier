@@ -615,7 +615,7 @@
             "id": "W_R1_M4",
             "p1": "Alexander",
             "p2": "Sascha",
-            "winner": null
+            "winner": "Alexander"
           }
         ],
         [
@@ -628,7 +628,7 @@
           {
             "id": "W_R2_M2",
             "p1": "Victor",
-            "p2": "TBD",
+            "p2": "Alexander",
             "winner": null
           }
         ],
