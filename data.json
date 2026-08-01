@@ -23,8 +23,24 @@
       "created_at": "2026-08-01 14:05:22"
     }
   },
-  "games": {},
-  "koth": {},
+  "games": {
+    "1": {
+      "name": "Counter-Strike 2",
+      "creator": "Victor",
+      "custom_cover": "",
+      "steam_appid": "",
+      "note": "",
+      "link": "",
+      "reason": ""
+    }
+  },
+  "koth": {
+    "1": {
+      "king": null,
+      "streak": 0,
+      "history": []
+    }
+  },
   "challenges": [],
   "brackets_de": [],
   "appeals": [],
@@ -58,6 +74,11 @@
       "timestamp": "2026-08-01 14:05:22",
       "user": "Admin",
       "action": "Spieler angelegt: Stefan"
+    },
+    {
+      "timestamp": "2026-08-01 14:06:27",
+      "user": "Victor",
+      "action": "Spiel 'Counter-Strike 2' hinzugefügt von Victor"
     }
   ]
 }
