@@ -233,5 +233,10 @@
       "action": "KotH (Counter Strike 2): Alexander gewann gegen Victor"
     }
   ],
-  "challenge_games": {}
+  "challenge_games": {
+    "1": {
+      "name": "Elden Ring",
+      "cover": ""
+    }
+  }
 }
