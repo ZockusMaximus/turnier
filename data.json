@@ -666,14 +666,14 @@
             "p2": "Alexander",
             "p1_origin": "Gewinner W1M3",
             "p2_origin": "Gewinner W1M4",
-            "winner": null
+            "winner": "Alexander"
           }
         ],
         [
           {
             "id": "W3M1",
             "p1": "Stefan",
-            "p2": "TBD",
+            "p2": "Alexander",
             "p1_origin": "Gewinner W2M1",
             "p2_origin": "Gewinner W2M2",
             "winner": null
@@ -702,11 +702,11 @@
           },
           {
             "id": "L2M2",
-            "p1": "TBD",
+            "p1": "Marcel",
             "p2": "BYE (Freilos)",
             "p1_origin": "Verlierer W2M2",
             "p2_origin": "Freilos",
-            "winner": null
+            "winner": "Marcel"
           }
         ],
         [
