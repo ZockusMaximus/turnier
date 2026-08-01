@@ -732,14 +732,14 @@
             "p2": "Marcel",
             "p1_origin": "Sieger L2M1",
             "p2_origin": "Verlierer W3M1",
-            "winner": null
+            "winner": "Victor"
           }
         ]
       ],
       "grand_final": {
         "id": "GF_M1",
         "p1": "Sascha",
-        "p2": "TBD",
+        "p2": "Victor",
         "p1_origin": "Winner Champ",
         "p2_origin": "Loser Champ",
         "winner": null
