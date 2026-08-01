@@ -8,7 +8,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 # ------------------------------------------------------------------------------
-# 1. KONFIGURATION & STYLES (MARTIAL DARK METAL / NEON GLOW THEME)
+# 1. KONFIGURATION & STYLES (MARTIAL DARK METAL / RESPONSIVE NEON GLOW)
 # ------------------------------------------------------------------------------
 st.set_page_config(
     page_title="COMPETUS MAXIMUS",
@@ -29,9 +29,10 @@ st.markdown("""
     /* Neon Cyan Headers */
     h1, h2, h3 {
         color: #00f0ff !important;
-        letter-spacing: 1.5px;
+        letter-spacing: 1px;
         font-weight: 800 !important;
         text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+        word-break: break-word;
     }
     
     /* Prominente Sidebar Navigation */
@@ -82,14 +83,49 @@ st.markdown("""
         border-radius: 2px;
     }
     
-    /* KOMPLETT ZUSAMMENHÄNGENDE CHALLENGE CARD INKLUSIVE VERSUCHE */
+    /* RESPONSIVE FULL-CARD FIX FOR MOBILE */
     .full-challenge-card {
         border: 2px solid #00f0ff !important;
         box-shadow: 0 0 15px rgba(0, 240, 255, 0.35), inset 0 0 10px rgba(0, 240, 255, 0.05) !important;
         background: #0f141d !important;
         border-radius: 8px !important;
-        padding: 20px;
-        margin-bottom: 35px;
+        padding: 16px;
+        margin-bottom: 25px;
+        box-sizing: border-box;
+    }
+
+    .challenge-flex-container {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .challenge-img {
+        width: 220px;
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+        border: 1.5px solid #00f0ff;
+        object-fit: cover;
+    }
+
+    .challenge-body {
+        flex: 1;
+        min-width: 0; /* Verhindert Overspill im Flex-Layout */
+    }
+
+    /* Mobile Adaption */
+    @media (max-width: 768px) {
+        .challenge-flex-container {
+            flex-direction: column;
+        }
+        .challenge-img {
+            width: 100%;
+            max-width: 280px;
+            margin: 0 auto 10px auto;
+            display: block;
+        }
     }
 
     /* Blauer Neon-Rahmen für Regeln */
@@ -124,22 +160,23 @@ st.markdown("""
     }
     
     /* Difficulty Badges */
-    .diff-leicht { background-color: #10b981; color: #000; padding: 4px 10px; border-radius: 4px; font-weight: 800; }
-    .diff-mittel { background-color: #f59e0b; color: #000; padding: 4px 10px; border-radius: 4px; font-weight: 800; }
-    .diff-schwer { background-color: #f97316; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: 800; }
-    .diff-extrem { background-color: #ef4444; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: 800; }
-    .diff-unmoeglich { background-color: #a855f7; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: 800; box-shadow: 0 0 10px #a855f7; }
+    .diff-leicht { background-color: #10b981; color: #000; padding: 3px 8px; border-radius: 4px; font-weight: 800; display: inline-block; }
+    .diff-mittel { background-color: #f59e0b; color: #000; padding: 3px 8px; border-radius: 4px; font-weight: 800; display: inline-block; }
+    .diff-schwer { background-color: #f97316; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: 800; display: inline-block; }
+    .diff-extrem { background-color: #ef4444; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: 800; display: inline-block; }
+    .diff-unmoeglich { background-color: #a855f7; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: 800; box-shadow: 0 0 10px #a855f7; display: inline-block; }
 
     /* Creator & King Boxes */
     .creator-box {
         background: rgba(0, 240, 255, 0.12);
         border: 1.5px solid #00f0ff;
-        padding: 6px 12px;
+        padding: 4px 8px;
         border-radius: 4px;
         color: #00f0ff;
         font-weight: 800;
         display: inline-block;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
+        font-size: 0.9rem;
     }
     .king-highlight-box {
         background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(180, 83, 9, 0.4) 100%);
@@ -176,10 +213,10 @@ def get_default_data():
         "config": {
             "current_season": 1
         },
-        "news": [],            # Automatische & Admin News-Einträge
+        "news": [],
         "players": {},
-        "games": {},           # KotH Spiele
-        "challenge_games": {}, # Separate Spiele-Datenbank für Challenges
+        "games": {},
+        "challenge_games": {},
         "koth": {},
         "challenges": [],
         "appeals": [],
@@ -242,13 +279,12 @@ def add_audit_log(data, action, user="System"):
     })
 
 def add_news(data, title, content_html, category="GENERAL", custom_color=""):
-    """Fügt eine neue Nachricht zum News-Feed hinzu."""
     data.setdefault("news", []).append({
         "id": len(data.get("news", [])) + 1,
         "timestamp": get_now_str(),
         "title": title,
         "content_html": content_html,
-        "category": category, # KOTH, CHALLENGE, ADMIN, GENERAL
+        "category": category,
         "custom_color": custom_color
     })
 
@@ -302,7 +338,7 @@ page = st.sidebar.radio(
 )
 
 # ------------------------------------------------------------------------------
-# 4. NEWS BEREICH (MIT OPTIONALEN FARBLICHEN ADMIN-HIGHLIGTS)
+# 4. NEWS BEREICH
 # ------------------------------------------------------------------------------
 if page == "📰 News":
     st.title("📰 ARENA NEWS & HIGHLIGHTS")
@@ -334,7 +370,6 @@ if page == "📰 News":
                 badge = "📢 ADMIN ANKÜNDIGUNG"
                 badge_color = "#a855f7"
                 
-            # Falls Admin eine spezifische Farbe gewählt hat
             custom_style = ""
             if custom_color:
                 custom_style = f"border-left-color: {custom_color} !important;"
@@ -590,7 +625,7 @@ elif page == "👑 King of the Hill":
                 st.progress(percent / 100)
 
 # ------------------------------------------------------------------------------
-# 6. CHALLENGES
+# 6. CHALLENGES (FIXED MOBILE RESPONSIVE LAYOUT)
 # ------------------------------------------------------------------------------
 elif page == "🎯 Challenges":
     st.title("🎯 CHALLENGES")
@@ -681,20 +716,23 @@ elif page == "🎯 Challenges":
                 diff_class = diff_css_map.get(c['difficulty'], 'diff-mittel')
                 completions = c.get("completions", [])
                 
+                # REIN HTML GEHALTENES COMPACT/RESPONSIVE CONTAINER MIT VERVERSUCHEN DRIN
                 st.markdown(f"""
                 <div class="full-challenge-card">
-                    <div style="display: flex; gap: 20px; align-items: flex-start;">
-                        <img src="{cover}" style="width: 240px; border-radius: 4px; border: 1.5px solid #00f0ff;">
-                        <div style="flex-grow: 1;">
-                            <h3 style="margin-top: 0; color: #00f0ff !important;">{c['title']} <span style="font-size: 0.8em; color: #94a3b8;">({cg_info['name']})</span></h3>
-                            <div class="creator-box">🛠️ ERSTELLER: {c['creator']}</div>
-                            <span class="{diff_class}">{c['difficulty']}</span> <span style="color: #64748b; font-size: 0.85em;">| {c['timestamp']}</span>
-                            <p style="margin-top: 12px; font-size: 1.05em; color: #e2e8f0;">{c['description']}</p>
+                    <div class="challenge-flex-container">
+                        <img src="{cover}" class="challenge-img">
+                        <div class="challenge-body">
+                            <h3 style="margin: 0 0 6px 0; color: #00f0ff !important;">{c['title']} <span style="font-size: 0.85em; color: #94a3b8;">({cg_info['name']})</span></h3>
+                            <div class="creator-box">🛠️ ERSTELLER: {c['creator']}</div><br>
+                            <span class="{diff_class}">{c['difficulty']}</span> 
+                            <span style="color: #64748b; font-size: 0.85em; font-weight: 600;">| {c['timestamp']}</span>
+                            <p style="margin-top: 10px; margin-bottom: 0; font-size: 1rem; color: #e2e8f0; line-height: 1.4;">{c['description']}</p>
                         </div>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
                 
+                # ABSOLVIERTE VERSUCHE
                 with st.container(border=True):
                     st.markdown("#### 🌟 Absolvierte Versuche")
                     if completions:
@@ -830,7 +868,7 @@ elif page == "📩 Einspruch & Anträge":
                         st.rerun()
 
 # ------------------------------------------------------------------------------
-# 8. ADMIN-BEREICH (INKLUSIVE NEWS VERWALTUNG & CUSTOM NEWS ERSTELLUNG)
+# 8. ADMIN-BEREICH
 # ------------------------------------------------------------------------------
 elif page == "⚙️ Admin-Bereich":
     st.title("⚙️ ADMIN CONTROL PANEL")
@@ -853,7 +891,7 @@ elif page == "⚙️ Admin-Bereich":
             "💾 Backup"
         ])
         
-        # TAB 1: NEWS VERWALTUNG & CUSTOM NEWS POSTEN
+        # TAB 1: NEWS VERWALTUNG
         with tab_admin[0]:
             st.subheader("📰 Arena-News & Ankündigungen verwalten")
             
