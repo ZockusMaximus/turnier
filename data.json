@@ -31,6 +31,14 @@
       "link": "https://store.steampowered.com/app/730/",
       "format": "Best of 1 (Bo1)",
       "rules": "AWP Aim Map, 30 Kills"
+    },
+    "2": {
+      "name": "Age of Empires 4",
+      "creator": "Alexander",
+      "custom_cover": "https://cdn.cloudflare.steamstatic.com/steam/apps/1466860/header.jpg",
+      "link": "https://store.steampowered.com/app/1466860/",
+      "format": "Best of 1 (Bo1)",
+      "rules": "Standard, Random Map"
     }
   },
   "koth": {
@@ -43,6 +51,19 @@
           "defender": "Victor",
           "challenger": "Thron-Gründung",
           "winner": "Victor",
+          "format": "Best of 1 (Bo1)"
+        }
+      ]
+    },
+    "2": {
+      "king": "Alexander",
+      "streak": 1,
+      "history": [
+        {
+          "timestamp": "2026-08-01 19:14:41",
+          "defender": "Alexander",
+          "challenger": "Thron-Gründung",
+          "winner": "Alexander",
           "format": "Best of 1 (Bo1)"
         }
       ]
@@ -386,6 +407,11 @@
       "timestamp": "2026-08-01 19:13:52",
       "user": "Victor",
       "action": "KotH Spiel 'Counter-Strike 2' angelegt von Victor. King: Victor"
+    },
+    {
+      "timestamp": "2026-08-01 19:14:41",
+      "user": "Alexander",
+      "action": "KotH Spiel 'Age of Empires 4' angelegt von Alexander. King: Alexander"
     }
   ],
   "challenge_games": {},
@@ -395,6 +421,14 @@
       "timestamp": "2026-08-01 19:13:52",
       "title": "👑 Neuer Thron errichtet: Counter-Strike 2",
       "content_html": "<b>Victor</b> hat den Thron für <span style='color:#00f0ff;'><b>Counter-Strike 2</b></span> errichtet und ist der erste König!",
+      "category": "KOTH",
+      "custom_color": ""
+    },
+    {
+      "id": 2,
+      "timestamp": "2026-08-01 19:14:41",
+      "title": "👑 Neuer Thron errichtet: Age of Empires 4",
+      "content_html": "<b>Alexander</b> hat den Thron für <span style='color:#00f0ff;'><b>Age of Empires 4</b></span> errichtet und ist der erste König!",
       "category": "KOTH",
       "custom_color": ""
     }
